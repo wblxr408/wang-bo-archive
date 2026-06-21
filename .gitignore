@@ -1,0 +1,11 @@
+# Design drafts (not needed for deployment)
+个人信息组织.md
+视觉风格排版.md
+项目如何组织.md
+
+# Temp python patch scripts
+_*.py
+
+# OS
+.DS_Store
+Thumbs.db

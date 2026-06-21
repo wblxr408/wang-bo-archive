@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wang Bo Archive</title>
+<meta name="description" content="Building Knowledge Systems — Exploring AI Systems, Knowledge Discovery, and Complex Architectures.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+/* ============================================================
+   Wang Bo Archive — Swiss International × Computational Aesthetic
+   Features: i18n ZH/EN, Dark/Light, Detail Modals, Research Atlas
+   ============================================================ */
+
+/* ---- Theme Variables ---- */
+:root,
+[data-theme="light"] {
+  --bg:            #FAFAF8;
+  --bg-alt:        #F2F2EE;
+  --bg-modal:      #FFFFFF;
+  --text:          #111111;
+  --text-dim:      #555555;
+  --text-faint:    #888888;
+  --accent:        #0047FF;
+  --accent-dim:    #0033B3;
+  --accent-ghost:  rgba(0,71,255,0.04);
+  --hairline:      #E0E0DC;
+  --hairline-light:#EBEBE6;
+  --hairline-dark: #CCCCC8;
+  --white:         #FFFFFF;
+  --shadow-sm:     0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md:     0 4px 24px rgba(0,0,0,0.06);
+  --shadow-lg:     0 8px 48px rgba(0,0,0,0.08);
+  --overlay:       rgba(0,0,0,0.35);
+  --nav-bg:        rgba(250,250,248,0.88);
+  --hero-grid-op:  0.30;
+}
+
+[data-theme="dark"] {
+  --bg:            #0D0D0D;
+  --bg-alt:        #141414;
+  --bg-modal:      #1A1A1A;
+  --text:          #E8E8E8;
+  --text-dim:      #999999;
+  --text-faint:    #666666;
+  --accent:        #3B82F6;
+  --accent-dim:    #60A5FA;
+  --accent-ghost:  rgba(59,130,246,0.08);
+  --hairline:      #2A2A2A;
+  --hairline-light:#222222;
+  --hairline-dark: #333333;
+  --white:         #1A1A1A;
+  --shadow-sm:     0 1px 3px rgba(0,0,0,0.20);
+  --shadow-md:     0 4px 24px rgba(0,0,0,0.30);
+  --shadow-lg:     0 8px 48px rgba(0,0,0,0.40);
+  --overlay:       rgba(0,0,0,0.65);
+  --nav-bg:        rgba(13,13,13,0.88);
+  --hero-grid-op:  0.12;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  letter-spacing: -0.011em;
+  overflow-x: hidden;
+  transition: background 0.35s, color 0.35s;
+}
+
+/* ---- Typography ---- */
+h1, h2, h3, h4 { font-weight: 700; line-height: 1.15; }
+a { color: inherit; text-decoration: none; }
+
+/* ---- Progress Bar ---- */
+#progress {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: var(--accent); z-index: 1000;
+  transition: width 0.15s linear; width: 0%;
+  will-change: width;
+}
+
+/* ---- Navigation ---- */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; height: 4rem;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 4rem; z-index: 100;
+  background: var(--nav-bg);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--hairline);
+  transition: border-color 0.4s, background 0.35s;
+}
+nav.at-top { border-bottom-color: transparent; }
+nav .nav-left { display: flex; align-items: center; gap: 1.5rem; }
+nav .logo {
+  font-size: 0.875rem; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--text);
+  display: flex; align-items: center; gap: 0.5rem;
+  text-decoration: none; line-height: 1;
+}
+nav .logo .logo-img {
+  height: 1.35rem; width: auto; display: block; flex-shrink: 0;
+}
+nav .logo .logo-text { display: flex; align-items: center; white-space: nowrap; }
+nav .logo .logo-text span { color: var(--accent); }
+nav .links { display: flex; gap: 2rem; list-style: none; }
+nav .links a {
+  font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-dim); position: relative;
+  transition: color 0.25s;
+}
+nav .links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1.5px; background: var(--accent);
+  transition: width 0.3s cubic-bezier(0.22,0.61,0.36,1);
+}
+nav .links a:hover, nav .links a.active { color: var(--text); }
+nav .links a:hover::after, nav .links a.active::after { width: 100%; }
+nav .nav-utils { display: flex; align-items: center; gap: 0.75rem; }
+nav .nav-utils button {
+  background: none; border: 1px solid var(--hairline); color: var(--text-dim);
+  padding: 0.35rem 0.65rem; border-radius: 4px; cursor: pointer;
+  font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.05em;
+  font-family: inherit; transition: all 0.25s;
+}
+nav .nav-utils button:hover { border-color: var(--accent); color: var(--accent); }
+nav .nav-utils button.active-btn { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ---- Section ---- */
+section {
+  padding: 7rem 4rem; max-width: min(90rem, 100%); margin: 0 auto;
+}
+section > :not(.sec-watermark) { position: relative; z-index: 1; }
+section.full-bleed { max-width: 100%; padding-left: 0; padding-right: 0; }
+.section-label {
+  font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1);
+}
+.section-label.visible { opacity: 1; transform: translateY(0); }
+
+/* ---- Section Watermark ---- */
+section { position: relative; }
+section .sec-watermark {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+section .sec-watermark img {
+  width: auto; height: auto;
+  max-width: 60%; max-height: 60%;
+  opacity: 0.08;
+  filter: grayscale(1);
+  transition: opacity 0.35s, filter 0.35s;
+  object-fit: contain;
+  will-change: opacity;
+}
+[data-theme="dark"] section .sec-watermark img {
+  opacity: 0.11;
+  filter: grayscale(1) invert(1) brightness(2.2);
+}
+section.full-bleed .sec-watermark { padding: 0; }
+
+/* ---- Hero ---- */
+/* ---- Hero ---- */
+#hero {
+  min-height: 100vh; display: flex; align-items: center;
+  padding-top: 4rem; position: relative; overflow: hidden;
+}
+#hero .grid-bg {
+  position: absolute; inset: 0; pointer-events: none;
+  opacity: var(--hero-grid-op);
+  background-image:
+    linear-gradient(var(--hairline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse 60% 55% at 28% 50%, black 28%, transparent 68%);
+  mask-image: radial-gradient(ellipse 60% 55% at 28% 50%, black 28%, transparent 68%);
+}
+#hero .hero-inner {
+  position: relative; z-index: 1;
+  max-width: min(90rem, 100%); margin: 0 auto; padding: 0 4rem;
+  width: 100%;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(2rem, 6vw, 6rem); align-items: center;
+}
+#hero .hero-main { max-width: 42rem; padding-left: 2rem; }
+#hero .hero-tag {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+  opacity: 0; transform: translateY(20px);
+  animation: fadeUp 0.9s 0.15s cubic-bezier(0.22,0.61,0.36,1) forwards;
+}
+#hero h1 {
+  font-size: clamp(3.2rem, 8.5vw, 7.5rem); font-weight: 900;
+  line-height: 0.90; letter-spacing: -0.03em; color: var(--text);
+  margin-bottom: 1.5rem;
+  opacity: 0; transform: translateY(30px);
+  animation: fadeUp 1s 0.3s cubic-bezier(0.22,0.61,0.36,1) forwards;
+}
+#hero h1 .line { display: block; }
+#hero h1 .line.accent { color: var(--accent); }
+#hero .hero-sub {
+  font-size: clamp(1rem, 1.6vw, 1.25rem); font-weight: 400;
+  color: var(--text-dim); max-width: 34rem; line-height: 1.55;
+  letter-spacing: -0.008em; margin-bottom: 1.8rem;
+  opacity: 0; transform: translateY(20px);
+  animation: fadeUp 0.9s 0.55s cubic-bezier(0.22,0.61,0.36,1) forwards;
+}
+#hero .hero-meta {
+  display: flex; gap: 1.5rem; flex-wrap: wrap;
+  opacity: 0; transform: translateY(20px);
+  animation: fadeUp 0.9s 0.7s cubic-bezier(0.22,0.61,0.36,1) forwards;
+}
+#hero .hero-meta span {
+  font-size: 0.75rem; font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text-faint);
+}
+#hero .hero-meta span:not(:last-child)::after {
+  content: '\00B7'; margin-left: 1rem; color: var(--hairline);
+}
+/* Hero right: sketch portrait + quick project links */
+#hero .hero-visual {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1.8rem;
+  max-width: 340px; flex-shrink: 0;
+  opacity: 0; transform: translateX(20px);
+  animation: fadeInRight 1s 0.8s cubic-bezier(0.22,0.61,0.36,1) forwards;
+}
+#hero .hero-portrait {
+  width: 100%; max-width: 340px;
+}
+#hero .portrait-frame {
+  position: relative;
+  border: 1px solid var(--hairline);
+  padding: 0.5rem;
+  background: var(--bg);
+  transition: border-color 0.35s, background 0.35s;
+}
+#hero .portrait-frame::after {
+  content: '';
+  position: absolute; inset: 0.5rem;
+  border: 1px solid var(--hairline);
+  pointer-events: none;
+  transition: border-color 0.35s;
+}
+#hero .portrait-img {
+  display: block; width: 100%; height: auto;
+  filter: grayscale(0.15) contrast(1.04);
+  transition: filter 0.35s;
+}
+[data-theme="dark"] #hero .portrait-img {
+  filter: grayscale(0.25) contrast(1.06) brightness(0.92);
+}
+#hero .portrait-cap {
+  margin-top: 0.75rem;
+  font-size: 0.6875rem; font-weight: 500;
+  letter-spacing: 0.06em; color: var(--text-faint);
+  text-align: center;
+}
+#hero .hero-quick-links {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 0.4rem;
+  max-width: 340px;
+}
+#hero .hql-label {
+  font-size: 0.625rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-faint);
+  margin-right: 0.5rem;
+}
+#hero .hql-item {
+  font-size: 0.75rem; font-weight: 500; color: var(--text-dim);
+  cursor: pointer; transition: color 0.25s;
+}
+#hero .hql-item:hover { color: var(--accent); }
+#hero .hql-sep {
+  font-size: 0.6875rem; color: var(--hairline-dark);
+  user-select: none;
+}
+
+#hero .scroll-hint {
+  position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0;
+  animation: fadeUp 0.9s 1.1s cubic-bezier(0.22,0.61,0.36,1) forwards;
+}
+#hero .scroll-hint span {
+  font-size: 0.625rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-faint);
+}
+#hero .scroll-hint .s-arrow {
+  width: 10px; height: 22px;
+  animation: arrowBounce 2s ease-in-out infinite;
+}
+#hero .scroll-hint .s-arrow svg {
+  display: block; width: 100%; height: 100%;
+  stroke: var(--text-faint); fill: none;
+}
+
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInRight { to { opacity: 1; transform: translateX(0); } }
+@keyframes arrowBounce {
+  0%, 100% { opacity: 0.25; transform: translateY(0); }
+  50% { opacity: 0.7; transform: translateY(8px); }
+}
+
+/* ---- About ---- */
+#about .about-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 3rem; position: relative;
+}
+#about .about-grid::before {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 33.333%;
+  width: 1px; background: var(--hairline);
+}
+#about .about-grid::after {
+  content: ''; position: absolute; top: 0; bottom: 0; right: 33.333%;
+  width: 1px; background: var(--hairline);
+}
+#about .about-col { position: relative; z-index: 1; }
+#about .about-col h3 {
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem; border-bottom: 1px solid var(--hairline);
+}
+#about .about-col .big-text {
+  font-size: 1.25rem; font-weight: 500; line-height: 1.45;
+  letter-spacing: -0.012em; color: var(--text); margin-bottom: 1.5rem;
+}
+#about .about-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+#about .about-col ul li {
+  font-size: 0.9rem; color: var(--text-dim); line-height: 1.5;
+  padding-left: 1rem; border-left: 1.5px solid var(--hairline);
+  transition: border-color 0.3s, color 0.3s;
+}
+#about .about-col ul li:hover { border-left-color: var(--accent); color: var(--text); }
+#about .phrase {
+  grid-column: 1 / -1; margin-top: 5rem; padding-top: 3rem;
+  border-top: 1px solid var(--hairline);
+  font-size: clamp(1.2rem, 2.3vw, 1.8rem); font-weight: 500;
+  line-height: 1.4; letter-spacing: -0.015em; color: var(--text);
+  text-align: center; max-width: 42rem; margin-left: auto; margin-right: auto;
+}
+#about .phrase::before { content: '\201C '; color: var(--accent); }
+#about .phrase::after { content: ' \201D'; color: var(--accent); }
+
+/* ---- Keywords ---- */
+#keywords { padding-top: 2rem; padding-bottom: 6rem; }
+#keywords .kw-cloud {
+  display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem; justify-content: center;
+  max-width: 48rem; margin: 0 auto;
+}
+#keywords .kw-cloud .kw {
+  font-size: 0.8125rem; font-weight: 500; color: var(--text-dim);
+  letter-spacing: 0.02em; padding: 0.3rem 0; cursor: pointer;
+  position: relative; transition: color 0.25s; background: none; border: none;
+  font-family: inherit;
+}
+#keywords .kw-cloud .kw::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 100%; height: 1px; background: var(--hairline);
+  transition: background 0.25s, height 0.25s;
+}
+#keywords .kw-cloud .kw:hover { color: var(--accent); }
+#keywords .kw-cloud .kw:hover::after { background: var(--accent); height: 2px; }
+
+/* ---- Projects ---- */
+#projects .project-row {
+  display: grid; grid-template-columns: 1fr 3fr 1fr; align-items: baseline;
+  padding: 2rem 0; border-bottom: 1px solid var(--hairline);
+  transition: background 0.3s; cursor: pointer;
+}
+#projects .project-row:first-of-type { border-top: 1px solid var(--hairline); }
+#projects .project-row:hover { background: var(--accent-ghost); }
+#projects .project-row .p-year {
+  font-size: 0.75rem; font-weight: 500; color: var(--text-faint);
+  letter-spacing: 0.06em; font-variant-numeric: tabular-nums;
+}
+#projects .project-row .p-name {
+  font-size: clamp(1.8rem, 4vw, 3.5rem); font-weight: 800;
+  letter-spacing: -0.025em; line-height: 1; color: var(--text);
+  transition: color 0.3s;
+}
+#projects .project-row:hover .p-name { color: var(--accent); }
+#projects .project-row .p-tagline {
+  font-size: 0.8125rem; color: var(--text-dim); font-weight: 400;
+  letter-spacing: 0.01em; margin-top: 0.3rem;
+}
+#projects .project-row .p-domain {
+  font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent); text-align: right;
+}
+#projects .project-themes {
+  display: flex; gap: 3rem; margin-top: 4rem; padding-top: 2.5rem;
+  border-top: 1px solid var(--hairline);
+}
+#projects .theme-group h4 {
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-faint); margin-bottom: 0.8rem;
+}
+#projects .theme-group .t-item {
+  font-size: 0.9rem; color: var(--text-dim); padding: 0.25rem 0;
+  transition: color 0.25s; cursor: pointer;
+}
+#projects .theme-group .t-item:hover { color: var(--accent); }
+
+/* ---- Atlas ---- */
+#atlas { padding-top: 3rem; padding-bottom: 7rem; }
+#atlas .atlas-container { width: 100%; height: 540px; margin: 2rem 0; }
+#atlas svg { width: 100%; height: 100%; }
+#atlas .atlas-node { cursor: pointer; }
+#atlas .atlas-node circle {
+  transition: stroke 0.3s, stroke-width 0.3s, r 0.35s cubic-bezier(0.22,0.61,0.36,1);
+}
+#atlas .atlas-node:hover circle { stroke: #3B82F6 !important; stroke-width: 2.5; }
+[data-theme="light"] #atlas .atlas-node:hover circle { stroke: #0047FF !important; }
+#atlas .atlas-node text {
+  font-family: 'Inter', 'Noto Sans SC', sans-serif;
+  font-size: 13px; font-weight: 600; fill: #111;
+  letter-spacing: 0.01em; transition: fill 0.3s;
+}
+[data-theme="dark"] #atlas .atlas-node text { fill: #E8E8E8; }
+[data-theme="dark"] #atlas .atlas-node:hover text { fill: #3B82F6; }
+[data-theme="light"] #atlas .atlas-node:hover text { fill: #0047FF; }
+#atlas .atlas-edge { stroke: #E0E0DC; stroke-width: 1; transition: stroke 0.4s, stroke-width 0.4s; }
+[data-theme="dark"] #atlas .atlas-edge { stroke: #2A2A2A; }
+#atlas .atlas-edge.highlight { stroke: #0047FF; stroke-width: 1.8; }
+[data-theme="dark"] #atlas .atlas-edge.highlight { stroke: #3B82F6; }
+#atlas .atlas-label { font-size: 11px; fill: #999; letter-spacing: 0.04em; }
+[data-theme="dark"] #atlas .atlas-label { fill: #666; }
+
+/* ---- Writing ---- */
+#writing .essay-list {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+  border-top: 1px solid var(--hairline);
+}
+#writing .essay-item {
+  padding: 2rem; border-bottom: 1px solid var(--hairline);
+  transition: background 0.3s; display: block;
+}
+#writing .essay-item:nth-child(odd) { border-right: 1px solid var(--hairline); }
+#writing .essay-item:hover { background: var(--accent-ghost); }
+#writing .essay-item .e-tag {
+  font-size: 0.625rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 0.35rem;
+}
+#writing .essay-item .e-title {
+  font-size: 1.1rem; font-weight: 600; letter-spacing: -0.01em;
+  line-height: 1.3; margin-bottom: 0.3rem;
+}
+#writing .essay-item .e-date { font-size: 0.75rem; color: var(--text-faint); }
+
+/* ---- Footer ---- */
+footer {
+  padding: 3rem 4rem 5rem; max-width: min(90rem, 100%); margin: 0 auto;
+  text-align: center; border-top: 1px solid var(--hairline);
+}
+footer .ft-name { font-size: 0.875rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 0.5rem; }
+footer .ft-name span { color: var(--accent); }
+footer .ft-links { display: flex; gap: 2rem; justify-content: center; list-style: none; margin-top: 1rem; }
+footer .ft-links a { font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.04em; transition: color 0.25s; }
+footer .ft-links a:hover { color: var(--accent); }
+footer .ft-copy { font-size: 0.6875rem; color: var(--text-faint); margin-top: 1.5rem; letter-spacing: 0.04em; }
+
+/* ---- Modal / Detail Page ---- */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: var(--overlay);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.22,0.61,0.36,1);
+  padding: 2rem;
+}
+.modal-overlay.open { opacity: 1; pointer-events: auto; }
+.modal-overlay.closing { opacity: 0; pointer-events: none; }
+.modal {
+  background: var(--bg-modal); max-width: 48rem; width: 100%; max-height: 85vh;
+  overflow-y: auto; padding: 3rem 3rem; position: relative;
+  border: 1px solid var(--hairline);
+  transform: translateY(24px); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1), opacity 0.4s cubic-bezier(0.22,0.61,0.36,1);
+  box-shadow: var(--shadow-lg);
+}
+.modal-overlay.open .modal { transform: translateY(0); opacity: 1; }
+.modal-overlay.closing .modal { transform: translateY(24px); opacity: 0; }
+.modal .modal-close {
+  position: sticky; top: 0; float: right; z-index: 1;
+  width: 2rem; height: 2rem; display: flex; align-items: center;
+  justify-content: center; border: 1px solid var(--hairline);
+  background: var(--bg-modal); cursor: pointer; font-size: 1rem;
+  color: var(--text-faint); transition: all 0.25s;
+}
+.modal .modal-close:hover { border-color: var(--accent); color: var(--accent); }
+.modal .modal-tag {
+  font-size: 0.625rem; font-weight: 600; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem;
+}
+.modal .modal-title {
+  font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 800;
+  letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.5rem;
+}
+.modal .modal-subtitle {
+  font-size: 1rem; color: var(--text-dim); margin-bottom: 2rem;
+}
+.modal .modal-section { margin-bottom: 2rem; }
+.modal .modal-section h4 {
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem;
+  padding-bottom: 0.4rem; border-bottom: 1px solid var(--hairline);
+}
+.modal .modal-section p { font-size: 0.9375rem; color: var(--text-dim); line-height: 1.65; margin-bottom: 0.75rem; }
+.modal .modal-section .tech-tags {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+}
+.modal .modal-section .tech-tags span {
+  font-size: 0.75rem; padding: 0.25rem 0.6rem;
+  border: 1px solid var(--hairline); color: var(--text-dim);
+  font-weight: 500; transition: all 0.25s;
+}
+.modal .modal-section .tech-tags span:hover { border-color: var(--accent); color: var(--accent); }
+.modal .mermaid-container {
+  margin: 1.5rem 0; padding: 1rem 0.5rem;
+  border: 1px solid var(--hairline); background: var(--bg-alt);
+  overflow-x: auto; overflow-y: visible;
+  display: flex; justify-content: center;
+  transition: background 0.35s, border-color 0.35s;
+}
+.modal .mermaid-container .mermaid {
+  display: flex; justify-content: center;
+  width: 100%; min-width: max-content;
+}
+.modal .mermaid-container .mermaid svg {
+  max-width: 100%; height: auto;
+}
+
+/* ---- Reveal ---- */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.8s cubic-bezier(0.22,0.61,0.36,1), transform 0.8s cubic-bezier(0.22,0.61,0.36,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.05s; }
+.reveal-delay-2 { transition-delay: 0.10s; }
+.reveal-delay-3 { transition-delay: 0.15s; }
+.reveal-delay-4 { transition-delay: 0.20s; }
+.reveal-delay-5 { transition-delay: 0.25s; }
+
+/* ---- Body scroll lock ---- */
+body.modal-open { overflow: hidden; }
+
+/* ---- Responsive ---- */
+@media (max-width: 960px) {
+  nav { padding: 0 1.5rem; }
+  nav .links { gap: 1rem; }
+  section { padding-left: 1.5rem; padding-right: 1.5rem; }
+  #hero .hero-inner { grid-template-columns: 1fr; gap: 2rem; padding: 0 1.5rem; }
+  #hero .hero-main { padding-left: 0; }
+  #hero .hero-visual .v-block { max-width: 100%; }
+  #about .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  #about .about-grid::before, #about .about-grid::after { display: none; }
+  #projects .project-row { grid-template-columns: 1fr; gap: 0.3rem; }
+  #projects .project-row .p-domain { text-align: left; }
+  #projects .project-themes { flex-direction: column; gap: 2rem; }
+  #writing .essay-list { grid-template-columns: 1fr; }
+  #writing .essay-item:nth-child(odd) { border-right: none; }
+  #atlas .atlas-container { height: 360px; }
+  .modal { padding: 2rem 1.5rem; max-width: 95vw; }
+}
+
+@media (max-width: 520px) {
+  :root { font-size: 15px; }
+  #hero .hero-inner { grid-template-columns: 1fr; padding: 0 1rem; }
+  #hero .hero-main { padding-left: 0; }
+  nav { padding: 0 1rem; }
+  nav .links { gap: 0.6rem; }
+  nav .links a { font-size: 0.68rem; letter-spacing: 0.03em; }
+  nav .nav-utils { gap: 0.4rem; }
+  nav .nav-utils button { padding: 0.3rem 0.5rem; font-size: 0.625rem; }
+  #hero h1 { font-size: clamp(2.2rem, 10vw, 3.5rem); }
+  #hero .hero-meta { flex-wrap: wrap; gap: 0.5rem; }
+  #hero .hero-visual { max-width: 280px; margin: 0 auto; }
+  #hero .hero-portrait { max-width: 260px; }
+  #keywords .kw-cloud { gap: 0.35rem 0.7rem; }
+  #keywords .kw-cloud .kw { font-size: 0.72rem; }
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- NAVIGATION -->
+<nav id="nav" class="at-top">
+  <div class="nav-left">
+    <a href="#hero" class="logo"><img src="logo.png" alt="Wang Bo" class="logo-img"><span class="logo-text">Wang<span>Bo</span></span></a>
+    <ul class="links">
+      <li><a href="#about" data-section="about" data-i18n="nav.about">About</a></li>
+      <li><a href="#projects" data-section="projects" data-i18n="nav.projects">Projects</a></li>
+      <li><a href="#atlas" data-section="atlas" data-i18n="nav.atlas">Atlas</a></li>
+      <li><a href="#writing" data-section="writing" data-i18n="nav.writing">Writing</a></li>
+    </ul>
+  </div>
+  <div class="nav-utils">
+    <button id="btnLang" type="button" title="Switch Language">中文</button>
+    <button id="btnTheme" type="button" title="Toggle Theme">◐</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="full-bleed">
+  <div class="grid-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-main">
+      <div class="hero-content">
+        <p class="hero-tag" data-i18n="hero.tag">Wang Bo Archive</p>
+        <h1>
+          <span class="line">BUILDING</span>
+          <span class="line">KNOWLEDGE</span>
+          <span class="line accent">SYSTEMS</span>
+        </h1>
+        <p class="hero-sub" data-i18n="hero.sub">
+          Exploring AI Systems, Knowledge Discovery, and Complex Architectures.
+          Research-driven builder focused on how knowledge is organized, discovered, and utilized.
+        </p>
+        <div class="hero-meta">
+          <span data-i18n="hero.uni">Southeast University</span>
+          <span>Software · AI · Systems · Knowledge Discovery</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-portrait">
+        <div class="portrait-frame">
+          <img src="portrait.png" alt="Wang Bo" class="portrait-img">
+        </div>
+        <p class="portrait-cap" data-i18n="hero.portrait">Wang Bo · Southeast University</p>
+      </div>
+      <div class="hero-quick-links">
+        <span class="hql-label" data-i18n="hero.projects">Featured Projects</span>
+        <span class="hql-item" data-project="graphsci">GraphSci</span>
+        <span class="hql-sep">/</span>
+        <span class="hql-item" data-project="homemind">HomeMind</span>
+        <span class="hql-sep">/</span>
+        <span class="hql-item" data-project="ascp">ASCP</span>
+        <span class="hql-sep">/</span>
+        <span class="hql-item" data-project="submitflow">SubmitFlow</span>
+        <span class="hql-sep">/</span>
+        <span class="hql-item" data-project="deepintel">DeepIntel</span>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span data-i18n="hero.scroll">Scroll</span>
+    <div class="s-arrow"><svg viewBox="0 0 10 22" xmlns="http://www.w3.org/2000/svg"><line x1="5" y1="0" x2="5" y2="14" stroke-width="1.2"/><polyline points="1,10 5,16 9,10" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <p class="section-label" data-i18n="about.label">About</p>
+  <div class="about-grid">
+    <div class="about-col reveal reveal-delay-1">
+      <h3 data-i18n="about.philosophy.title">Philosophy</h3>
+      <p class="big-text" data-i18n="about.philosophy.desc">
+        I ask <em>why</em> systems are designed the way they are — not just how to use them.
+      </p>
+      <ul>
+        <li data-i18n="about.philosophy.1">First Principles thinking</li>
+        <li data-i18n="about.philosophy.2">System-level perspective</li>
+        <li data-i18n="about.philosophy.3">Continuous deep exploration</li>
+        <li data-i18n="about.philosophy.4">Mechanism over surface</li>
+      </ul>
+    </div>
+    <div class="about-col reveal reveal-delay-2">
+      <h3 data-i18n="about.research.title">Research Interests</h3>
+      <ul>
+        <li data-i18n="about.research.1">Agent Architecture &amp; Workflow</li>
+        <li data-i18n="about.research.2">Multi-Agent Collaboration</li>
+        <li data-i18n="about.research.3">Knowledge Organization &amp; Discovery</li>
+        <li data-i18n="about.research.4">Semantic Consistency &amp; Dependency</li>
+        <li data-i18n="about.research.5">Complex Systems Evolution</li>
+        <li data-i18n="about.research.6">Human–AI Collaboration</li>
+      </ul>
+    </div>
+    <div class="about-col reveal reveal-delay-3">
+      <h3 data-i18n="about.explore.title">Current Explorations</h3>
+      <ul>
+        <li data-i18n="about.explore.1">AI Native Systems</li>
+        <li data-i18n="about.explore.2">Knowledge Discovery Platforms</li>
+        <li data-i18n="about.explore.3">Semantic Dependency Modeling</li>
+        <li data-i18n="about.explore.4">Research Infrastructure</li>
+        <li data-i18n="about.explore.5">Agent-based Software Engineering</li>
+      </ul>
+    </div>
+  </div>
+  <p class="phrase reveal reveal-delay-4" data-i18n="about.phrase">
+    I focus on how knowledge is organized, discovered, and utilized — and how agent systems continuously collaborate within complex environments.
+  </p>
+</section>
+
+<!-- KEYWORDS -->
+<section id="keywords">
+  <div class="kw-cloud reveal" id="kwCloud">
+    <!-- generated by JS -->
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label" data-i18n="projects.label">Featured Projects</p>
+
+  <div class="project-row reveal reveal-delay-1" data-project="graphsci">
+    <span class="p-year">2025</span>
+    <div>
+      <div class="p-name">GraphSci</div>
+      <div class="p-tagline" data-i18n="projects.graphsci.tagline">Research Discovery Operating System — Knowledge graph, research pathfinding, academic relationship exploration</div>
+    </div>
+    <span class="p-domain" data-i18n="projects.graphsci.domain">Knowledge Discovery</span>
+  </div>
+
+  <div class="project-row reveal reveal-delay-2" data-project="homemind">
+    <span class="p-year">2025</span>
+    <div>
+      <div class="p-name">HomeMind</div>
+      <div class="p-tagline" data-i18n="projects.homemind.tagline">AI Native Smart Home OS — LangGraph, RAG, BSR multi-route recall, agent decision, cloud-edge coordination</div>
+    </div>
+    <span class="p-domain" data-i18n="projects.homemind.domain">AI Systems</span>
+  </div>
+
+  <div class="project-row reveal reveal-delay-3" data-project="ascp">
+    <span class="p-year">2025</span>
+    <div>
+      <div class="p-name">ASCP</div>
+      <div class="p-tagline" data-i18n="projects.ascp.tagline">Adaptive Semantic Consistency Preservation — Dynamic dependency modeling, constrained execution, adaptive evolution</div>
+    </div>
+    <span class="p-domain" data-i18n="projects.ascp.domain">Research</span>
+  </div>
+
+  <div class="project-row reveal reveal-delay-4" data-project="submitflow">
+    <span class="p-year">2025</span>
+    <div>
+      <div class="p-name">SubmitFlow</div>
+      <div class="p-tagline" data-i18n="projects.submitflow.tagline">CS/AI Student Job Aggregation &amp; Application Tracking — 500+ companies, AI recommendation engine, automated tracking</div>
+    </div>
+    <span class="p-domain" data-i18n="projects.submitflow.domain">Full-Stack Product</span>
+  </div>
+
+  <div class="project-row reveal reveal-delay-5" data-project="deepintel">
+    <span class="p-year">2024</span>
+    <div>
+      <div class="p-name">DeepIntel</div>
+      <div class="p-tagline" data-i18n="projects.deepintel.tagline">Hallucination-Resistant Research Assistant — Multi-route retrieval, query routing, evidence aggregation, knowledge verification</div>
+    </div>
+    <span class="p-domain" data-i18n="projects.deepintel.domain">AI Systems</span>
+  </div>
+
+  <div class="project-themes reveal">
+    <div class="theme-group">
+      <h4 data-i18n="themes.ai">AI Systems</h4>
+      <div class="t-item" data-project="homemind">HomeMind</div>
+      <div class="t-item" data-project="deepintel">DeepIntel</div>
+      <div class="t-item" data-project="submitflow">SubmitFlow</div>
+    </div>
+    <div class="theme-group">
+      <h4 data-i18n="themes.knowledge">Knowledge Discovery</h4>
+      <div class="t-item" data-project="graphsci">GraphSci</div>
+    </div>
+    <div class="theme-group">
+      <h4 data-i18n="themes.research">Research</h4>
+      <div class="t-item" data-project="ruleflow">RuleFlow</div>
+      <div class="t-item" data-project="tapsync">TapSync</div>
+      <div class="t-item" data-project="ascp">ASCP</div>
+    </div>
+    <div class="theme-group">
+      <h4 data-i18n="themes.explore">Exploration</h4>
+      <div class="t-item" data-project="agent-re">Agent Reverse Engineering</div>
+    </div>
+  </div>
+</section>
+
+<!-- RESEARCH ATLAS -->
+<section id="atlas">
+  <p class="section-label" data-i18n="atlas.label">Research Atlas</p>
+  <div class="atlas-container reveal" id="atlasContainer">
+    <svg viewBox="0 0 900 520" xmlns="http://www.w3.org/2000/svg" id="atlasSvg">
+      <g id="atlasEdges"></g>
+      <g id="atlasNodes"></g>
+      <text x="450" y="498" text-anchor="middle" class="atlas-label" data-i18n="atlas.footer">Knowledge Systems · Research Topics · Semantic Relationships</text>
+    </svg>
+  </div>
+</section>
+
+<!-- WRITING -->
+<section id="writing">
+  <p class="section-label" data-i18n="writing.label">Writing &amp; Notes</p>
+  <div class="essay-list reveal">
+    <a href="#" class="essay-item" data-tech="agent">
+      <div class="e-tag" data-i18n="writing.1.tag">Agent Systems</div>
+      <div class="e-title" data-i18n="writing.1.title">On Agent Architecture: From Tool Calling to Autonomous Workflows</div>
+      <div class="e-date">2025 · June</div>
+    </a>
+    <a href="#" class="essay-item" data-tech="knowledge-graph">
+      <div class="e-tag" data-i18n="writing.2.tag">Knowledge Discovery</div>
+      <div class="e-title" data-i18n="writing.2.title">Why Knowledge Graphs Matter for Research Navigation</div>
+      <div class="e-date">2025 · May</div>
+    </a>
+    <a href="#" class="essay-item" data-tech="concurrency">
+      <div class="e-tag" data-i18n="writing.3.tag">Systems</div>
+      <div class="e-title" data-i18n="writing.3.title">Concurrency Patterns in Multi-Agent Environments</div>
+      <div class="e-date">2025 · April</div>
+    </a>
+    <a href="#" class="essay-item" data-tech="semantic">
+      <div class="e-tag" data-i18n="writing.4.tag">Research</div>
+      <div class="e-title" data-i18n="writing.4.title">Semantic Dependency: The Hidden Structure in Rule Systems</div>
+      <div class="e-date">2025 · March</div>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-name">Wang<span>Bo</span> Archive</div>
+  <ul class="ft-links">
+    <li><a href="https://github.com/wblxr" target="_blank" rel="noopener">GitHub</a></li>
+    <li><a href="mailto:wangbo@example.com">Email</a></li>
+    <li><a href="#">Scholar</a></li>
+    <li><a href="#">LinkedIn</a></li>
+  </ul>
+  <p class="ft-copy">© 2025 Wang Bo · Southeast University · Building Knowledge Systems</p>
+</footer>
+
+<!-- MODAL OVERLAY (shared) -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- SCRIPTS -->
+<script>
+(function() {
+  'use strict';
+
+  /* ---- Mermaid Init ---- */
+  var mermaidDark = {
+    primaryColor: '#1A1A1A', primaryBorderColor: '#333333',
+    primaryTextColor: '#E8E8E8', lineColor: '#444444',
+    secondaryColor: '#141414', tertiaryColor: '#1A1A1A'
+  };
+  var mermaidLight = {
+    primaryColor: '#FAFAF8', primaryBorderColor: '#E0E0DC',
+    primaryTextColor: '#111111', lineColor: '#CCCCC8',
+    secondaryColor: '#F2F2EE', tertiaryColor: '#FAFAF8'
+  };
+  mermaid.initialize({
+    startOnLoad: false, theme: 'base', securityLevel: 'loose',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis', padding: 18, nodeSpacing: 42, rankSpacing: 48 },
+    themeVariables: mermaidLight
+  });
+
+  /* ============================================================
+     i18n DATA
+     ============================================================ */
+  var I18N = {
+    zh: {
+      'nav.about': '关于',
+      'nav.projects': '项目',
+      'nav.atlas': '图谱',
+      'nav.writing': '写作',
+
+      'hero.tag': '王博档案',
+      'hero.sub': '探索 AI 系统、知识发现与复杂架构。以研究驱动的构建者，关注知识如何被组织、发现与利用。',
+      'hero.portrait': '王博 · 东南大学',
+      'hero.uni': '东南大学',
+      'hero.projects': '重点项⽬',
+      'hero.scroll': '向下浏览',
+
+      'about.label': '关于',
+      'about.philosophy.title': '哲学',
+      'about.philosophy.desc': '我问系统<em>为什么</em>这样设计——而不仅仅是怎样使用它们。',
+      'about.philosophy.1': '第一性原理思考',
+      'about.philosophy.2': '系统级视角',
+      'about.philosophy.3': '持续深度探索',
+      'about.philosophy.4': '机制优于表面',
+      'about.research.title': '研究兴趣',
+      'about.research.1': '智能体架构与工作流',
+      'about.research.2': '多智能体协作',
+      'about.research.3': '知识组织与发现',
+      'about.research.4': '语义一致性与依赖',
+      'about.research.5': '复杂系统演化',
+      'about.research.6': '人机协作',
+      'about.explore.title': '当前探索',
+      'about.explore.1': 'AI 原生系统',
+      'about.explore.2': '知识发现平台',
+      'about.explore.3': '语义依赖建模',
+      'about.explore.4': '研究基础设施',
+      'about.explore.5': '智能体软件工程',
+      'about.phrase': '我关注知识如何被组织、发现与利用——以及智能体系统如何在复杂环境中持续协作。',
+
+      'projects.label': '重点项目',
+      'projects.graphsci.tagline': '研究探索操作系统——知识图谱、研究路径发现、学术关系探索',
+      'projects.graphsci.domain': '知识发现',
+      'projects.homemind.tagline': 'AI 原生智能家居操作系统——LangGraph、RAG、BSR 多路召回、智能体决策、云边协同',
+      'projects.homemind.domain': 'AI 系统',
+      'projects.ascp.tagline': '自适应语义一致性保持——动态依赖建模、约束执行、自适应演化',
+      'projects.ascp.domain': '研究',
+      'projects.submitflow.tagline': 'CS/AI 学生实习校招聚合与投递追踪平台——500+ 公司、AI 推荐引擎、自动追踪',
+      'projects.submitflow.domain': '全栈产品',
+      'projects.deepintel.tagline': '抗幻觉研究助手——多路检索、查询路由、证据聚合、知识验证',
+      'projects.deepintel.domain': 'AI 系统',
+
+      'themes.ai': 'AI 系统',
+      'themes.knowledge': '知识发现',
+      'themes.research': '研究',
+      'themes.explore': '探索',
+
+      'atlas.label': '研究图谱',
+      'atlas.footer': '知识系统 · 研究主题 · 语义关系',
+
+      'writing.label': '写作与笔记',
+      'writing.1.tag': '智能体系统',
+      'writing.1.title': '论智能体架构：从工具调用到自主工作流',
+      'writing.2.tag': '知识发现',
+      'writing.2.title': '知识图谱如何助力研究导航',
+      'writing.3.tag': '系统',
+      'writing.3.title': '多智能体环境中的并发模式',
+      'writing.4.tag': '研究',
+      'writing.4.title': '语义依赖：规则系统中隐藏的结构',
+
+      'modal.close': '关闭',
+      'modal.overview': '概述',
+      'modal.tech': '技术栈',
+      'modal.arch': '架构',
+      'modal.highlights': '亮点',
+      'modal.back': '返回首页',
+
+      'keywords': ['AI Agent','知识图谱','研究映射','RAG','LangGraph','MCP','系统','并发','语义一致性','发现','架构','设计','复杂系统','知识发现','人机协作']
+    },
+    en: {
+      'nav.about': 'About',
+      'nav.projects': 'Projects',
+      'nav.atlas': 'Atlas',
+      'nav.writing': 'Writing',
+
+      'hero.tag': 'Wang Bo Archive',
+      'hero.sub': 'Exploring AI Systems, Knowledge Discovery, and Complex Architectures. Research-driven builder focused on how knowledge is organized, discovered, and utilized.',
+      'hero.portrait': 'Wang Bo · Southeast University',
+      'hero.uni': 'Southeast University',
+      'hero.projects': 'Featured Projects',
+      'hero.scroll': 'Scroll',
+
+      'about.label': 'About',
+      'about.philosophy.title': 'Philosophy',
+      'about.philosophy.desc': 'I ask <em>why</em> systems are designed the way they are — not just how to use them.',
+      'about.philosophy.1': 'First Principles thinking',
+      'about.philosophy.2': 'System-level perspective',
+      'about.philosophy.3': 'Continuous deep exploration',
+      'about.philosophy.4': 'Mechanism over surface',
+      'about.research.title': 'Research Interests',
+      'about.research.1': 'Agent Architecture & Workflow',
+      'about.research.2': 'Multi-Agent Collaboration',
+      'about.research.3': 'Knowledge Organization & Discovery',
+      'about.research.4': 'Semantic Consistency & Dependency',
+      'about.research.5': 'Complex Systems Evolution',
+      'about.research.6': 'Human–AI Collaboration',
+      'about.explore.title': 'Current Explorations',
+      'about.explore.1': 'AI Native Systems',
+      'about.explore.2': 'Knowledge Discovery Platforms',
+      'about.explore.3': 'Semantic Dependency Modeling',
+      'about.explore.4': 'Research Infrastructure',
+      'about.explore.5': 'Agent-based Software Engineering',
+      'about.phrase': 'I focus on how knowledge is organized, discovered, and utilized — and how agent systems continuously collaborate within complex environments.',
+
+      'projects.label': 'Featured Projects',
+      'projects.graphsci.tagline': 'Research Discovery Operating System — Knowledge graph, research pathfinding, academic relationship exploration',
+      'projects.graphsci.domain': 'Knowledge Discovery',
+      'projects.homemind.tagline': 'AI Native Smart Home OS — LangGraph, RAG, BSR multi-route recall, agent decision, cloud-edge coordination',
+      'projects.homemind.domain': 'AI Systems',
+      'projects.ascp.tagline': 'Adaptive Semantic Consistency Preservation — Dynamic dependency modeling, constrained execution, adaptive evolution',
+      'projects.ascp.domain': 'Research',
+      'projects.submitflow.tagline': 'CS/AI Student Job Aggregation & Application Tracking — 500+ companies, AI recommendation engine, automated tracking',
+      'projects.submitflow.domain': 'Full-Stack Product',
+      'projects.deepintel.tagline': 'Hallucination-Resistant Research Assistant — Multi-route retrieval, query routing, evidence aggregation, knowledge verification',
+      'projects.deepintel.domain': 'AI Systems',
+
+      'themes.ai': 'AI Systems',
+      'themes.knowledge': 'Knowledge Discovery',
+      'themes.research': 'Research',
+      'themes.explore': 'Exploration',
+
+      'atlas.label': 'Research Atlas',
+      'atlas.footer': 'Knowledge Systems · Research Topics · Semantic Relationships',
+
+      'writing.label': 'Writing & Notes',
+      'writing.1.tag': 'Agent Systems',
+      'writing.1.title': 'On Agent Architecture: From Tool Calling to Autonomous Workflows',
+      'writing.2.tag': 'Knowledge Discovery',
+      'writing.2.title': 'Why Knowledge Graphs Matter for Research Navigation',
+      'writing.3.tag': 'Systems',
+      'writing.3.title': 'Concurrency Patterns in Multi-Agent Environments',
+      'writing.4.tag': 'Research',
+      'writing.4.title': 'Semantic Dependency: The Hidden Structure in Rule Systems',
+
+      'modal.close': 'Close',
+      'modal.overview': 'Overview',
+      'modal.tech': 'Tech Stack',
+      'modal.arch': 'Architecture',
+      'modal.highlights': 'Highlights',
+      'modal.back': 'Back to Home',
+
+      'keywords': ['AI Agent','Knowledge Graph','Research Mapping','RAG','LangGraph','MCP','Systems','Concurrency','Semantic Consistency','Discovery','Architecture','Design','Complex Systems','Knowledge Discovery','Human-AI Collaboration']
+    }
+  };
+
+  var currentLang = 'en';
+  var currentTheme = 'light';
+
+  function t(key) {
+    return (I18N[currentLang] && I18N[currentLang][key]) || (I18N['en'][key]) || key;
+  }
+
+  function applyI18n() {
+    var els = document.querySelectorAll('[data-i18n]');
+    els.forEach(function(el) {
+      var key = el.getAttribute('data-i18n');
+      if (key === 'keywords') return; // handled separately
+      // For text that contains HTML (like <em>), use innerHTML
+      var val = t(key);
+      if (val.indexOf('<') >= 0) {
+        el.innerHTML = val;
+      } else {
+        el.textContent = val;
+      }
+    });
+    // Rebuild keyword cloud
+    buildKeywordCloud();
+    // Update lang button text
+    document.getElementById('btnLang').textContent = currentLang === 'zh' ? 'EN' : '中文';
+    document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+  }
+
+  /* ============================================================
+     THEME
+     ============================================================ */
+  function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('wb-theme', theme);
+    document.getElementById('btnTheme').textContent = theme === 'dark' ? '◑' : '◐';
+    // Update SVG colors
+    updateAtlasColors();
+  }
+
+  function updateMermaidTheme() {
+    var isDark = currentTheme === 'dark';
+    var vars = isDark ? mermaidDark : mermaidLight;
+    try {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'base',
+        securityLevel: 'loose',
+        flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis', padding: 16, nodeSpacing: 40, rankSpacing: 45 },
+        themeVariables: vars
+      });
+    } catch(e) {}
+  }
+  function toggleTheme() {
+    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+    updateMermaidTheme();
+  }
+
+  /* ============================================================
+     LANGUAGE
+     ============================================================ */
+  function setLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('wb-lang', lang);
+    applyI18n();
+  }
+
+  function toggleLang() {
+    setLang(currentLang === 'zh' ? 'en' : 'zh');
+  }
+
+  /* ============================================================
+     KEYWORD CLOUD
+     ============================================================ */
+  function buildKeywordCloud() {
+    var cloud = document.getElementById('kwCloud');
+    if (!cloud) return;
+    var keywords = I18N[currentLang].keywords;
+    cloud.innerHTML = '';
+    keywords.forEach(function(kw) {
+      var span = document.createElement('span');
+      span.className = 'kw';
+      span.textContent = kw;
+      span.setAttribute('data-tech', kw.toLowerCase().replace(/\s+/g, '-'));
+      span.addEventListener('click', function() { openTechDetail(kw); });
+      cloud.appendChild(span);
+    });
+  }
+
+  /* ============================================================
+     MODAL SYSTEM
+     ============================================================ */
+  var overlay = document.getElementById('modalOverlay');
+  var modalContent = document.getElementById('modalContent');
+  var scrollY = 0;
+
+  function openModal(html) {
+    scrollY = window.scrollY;
+    document.body.classList.add('modal-open');
+    document.body.style.top = '-' + scrollY + 'px';
+    modalContent.innerHTML = html;
+    // Render Mermaid diagrams inside modal
+    setTimeout(function() {
+      try {
+        var svgId = 0;
+        mermaid.run({
+          querySelector: '#modalContent .mermaid'
+        }).then(function() {
+          // Adjust SVG for dark/light
+          updateMermaidTheme();
+        }).catch(function(e) { console.warn('Mermaid render:', e); });
+      } catch(e) {}
+    }, 80);
+    overlay.classList.remove('closing');
+    overlay.classList.add('open');
+
+    // Close button
+    var closeBtn = modalContent.querySelector('.modal-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeModal);
+    }
+
+    // Attach tech-tag click handlers
+    var tags = modalContent.querySelectorAll('.tech-tags span');
+    tags.forEach(function(tag) {
+      tag.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var tech = tag.getAttribute('data-tech');
+        if (tech) openTechDetail(tech);
+      });
+    });
+  }
+
+  function closeModal() {
+    overlay.classList.add('closing');
+    overlay.classList.remove('open');
+    setTimeout(function() {
+      document.body.classList.remove('modal-open');
+      document.body.style.top = '';
+      window.scrollTo(0, scrollY);
+    }, 350);
+  }
+
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+  });
+
+  /* ============================================================
+     TECH DETAIL MODAL
+     ============================================================ */
+  var TECH_DETAILS = {
+    'ai-agent': {
+      en: {
+        title: 'AI Agent',
+        subtitle: 'Autonomous intelligent agents — reasoning, tool use, and multi-step task execution',
+        overview: 'AI Agents are autonomous systems that perceive their environment, reason about goals, select and invoke tools, and execute multi-step plans. They represent a paradigm shift from static models to dynamic, goal-driven systems.',
+        tech: ['LangGraph','MCP','Tool Calling','Memory','Planning','Reflection'],
+        arch: 'flowchart LR\n    P[Perception] --> Plan[Planning] --> Tool[Tool Select] --> Exec[Execution] --> Obs[Observation] --> Ref[Reflection] --> Plan',
+        highlights: 'Stateful agent workflows with checkpoint/resume; Tool-augmented reasoning with MCP protocol; Multi-agent orchestration patterns; Long-term memory and context management'
+      },
+      zh: {
+        title: 'AI Agent',
+        subtitle: '自主智能体——推理、工具使用与多步任务执行',
+        overview: 'AI Agent 是能够感知环境、推理目标、选择并调用工具、执行多步计划的自主系统。它们代表了从静态模型到动态目标驱动系统的范式转变。',
+        tech: ['LangGraph','MCP','Tool Calling','Memory','Planning','Reflection'],
+        arch: 'flowchart LR\n    P[感知] --> Plan[规划] --> Tool[工具选择] --> Exec[执行] --> Obs[观察] --> Ref[反思] --> Plan',
+        highlights: '带检查点/恢复的有状态智能体工作流；基于 MCP 协议的工具增强推理；多智能体编排模式；长期记忆与上下文管理'
+      }
+    },
+    'knowledge-graph': {
+      en: {
+        title: 'Knowledge Graph',
+        subtitle: 'Structured semantic networks connecting entities, concepts, and their relationships',
+        overview: 'Knowledge Graphs represent information as a network of entities and their interrelations, enabling semantic querying, reasoning, and discovery. They form the backbone of modern knowledge organization systems.',
+        tech: ['Graph Databases','Semantic Web','Ontology','Entity Resolution','Graph Neural Networks','SPARQL'],
+        arch: 'flowchart LR\n    EE[Entity Extraction] --> RE[Relation Extraction] --> ER[Entity Resolution] --> GC[Graph Construction] --> SE[Semantic Enrichment] --> QI[Query & Inference]',
+        highlights: 'Semantic relationship modeling beyond keyword matching; Multi-hop reasoning across knowledge domains; Dynamic graph evolution with new information; Integration with LLM for knowledge-grounded generation'
+      },
+      zh: {
+        title: '知识图谱',
+        subtitle: '连接实体、概念及其关系的结构化语义网络',
+        overview: '知识图谱将信息表示为实体及其相互关系的网络，支持语义查询、推理和发现。它们构成了现代知识组织系统的骨干。',
+        tech: ['图数据库','语义网','本体论','实体消歧','图神经网络','SPARQL'],
+        arch: 'flowchart LR\n    EE[实体抽取] --> RE[关系抽取] --> ER[实体消歧] --> GC[图谱构建] --> SE[语义增强] --> QI[查询与推理]',
+        highlights: '超越关键词匹配的语义关系建模；跨知识域的多跳推理；新信息驱动的动态图谱演化；与 LLM 集成实现知识增强生成'
+      }
+    },
+    'rag': {
+      en: {
+        title: 'RAG (Retrieval-Augmented Generation)',
+        subtitle: 'Grounding LLM outputs in retrieved evidence to reduce hallucination',
+        overview: 'RAG combines information retrieval with language generation. Instead of relying solely on model parameters, it retrieves relevant documents from a knowledge base and conditions generation on that evidence, dramatically reducing hallucination.',
+        tech: ['Vector DB','Embedding','BM25','Reranking','Hybrid Search','Chunking'],
+        arch: 'flowchart LR\n    Q[Query] --> QR[Query Reformulation] --> MRR[Multi-Route Retrieval] --> F[Fusion] --> R[Reranking] --> CA[Context Assembly] --> GG[Grounded Generation]',
+        highlights: 'BSR (Broad Semantic Recall) multi-path architecture; Hybrid dense+sparse retrieval; Evidence attribution and citation; Adaptive chunking strategies'
+      },
+      zh: {
+        title: 'RAG（检索增强生成）',
+        subtitle: '将 LLM 输出锚定在检索到的证据上，减少幻觉',
+        overview: 'RAG 将信息检索与语言生成相结合。它不单纯依赖模型参数，而是从知识库中检索相关文档，并以这些证据为条件进行生成，大幅减少幻觉。',
+        tech: ['向量数据库','Embedding','BM25','重排序','混合搜索','分块'],
+        arch: 'flowchart LR\n    Q[查询] --> QR[查询改写] --> MRR[多路召回] --> F[融合] --> R[重排序] --> CA[上下文组装] --> GG[证据增强生成]',
+        highlights: 'BSR（广度语义召回）多路径架构；混合稠密+稀疏检索；证据溯源与引用；自适应分块策略'
+      }
+    },
+    'langgraph': {
+      en: {
+        title: 'LangGraph',
+        subtitle: 'Stateful, graph-based agent orchestration framework',
+        overview: 'LangGraph models agent workflows as directed graphs where nodes represent computation steps and edges represent conditional transitions. It provides built-in support for state management, checkpointing, and human-in-the-loop patterns.',
+        tech: ['StateGraph','Checkpointing','Conditional Edges','Subgraphs','Streaming','Human-in-the-Loop'],
+        arch: 'flowchart TD\n    SD[State Definition] --> NI[Node Implementation] --> EL[Edge Logic] --> GC[Graph Compilation] --> ES[Execution + Streaming] --> CR[Checkpoint / Resume]',
+        highlights: 'Cyclical agent workflows beyond DAG; Time-travel debugging with checkpoint replay; Nested subgraph composition; SSE streaming for real-time progress'
+      },
+      zh: {
+        title: 'LangGraph',
+        subtitle: '有状态的图式智能体编排框架',
+        overview: 'LangGraph 将智能体工作流建模为有向图，节点代表计算步骤，边代表条件转移。它提供内置的状态管理、检查点和人机协同模式支持。',
+        tech: ['StateGraph','Checkpointing','条件边','子图','流式输出','人机协同'],
+        arch: 'flowchart TD\n    SD[状态定义] --> NI[节点实现] --> EL[边逻辑] --> GC[图编译] --> ES[流式执行] --> CR[检查点 / 恢复]',
+        highlights: '超越 DAG 的环形智能体工作流；检查点回放的时间旅行调试；嵌套子图组合；SSE 流式实时进度'
+      }
+    },
+    'mcp': {
+      en: {
+        title: 'MCP (Model Context Protocol)',
+        subtitle: 'Open protocol for connecting AI models to external tools and data sources',
+        overview: 'MCP standardizes how AI models discover and interact with external tools, data sources, and services. It defines a client-server architecture where models act as clients that connect to MCP servers exposing resources, tools, and prompt templates.',
+        tech: ['JSON-RPC','Tool Definition','Resource Exposure','Stdio/HTTP Transport','Server Composition'],
+        arch: 'flowchart LR\n    C[MCP Client] --> D[Discovery] --> L[Tool/Rsrc Listing] --> S[Selection] --> I[Invocation] --> R[Result] --> CI[Context Integration]',
+        highlights: 'Universal tool interface across model providers; Dynamic tool discovery without hardcoding; Server composition for complex tool chains; Standardized error handling and logging'
+      },
+      zh: {
+        title: 'MCP（模型上下文协议）',
+        subtitle: '连接 AI 模型与外部工具和数据源的开放协议',
+        overview: 'MCP 标准化了 AI 模型发现和与外部工具、数据源、服务交互的方式。它定义了客户端-服务器架构，模型作为客户端连接到暴露资源、工具和提示模板的 MCP 服务器。',
+        tech: ['JSON-RPC','工具定义','资源暴露','Stdio/HTTP 传输','服务组合'],
+        arch: 'flowchart LR\n    C[MCP Client] --> D[发现] --> L[工具/资源列表] --> S[选择] --> I[调用] --> R[结果] --> CI[上下文集成]',
+        highlights: '跨模型提供商的通用工具接口；无需硬编码的动态工具发现；复杂工具链的服务组合；标准化错误处理和日志'
+      }
+    },
+    'concurrency': {
+      en: {
+        title: 'Concurrency',
+        subtitle: 'Managing simultaneous execution flows in complex systems',
+        overview: 'Concurrency is the art of managing multiple simultaneous execution flows — threads, processes, async tasks, and distributed workers. In the context of agent systems, it governs how multiple agents coordinate without race conditions or deadlocks.',
+        tech: ['Async/Await','Threading','Multiprocessing','Lock-free Structures','Scheduling','Message Passing'],
+        arch: 'flowchart TD\n    TD[Task Decomposition] --> S[Scheduling] --> E[Execution] --> SY[Synchronization] --> RA[Result Aggregation]',
+        highlights: 'Agent-level concurrency patterns; Lock-free data structures for high-throughput; Priority-based agent scheduling; Distributed agent coordination'
+      },
+      zh: {
+        title: '并发',
+        subtitle: '管理复杂系统中同时执行的多个流程',
+        overview: '并发是管理多个同时执行流程——线程、进程、异步任务和分布式工作器的艺术。在智能体系统语境中，它决定了多个智能体如何协调而不出现竞态条件或死锁。',
+        tech: ['Async/Await','多线程','多进程','无锁结构','调度','消息传递'],
+        arch: 'flowchart TD\n    TD[任务分解] --> S[调度] --> E[执行] --> SY[同步] --> RA[结果聚合]',
+        highlights: '智能体级并发模式；高吞吐的无锁数据结构；基于优先级的智能体调度；分布式智能体协调'
+      }
+    },
+    'semantic': {
+      en: {
+        title: 'Semantic Consistency',
+        subtitle: 'Ensuring logical coherence across interdependent rule systems',
+        overview: 'Semantic Consistency addresses the challenge of maintaining logical coherence when rules, constraints, and dependencies evolve over time. In IoT, smart home, and distributed systems, hidden dependencies between rules can cause cascading failures.',
+        tech: ['Dependency Graph','Constraint Solving','Reactive Systems','Formal Verification','Temporal Logic'],
+        arch: 'flowchart TD\n    RR[Rule Registration] --> DD[Dependency Discovery] --> CD[Conflict Detection] --> CE[Consistency Enforcement] --> AE[Adaptive Evolution]',
+        highlights: 'Automatic hidden dependency discovery; Real-time constraint propagation; Adaptive consistency under rule changes; Cascading failure prevention'
+      },
+      zh: {
+        title: '语义一致性',
+        subtitle: '确保相互依赖的规则系统保持逻辑一致',
+        overview: '语义一致性解决规则、约束和依赖随时间演化时如何保持逻辑一致性的挑战。在物联网、智能家居和分布式系统中，规则之间的隐藏依赖可能导致级联故障。',
+        tech: ['依赖图','约束求解','响应式系统','形式化验证','时序逻辑'],
+        arch: 'flowchart TD\n    RR[规则注册] --> DD[依赖发现] --> CD[冲突检测] --> CE[一致性执行] --> AE[自适应演化]',
+        highlights: '自动隐藏依赖发现；实时约束传播；规则变更下的自适应一致性；级联故障预防'
+      }
+    },
+    'systems': {
+      en: {
+        title: 'Systems Design',
+        subtitle: 'Architecting complex software systems from first principles',
+        overview: 'Systems Design is the discipline of structuring complex software to meet functional and non-functional requirements. It spans operating systems, distributed systems, databases, and the architectural patterns that make them reliable, scalable, and maintainable.',
+        tech: ['OS Design','Distributed Systems','Scheduling','Memory Management','Networking','Fault Tolerance'],
+        highlights: 'First-principles approach to system architecture; Deep understanding of OS internals; Distributed consistency and consensus; Performance profiling and optimization'
+      },
+      zh: {
+        title: '系统设计',
+        subtitle: '从第一性原理构建复杂软件系统',
+        overview: '系统设计是构建复杂软件以满足功能和非功能需求的学科。它涵盖操作系统、分布式系统、数据库，以及使它们可靠、可扩展和可维护的架构模式。',
+        tech: ['操作系统设计','分布式系统','调度','内存管理','网络','容错'],
+        highlights: '第一性原理系统架构方法；深入理解操作系统内部机制；分布式一致性与共识；性能分析与优化'
+      }
+    }
+  };
+
+  function openTechDetail(techName) {
+    var key = techName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    // Try to match
+    var detail = TECH_DETAILS[key];
+    if (!detail) {
+      // fuzzy match
+      var keys = Object.keys(TECH_DETAILS);
+      for (var i = 0; i < keys.length; i++) {
+        if (keys[i].indexOf(key) >= 0 || key.indexOf(keys[i]) >= 0) {
+          detail = TECH_DETAILS[keys[i]];
+          break;
+        }
+      }
+    }
+    if (!detail) return;
+
+    var d = detail[currentLang] || detail['en'];
+    var techTags = d.tech.map(function(t) {
+      return '<span data-tech="' + t.toLowerCase().replace(/\s+/g, '-') + '">' + t + '</span>';
+    }).join('');
+
+    var html = '<button class="modal-close">&times;</button>';
+    html += '<div class="modal-tag">' + t('nav.atlas') + ' · Tech</div>';
+    html += '<h2 class="modal-title">' + d.title + '</h2>';
+    html += '<p class="modal-subtitle">' + d.subtitle + '</p>';
+    html += '<div class="modal-section"><h4>' + t('modal.overview') + '</h4><p>' + d.overview + '</p></div>';
+    html += '<div class="modal-section"><h4>' + t('modal.tech') + '</h4><div class="tech-tags">' + techTags + '</div></div>';
+    if (d.arch) {
+      html += '<div class="modal-section"><h4>' + t('modal.arch') + '</h4><div class="mermaid-container"><div class="mermaid">' + d.arch + '</div></div></div>';
+    }
+    html += '<div class="modal-section"><h4>' + t('modal.highlights') + '</h4><p>' + d.highlights + '</p></div>';
+
+    openModal(html);
+  }
+
+  /* ============================================================
+     PROJECT DETAIL MODAL
+     ============================================================ */
+  var PROJECT_DETAILS = {
+    graphsci: {
+      en: {
+        title: 'GraphSci',
+        subtitle: 'Research Discovery Operating System',
+        overview: 'GraphSci is a knowledge discovery platform that transforms how researchers navigate academic literature. Unlike traditional paper search tools, GraphSci uses knowledge graphs, infinite canvas, and semantic relationship modeling to enable true research pathfinding.',
+        tech: ['Next.js','React','TypeScript','NestJS','PostgreSQL','LangGraph','Knowledge Graph','OpenAPI','SSE','Temporal'],
+        arch: 'flowchart TD\n    Paper[Papers] --> KG[Knowledge Graph]\n    Authors[Authors] --> KG\n    Methods[Methods] --> KG\n    KG --> Canvas[Infinite Canvas]\n    KG --> Explore[Semantic Exploration]\n    Canvas --> Path[Research Pathfinding]\n    Explore --> Path\n    Path --> Disc[Discovery]',
+        highlights: 'Infinite canvas for visual research exploration; Multi-entity knowledge graph (Paper, Author, Method, Dataset, Institution, Concept); Research pathfinding beyond keyword search; Editorial-grade UI for academic workflows; 136+ API contracts with OpenAPI; Short-transaction + outbox/inbox + Temporal saga for data consistency'
+      },
+      zh: {
+        title: 'GraphSci',
+        subtitle: '研究探索操作系统',
+        overview: 'GraphSci 是一个知识发现平台，彻底改变了研究者导航学术文献的方式。不同于传统的论文搜索工具，GraphSci 使用知识图谱、无限画布和语义关系建模来实现真正的研究路径发现。',
+        tech: ['Next.js','React','TypeScript','NestJS','PostgreSQL','LangGraph','知识图谱','OpenAPI','SSE','Temporal'],
+        arch: 'flowchart TD\n    Paper[论文] --> KG[知识图谱]\n    Authors[作者] --> KG\n    Methods[方法] --> KG\n    KG --> Canvas[无限画布]\n    KG --> Explore[语义探索]\n    Canvas --> Path[研究路径发现]\n    Explore --> Path\n    Path --> Disc[发现]',
+        highlights: '无限画布可视化研究探索；多实体知识图谱（论文、作者、方法、数据集、机构、概念）；超越关键词搜索的研究路径发现；编辑级 UI 学术工作流程；136+ OpenAPI 契约接口；短事务+outbox/inbox+Temporal saga 数据一致性方案'
+      }
+    },
+    homemind: {
+      en: {
+        title: 'HomeMind',
+        subtitle: 'AI Native Smart Home Operating System',
+        overview: 'HomeMind is an edge-first, optionally cloud-collaborative smart home agent. It understands fuzzy natural language, retains context and user preferences, invokes the cloud only when necessary while keeping execution authority on the edge, and progressively introduces automation rules.',
+        tech: ['LangGraph','RAG','Vector DB','MCP','Tool Calling','Policy Engine','Vosk','DQN','Python'],
+        arch: 'flowchart TD\n    Input[Voice / Text Input] --> Norm[Language Normalizer]\n    Norm --> BSR[BSR Recall]\n    BSR --> LSR[LSR Rerank]\n    LSR --> Router[Inference Router]\n    Router --> Privacy[Privacy Redactor]\n    Privacy --> LLM[LLM Decider]\n    LLM --> Val[Command Validator]\n    Val --> Dev[Device Controller]\n    Dev --> Store[Session / Preference Store]',
+        highlights: 'BSR + LSR + LLM natural language pipeline; Local RAG memory & preference closed loop; DQN active recommendation engine; Vosk local voice recognition with dialect normalization; Edge-cloud hybrid inference routing; TAP rule engine with automatic scheduling; Privacy redaction for minimal cloud upload'
+      },
+      zh: {
+        title: 'HomeMind',
+        subtitle: 'AI 原生智能家居操作系统',
+        overview: 'HomeMind 是一个端侧优先、可选端云协同的智能家居智能体。它能理解模糊的自然语言表达，保留上下文和用户偏好，在需要时调用云端但始终由端侧掌握执行权，并逐步引入自动化规则。',
+        tech: ['LangGraph','RAG','向量数据库','MCP','Tool Calling','策略引擎','Vosk','DQN','Python'],
+        arch: 'flowchart TD\n    Input[语音 / 文本输入] --> Norm[语言归一化]\n    Norm --> BSR[BSR 候选召回]\n    BSR --> LSR[LSR 精排]\n    LSR --> Router[推理路由]\n    Router --> Privacy[隐私脱敏]\n    Privacy --> LLM[LLM 决策]\n    LLM --> Val[指令校验]\n    Val --> Dev[设备控制]\n    Dev --> Store[会话 / 偏好存储]',
+        highlights: 'BSR+LSR+LLM 自然语言主链路；本地 RAG 记忆与偏好闭环；DQN 主动推荐引擎；Vosk 本地语音识别+中英/方言归一化；端云混合推理路由；TAP 规则引擎自动调度；最小必要上下文隐私脱敏上传'
+      }
+    },
+    ascp: {
+      en: {
+        title: 'ASCP',
+        subtitle: 'Adaptive Semantic Consistency Preservation',
+        overview: 'ASCP is a research framework addressing a fundamental gap: existing work detects conflicts, but ASCP models how dynamic semantic dependencies continuously maintain consistency. Built upon RuleFlow (dependency discovery) and TapSync (consistency enforcement), ASCP adds adaptive evolution — the ability to self-adjust when the rule environment changes.',
+        tech: ['Dependency Modeling','Constraint Solving','Reactive Systems','Temporal Logic','Graph Theory','Formal Methods'],
+        arch: 'flowchart TD\n    RF[RuleFlow: Dependency Discovery] --> TS[TapSync: Consistency Enforcement]\n    TS --> ASCP[ASCP: Adaptive Evolution]\n    subgraph Layers[Three-Layer Architecture]\n        direction LR\n        DM[Dependency Modeling] --> CE[Constrained Execution] --> AE[Adaptive Evolution]\n    end',
+        highlights: 'Three-layer architecture: discovery, enforcement, adaptation; Dynamic semantic dependency tracking; Continuous consistency under rule changes; Strong paper publication potential; Bridges IoT, smart home, and distributed systems theory'
+      },
+      zh: {
+        title: 'ASCP',
+        subtitle: '自适应语义一致性保持',
+        overview: 'ASCP 是一个研究框架，解决了一个根本性的缺口：现有研究检测冲突，而 ASCP 建模动态语义依赖如何持续保持一致性。ASCP 构建于 RuleFlow（依赖发现）和 TapSync（一致性执行）之上，增加了自适应演化——规则环境变化时的自我调整能力。',
+        tech: ['依赖建模','约束求解','响应式系统','时序逻辑','图论','形式化方法'],
+        arch: 'flowchart TD\n    RF[RuleFlow: 依赖发现] --> TS[TapSync: 一致性执行]\n    TS --> ASCP[ASCP: 自适应演化]\n    subgraph Layers[三层架构]\n        direction LR\n        DM[依赖建模] --> CE[约束执行] --> AE[自适应演化]\n    end',
+        highlights: '三层架构：发现、执行、适应；动态语义依赖追踪；规则变更下的持续一致性；强论⽂发表潜⼒；桥接物联网、智能家居和分布式系统理论'
+      }
+    },
+    submitflow: {
+      en: {
+        title: 'SubmitFlow',
+        subtitle: 'CS/AI Student Internship & Job Application Aggregation Platform',
+        overview: 'SubmitFlow is a full-stack platform designed for CS/AI students aggregating internship and campus recruitment opportunities. It features 500+ companies, 1000+ job listings, a six-dimensional AI recommendation engine, city-aware matching, and automated application tracking — all powered by a Next.js + PostgreSQL + AI orchestration stack.',
+        tech: ['Next.js 14','TypeScript','Tailwind CSS','React Query','PostgreSQL 16','Playwright','AI Orchestration','Docker','JWT Auth'],
+        arch: 'flowchart LR\n    Pool[Company Pool 500+] --> Score[AI Scoring 6-dim] --> City[City Matching] --> Rec[Recommendations] --> Track[Application Tracking] --> Pipe[Status Pipeline]',
+        highlights: '500+ company pool with 1000+ active positions; Six-dimensional AI recommendation (prestige, match, city, urgency, conversion rate, freshness); City-aware matching with tiered city grouping; JWT-based multi-user authentication; React Query optimized frontend; Docker Compose one-command deployment; Unified AI orchestration layer supporting 8 providers'
+      },
+      zh: {
+        title: 'SubmitFlow',
+        subtitle: 'CS/AI 学生实习校招信息聚合与投递追踪平台',
+        overview: 'SubmitFlow 是一个面向 CS/AI 学生的全栈平台，聚合实习和校园招聘机会。拥有 500+ 家公司、1000+ 岗位、六维 AI 推荐引擎、城市智能匹配和自动投递追踪——全部基于 Next.js + PostgreSQL + AI 编排技术栈。',
+        tech: ['Next.js 14','TypeScript','Tailwind CSS','React Query','PostgreSQL 16','Playwright','AI 编排','Docker','JWT 认证'],
+        arch: 'flowchart LR\n    Pool[公司池 500+] --> Score[AI 六维评分] --> City[城市匹配] --> Rec[智能推荐] --> Track[投递追踪] --> Pipe[状态流水线]',
+        highlights: '500+ 公司池、1000+ 有效岗位；六维 AI 推荐（知名度+匹配度+城市+紧迫性+转正率+新鲜度）；城市精细化分级匹配；JWT 多用户认证；React Query 前端性能优化；Docker Compose 一键部署；统一 AI 编排层支持 8 家服务商'
+      }
+    },
+    deepintel: {
+      en: {
+        title: 'DeepIntel',
+        subtitle: 'Agentic Deep Research System — Hallucination-Resistant Research Assistant',
+        overview: 'DeepIntel (ADRS) is a LangGraph-based autonomous research agent platform. Its core pipeline: User Input → Planner generates DAG → Parallel Search/Browse/RAG collection → Analyst synthesis → Reflection verification → Report output. Designed to demonstrate Agent Engineering capabilities with executable DAGs, multi-agent collaboration, SSE streaming, and evidence-driven generation.',
+        tech: ['LangGraph','FastAPI','React','TypeScript','PostgreSQL','pgvector','BM25','Playwright','Redis','SSE'],
+        arch: 'flowchart TD\n    Input[User Input] --> Planner[Planner]\n    Planner --> DAG[DAG Generation]\n    DAG --> Search[Search]\n    DAG --> Browse[Browse]\n    DAG --> Rag[RAG]\n    Search --> Analyst[Analyst Synthesis]\n    Browse --> Analyst\n    Rag --> Analyst\n    Analyst --> Refl[Reflection Verify]\n    Refl --> Report[Report Output]',
+        highlights: 'Automatic research DAG generation; Tool-driven multi-agent collaboration; Long-lifetime sessions with checkpointing; SSE real-time event streaming; Evidence-driven report generation; Reflection verification & replanning; Report length control (short/medium/long); Internal knowledge base CRUD with file upload'
+      },
+      zh: {
+        title: 'DeepIntel',
+        subtitle: '智能深度研究系统——抗幻觉研究助手',
+        overview: 'DeepIntel（ADRS）是一个基于 LangGraph 的自主研究智能体平台。其核心链路：用户输入 → Planner 生成 DAG → 并行搜索/浏览/RAG 采集 → Analyst 综合 → Reflection 校验 → Report 输出。旨在展示智能体工程能力，具有可执行 DAG、多智能体协作、SSE 流式输出和证据驱动生成。',
+        tech: ['LangGraph','FastAPI','React','TypeScript','PostgreSQL','pgvector','BM25','Playwright','Redis','SSE'],
+        arch: 'flowchart TD\n    Input[用户输入] --> Planner[Planner]\n    Planner --> DAG[DAG 生成]\n    DAG --> Search[搜索]\n    DAG --> Browse[浏览]\n    DAG --> Rag[RAG]\n    Search --> Analyst[Analyst 分析]\n    Browse --> Analyst\n    Rag --> Analyst\n    Analyst --> Refl[Reflection 反思]\n    Refl --> Report[Report 输出]',
+        highlights: '自动生成研究 DAG；工具驱动多智能体协作；长生命周期会话与检查点；SSE 实时事件流；证据驱动报告生成；反思校验与重规划；报告长度分档（短文/中篇/长篇）；内部知识库 CRUD 与文件上传'
+      }
+    },
+    ruleflow: {
+      en: {
+        title: 'RuleFlow',
+        subtitle: 'Semantic Dependency Discovery for TAP Systems',
+        overview: 'RuleFlow addresses a hidden danger in Trigger-Action Programming (TAP) systems: rules can have implicit dependencies unknown to the developer. Rule A affecting Rule B without the developer realizing it can cause cascading failures. RuleFlow automatically discovers these hidden semantic dependencies.',
+        tech: ['Dependency Graph','Static Analysis','Rule Engine','Semantic Modeling','Graph Algorithms'],
+        arch: 'flowchart LR\n    RS[Rule Set] --> DA[Dependency Analysis] --> HDD[Hidden Dependency Discovery] --> DG[Dependency Graph] --> CW[Conflict Warning]',
+        highlights: 'Automatic hidden dependency discovery in rule systems; Static analysis of TAP rule interactions; Dependency graph visualization; Integration with TapSync for end-to-end consistency; Published at CSCWD conference'
+      },
+      zh: {
+        title: 'RuleFlow',
+        subtitle: 'TAP 系统语义依赖发现',
+        overview: 'RuleFlow 解决了触发-动作编程（TAP）系统中的一个隐藏危险：规则之间可能存在开发者未知的隐式依赖。规则 A 影响规则 B 而开发者未意识到，可能导致级联故障。RuleFlow 自动发现这些隐藏的语义依赖。',
+        tech: ['依赖图','静态分析','规则引擎','语义建模','图算法'],
+        arch: 'flowchart LR\n    RS[规则集] --> DA[依赖分析] --> HDD[隐藏依赖发现] --> DG[依赖图] --> CW[冲突预警]',
+        highlights: '规则系统中的自动隐藏依赖发现；TAP 规则交互静态分析；依赖图可视化；与 TapSync 集成实现端到端一致性；发表于 CSCWD 会议'
+      }
+    },
+    tapsync: {
+      en: {
+        title: 'TapSync',
+        subtitle: 'Semantic Consistency Enforcement for TAP Systems',
+        overview: 'TapSync is the enforcement counterpart to RuleFlow. While RuleFlow discovers hidden dependencies, TapSync ensures that rule execution respects those dependencies — preventing conflicts, ensuring correct ordering, and maintaining semantic consistency during concurrent rule execution.',
+        tech: ['Constraint Solving','Reactive Programming','Execution Ordering','Conflict Resolution','IoT Middleware'],
+        arch: 'flowchart LR\n    DG[Dependency Graph from RuleFlow] --> EP[Execution Planning] --> CE[Constraint Enforcement] --> OE[Ordered Execution] --> CV[Consistency Verification]',
+        highlights: 'Real-time constraint enforcement during rule execution; Correct rule ordering based on discovered dependencies; Conflict prevention in concurrent scenarios; Tight integration with RuleFlow for end-to-end semantic consistency'
+      },
+      zh: {
+        title: 'TapSync',
+        subtitle: 'TAP 系统语义一致性执行',
+        overview: 'TapSync 是 RuleFlow 的执行端对应。RuleFlow 发现隐藏依赖，TapSync 确保规则执行尊重这些依赖——防止冲突、确保正确顺序、在并发规则执行期间保持语义一致性。',
+        tech: ['约束求解','响应式编程','执行排序','冲突解决','物联网中间件'],
+        arch: 'flowchart LR\n    DG[依赖图 来自 RuleFlow] --> EP[执行规划] --> CE[约束执行] --> OE[有序执行] --> CV[一致性验证]',
+        highlights: '规则执行期间的实时约束执行；基于发现依赖的正确规则排序；并发场景下的冲突预防；与 RuleFlow 紧密集成实现端到端语义一致性'
+      }
+    },
+    'agent-re': {
+      en: {
+        title: 'Agent Reverse Engineering',
+        subtitle: 'Understanding agent systems through binary and behavioral analysis',
+        overview: 'An exploratory project applying reverse engineering techniques (Ghidra, IDA) to understand how agent systems work internally — their code graphs, knowledge structures, and workflow patterns. This bridges systems-level understanding with agent architecture design.',
+        tech: ['Ghidra','IDA','MCP','Agent Workflow','Code Graph','Knowledge Graph'],
+        highlights: 'Reverse engineering agent binaries to understand internal architecture; Code graph extraction for agent workflow analysis; Cross-pollination of systems and AI knowledge'
+      },
+      zh: {
+        title: 'Agent 逆向工程',
+        subtitle: '通过二进制和行为分析理解智能体系统',
+        overview: '一个探索性项目，应用逆向工程技术（Ghidra、IDA）来理解智能体系统的内部运作——它们的代码图、知识结构和工作流模式。这桥接了系统级理解与智能体架构设计。',
+        tech: ['Ghidra','IDA','MCP','Agent Workflow','Code Graph','Knowledge Graph'],
+        highlights: '逆向智能体二进制以理解内部架构；代码图提取用于智能体工作流分析；系统与 AI 知识的交叉融合'
+      }
+    }
+  };
+
+  function openProjectDetail(projectKey) {
+    var detail = PROJECT_DETAILS[projectKey];
+    if (!detail) return;
+    var d = detail[currentLang] || detail['en'];
+    var techTags = d.tech.map(function(t) {
+      return '<span data-tech="' + t.toLowerCase().replace(/\s+/g, '-') + '">' + t + '</span>';
+    }).join('');
+
+    var html = '<button class="modal-close">&times;</button>';
+    html += '<div class="modal-tag">' + t('nav.projects') + ' · Project</div>';
+    html += '<h2 class="modal-title">' + d.title + '</h2>';
+    html += '<p class="modal-subtitle">' + d.subtitle + '</p>';
+    html += '<div class="modal-section"><h4>' + t('modal.overview') + '</h4><p>' + d.overview + '</p></div>';
+    html += '<div class="modal-section"><h4>' + t('modal.tech') + '</h4><div class="tech-tags">' + techTags + '</div></div>';
+    html += '<div class="modal-section"><h4>' + t('modal.arch') + '</h4><div class="mermaid-container"><div class="mermaid">' + d.arch + '</div></div></div>';
+    html += '<div class="modal-section"><h4>' + t('modal.highlights') + '</h4><p>' + d.highlights + '</p></div>';
+
+    // Update URL hash
+    history.pushState(null, '', '#project/' + projectKey);
+    openModal(html);
+  }
+
+  /* ============================================================
+     PROGRESS BAR
+     ============================================================ */
+  var progressBar = document.getElementById('progress');
+  function updateProgress() {
+    var st = window.scrollY;
+    var dh = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (dh > 0 ? Math.min((st / dh) * 100, 100) : 0) + '%';
+  }
+
+  /* ============================================================
+     NAV STATE
+     ============================================================ */
+  var nav = document.getElementById('nav');
+  var navLinks = document.querySelectorAll('nav .links a');
+  var sections = [];
+
+  navLinks.forEach(function(link) {
+    var id = link.getAttribute('data-section');
+    var el = document.getElementById(id);
+    if (el) sections.push({ id: id, el: el, link: link });
+  });
+
+  function updateNav() {
+    var sy = window.scrollY;
+    if (sy < 60) nav.classList.add('at-top');
+    else nav.classList.remove('at-top');
+
+    var current = null;
+    sections.forEach(function(s) {
+      if (sy >= s.el.offsetTop - 140) current = s;
+    });
+    navLinks.forEach(function(l) { l.classList.remove('active'); });
+    if (current) current.link.classList.add('active');
+  }
+
+  /* ============================================================
+     REVEAL OBSERVER
+     ============================================================ */
+  var revealEls = document.querySelectorAll('.reveal');
+  var revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
+
+  revealEls.forEach(function(el) { revealObserver.observe(el); });
+
+  var labelObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        labelObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.25 });
+  document.querySelectorAll('.section-label').forEach(function(el) { labelObserver.observe(el); });
+
+  /* ============================================================
+     SCROLL HANDLER (throttled)
+     ============================================================ */
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() {
+        updateProgress();
+        updateNav();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  /* ============================================================
+     RESEARCH ATLAS
+     ============================================================ */
+  var atlasNodes = [
+    { id: 'agent',      label: 'Agent Systems',            x: 450, y: 78,  r: 24 },
+    { id: 'knowledge',  label: 'Knowledge Discovery',      x: 165, y: 195, r: 20 },
+    { id: 'systems',    label: 'Operating Systems',        x: 735, y: 195, r: 18 },
+    { id: 'infra',      label: 'Research Infra.',          x: 95,  y: 365, r: 15 },
+    { id: 'hci',        label: 'Human-AI Collab.',         x: 805, y: 365, r: 15 },
+    { id: 'semantic',   label: 'Semantic Consistency',     x: 285, y: 375, r: 17 },
+    { id: 'complex',    label: 'Complex Systems',          x: 600, y: 395, r: 15 },
+  ];
+
+  var atlasEdgesData = [
+    ['agent','knowledge'],['agent','systems'],['agent','hci'],['agent','semantic'],
+    ['knowledge','infra'],['knowledge','semantic'],['systems','complex'],
+    ['systems','semantic'],['agent','complex'],['knowledge','complex'],
+    ['agent','infra'],['knowledge','hci'],['semantic','complex'],
+    ['agent','systems'],['knowledge','agent'],
+  ];
+
+  function updateAtlasColors() {
+    var isDark = currentTheme === 'dark';
+    var edgeColor = isDark ? '#2A2A2A' : '#E0E0DC';
+    var highlightColor = isDark ? '#3B82F6' : '#0047FF';
+    var textColor = isDark ? '#E8E8E8' : '#111111';
+    var circleFill = isDark ? '#1A1A1A' : '#FFFFFF';
+    var circleStroke = isDark ? '#333333' : '#E0E0DC';
+    var hoverCircleStroke = isDark ? '#3B82F6' : '#0047FF';
+    var labelColor = isDark ? '#666666' : '#999999';
+
+    var edges = document.querySelectorAll('#atlasEdges .atlas-edge');
+    edges.forEach(function(e) { e.style.stroke = edgeColor; });
+
+    var nodes = document.querySelectorAll('#atlasNodes .atlas-node');
+    nodes.forEach(function(g) {
+      var circle = g.querySelector('circle');
+      var text = g.querySelector('text');
+      if (circle) {
+        circle.setAttribute('fill', circleFill);
+        circle.setAttribute('stroke', circleStroke);
+      }
+      if (text) text.setAttribute('fill', textColor);
+    });
+
+    var labels = document.querySelectorAll('#atlasSvg .atlas-label');
+    labels.forEach(function(l) { l.setAttribute('fill', labelColor); });
+  }
+
+  function buildAtlas() {
+    var edgesGroup = document.getElementById('atlasEdges');
+    var nodesGroup = document.getElementById('atlasNodes');
+
+    // Edges
+    atlasEdgesData.forEach(function(e) {
+      var fn = null, tn = null;
+      for (var i = 0; i < atlasNodes.length; i++) {
+        if (atlasNodes[i].id === e[0]) fn = atlasNodes[i];
+        if (atlasNodes[i].id === e[1]) tn = atlasNodes[i];
+      }
+      if (!fn || !tn) return;
+      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      line.setAttribute('x1', fn.x);
+      line.setAttribute('y1', fn.y);
+      line.setAttribute('x2', tn.x);
+      line.setAttribute('y2', tn.y);
+      line.setAttribute('data-from', e[0]);
+      line.setAttribute('data-to', e[1]);
+      line.classList.add('atlas-edge');
+      edgesGroup.appendChild(line);
+    });
+
+    // Nodes
+    atlasNodes.forEach(function(n) {
+      var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.classList.add('atlas-node');
+      g.setAttribute('data-id', n.id);
+      g.setAttribute('transform', 'translate(' + n.x + ',' + n.y + ')');
+      g.style.cursor = 'pointer';
+
+      var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('r', n.r);
+      circle.setAttribute('fill', '#FFFFFF');
+      circle.setAttribute('stroke', '#E0E0DC');
+      circle.setAttribute('stroke-width', '1.5');
+      g.appendChild(circle);
+
+      var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      text.setAttribute('text-anchor', 'middle');
+      text.setAttribute('dy', '0.35em');
+      text.setAttribute('font-family', 'Inter, Noto Sans SC, sans-serif');
+      text.setAttribute('font-size', n.r > 18 ? '12' : '10');
+      text.setAttribute('font-weight', '600');
+      text.setAttribute('fill', '#111111');
+      text.setAttribute('letter-spacing', '0.01em');
+      text.textContent = n.label;
+      g.appendChild(text);
+
+      g.addEventListener('mouseenter', function() {
+        var allEdges = edgesGroup.querySelectorAll('.atlas-edge');
+        allEdges.forEach(function(edge) {
+          var from = edge.getAttribute('data-from');
+          var to = edge.getAttribute('data-to');
+          if (from === n.id || to === n.id) edge.classList.add('highlight');
+        });
+      });
+      g.addEventListener('mouseleave', function() {
+        edgesGroup.querySelectorAll('.atlas-edge').forEach(function(edge) {
+          edge.classList.remove('highlight');
+        });
+      });
+
+      // Click to open related tech detail
+      g.addEventListener('click', function() {
+        var techMap = {
+          'agent': 'ai-agent', 'knowledge': 'knowledge-graph', 'systems': 'systems',
+          'semantic': 'semantic', 'complex': 'systems', 'infra': 'rag',
+          'hci': 'ai-agent'
+        };
+        openTechDetail(techMap[n.id] || n.id);
+      });
+
+      nodesGroup.appendChild(g);
+    });
+
+    // Fade-in animation
+    var atlasObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var nodeEls = nodesGroup.querySelectorAll('.atlas-node');
+          nodeEls.forEach(function(el, i) {
+            el.style.opacity = '0';
+            setTimeout(function() {
+              el.style.transition = 'opacity 0.55s cubic-bezier(0.22,0.61,0.36,1)';
+              el.style.opacity = '1';
+            }, i * 90);
+          });
+          atlasObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    atlasObserver.observe(document.getElementById('atlasContainer'));
+  }
+
+  /* ============================================================
+     EVENT BINDINGS
+     ============================================================ */
+  function bindEvents() {
+    // Project rows
+    document.querySelectorAll('[data-project]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        // Don't fire if clicking on a child that already has a handler
+        if (e.target.closest('.tech-tags span')) return;
+        var key = el.getAttribute('data-project');
+        if (key && PROJECT_DETAILS[key]) openProjectDetail(key);
+      });
+    });
+
+    // Hero quick-link project items
+    document.querySelectorAll('#hero .hql-item').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var key = el.getAttribute('data-project');
+        if (key && PROJECT_DETAILS[key]) openProjectDetail(key);
+      });
+    });
+
+    // Tech keywords
+    document.querySelectorAll('[data-tech]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var tech = el.getAttribute('data-tech');
+        if (tech) openTechDetail(tech);
+      });
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        var href = this.getAttribute('href');
+        if (href === '#') { e.preventDefault(); return; }
+        var target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          history.pushState(null, '', href);
+        }
+      });
+    });
+
+    // Theme toggle
+    document.getElementById('btnTheme').addEventListener('click', toggleTheme);
+    // Lang toggle
+    document.getElementById('btnLang').addEventListener('click', toggleLang);
+  }
+
+  /* ============================================================
+     INIT
+     ============================================================ */
+  function init() {
+    // Restore saved preferences
+    var savedTheme = localStorage.getItem('wb-theme');
+    if (savedTheme) setTheme(savedTheme);
+    else setTheme('light');
+
+    var savedLang = localStorage.getItem('wb-lang');
+    if (savedLang) setLang(savedLang);
+    else setLang('en');
+
+    buildAtlas();
+    buildKeywordCloud();
+    bindEvents();
+    updateProgress();
+    updateNav();
+
+    // Handle hash-based routing for direct links or back/forward
+    function handleHash() {
+      var hash = window.location.hash;
+      var match = hash.match(/^#project\/(.+)/);
+      if (match) {
+        var key = match[1];
+        if (PROJECT_DETAILS[key]) {
+          setTimeout(function() { openProjectDetail(key); }, 200);
+        }
+      }
+    }
+    window.addEventListener('hashchange', handleHash);
+    handleHash(); // check on load
+  }
+
+  /* ---- Inject logo watermark into every section ---- */
+  function injectWatermark() {
+    var secs = document.querySelectorAll('section');
+    secs.forEach(function(sec) {
+      var wm = document.createElement('div');
+      wm.className = 'sec-watermark';
+      var img = document.createElement('img');
+      img.src = 'logo.png';
+      img.alt = '';
+      img.onerror = function() { this.style.display = 'none'; };
+      wm.appendChild(img);
+      sec.insertBefore(wm, sec.firstChild);
+    });
+  }
+  injectWatermark();
+
+  init();
+
+})();
+</script>
+
+</body>
+</html>
