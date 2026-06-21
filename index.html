@@ -522,9 +522,19 @@ footer .ft-copy { font-size: 0.6875rem; color: var(--text-faint); margin-top: 1.
 }
 .modal .modal-section p { font-size: 0.9375rem; color: var(--text-dim); line-height: 1.65; margin-bottom: 0.75rem; }
 .modal .modal-highlights { margin-top: 0.5rem; }
-.modal .modal-highlights .hl-para {
+.modal .modal-highlights .hl-point {
+  margin-bottom: 1.2rem; padding-left: 1rem;
+  border-left: 2px solid var(--hairline);
+  transition: border-color 0.3s;
+}
+.modal .modal-highlights .hl-point:hover { border-left-color: var(--accent); }
+.modal .modal-highlights .hl-point-header {
+  display: block; margin-bottom: 0.35rem;
+  font-size: 0.8125rem; font-weight: 700; color: var(--text);
+  letter-spacing: 0.01em;
+}
+.modal .modal-highlights .hl-point-body {
   font-size: 0.875rem; color: var(--text-dim); line-height: 1.65;
-  margin-bottom: 0.6rem; padding-left: 0.25rem;
 }
 .modal .modal-highlights .hl-code {
   font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
@@ -532,6 +542,15 @@ footer .ft-copy { font-size: 0.6875rem; color: var(--text-faint); margin-top: 1.
   background: var(--accent-ghost); padding: 0.1rem 0.35rem;
   border-radius: 3px;
 }
+.modal .modal-github-link {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  margin-bottom: 2rem; padding: 0.4rem 0.8rem;
+  border: 1px solid var(--hairline); font-size: 0.75rem;
+  font-weight: 500; color: var(--text-dim); text-decoration: none;
+  transition: all 0.25s;
+}
+.modal .modal-github-link:hover { border-color: var(--accent); color: var(--accent); }
+.modal .modal-github-link svg { width: 14px; height: 14px; }
 .modal .modal-section .tech-tags {
   display: flex; flex-wrap: wrap; gap: 0.4rem;
 }
@@ -666,6 +685,8 @@ body.modal-open { overflow: hidden; }
         <span class="hql-sep">/</span>
         <span class="hql-item" data-project="ascp">ASCP</span>
         <span class="hql-sep">/</span>
+        <span class="hql-item" data-project="hausragen">HausRAGen</span>
+        <span class="hql-sep">/</span>
         <span class="hql-item" data-project="submitflow">SubmitFlow</span>
         <span class="hql-sep">/</span>
         <span class="hql-item" data-project="deepintel">DeepIntel</span>
@@ -759,7 +780,16 @@ body.modal-open { overflow: hidden; }
     <span class="p-domain" data-i18n="projects.ascp.domain">Research</span>
   </div>
 
-  <div class="project-row reveal reveal-delay-4" data-project="submitflow">
+  <div class="project-row reveal reveal-delay-4" data-project="hausragen">
+    <span class="p-year">2025</span>
+    <div>
+      <div class="p-name">HausRAGen</div>
+      <div class="p-tagline" data-i18n="projects.hausragen.tagline">Semantic RAG Engine for Smart Home Automation — Code retrieval, semantic clustering, multi-provider AI TAP rule generation</div>
+    </div>
+    <span class="p-domain" data-i18n="projects.hausragen.domain">AI Systems</span>
+  </div>
+
+  <div class="project-row reveal reveal-delay-5" data-project="submitflow">
     <span class="p-year">2025</span>
     <div>
       <div class="p-name">SubmitFlow</div>
@@ -781,6 +811,7 @@ body.modal-open { overflow: hidden; }
     <div class="theme-group">
       <h4 data-i18n="themes.ai">AI Systems</h4>
       <div class="t-item" data-project="homemind">HomeMind</div>
+      <div class="t-item" data-project="hausragen">HausRAGen</div>
       <div class="t-item" data-project="deepintel">DeepIntel</div>
       <div class="t-item" data-project="submitflow">SubmitFlow</div>
     </div>
@@ -925,6 +956,8 @@ body.modal-open { overflow: hidden; }
       'projects.homemind.domain': 'AI 系统',
       'projects.ascp.tagline': '自适应语义一致性保持——动态依赖建模、约束执行、自适应演化',
       'projects.ascp.domain': '研究',
+      'projects.hausragen.tagline': '智能家居自动化语义 RAG 引擎——代码检索、语义聚类、多提供商 AI TAP 规则生成',
+      'projects.hausragen.domain': 'AI 系统',
       'projects.submitflow.tagline': 'CS/AI 学生实习校招聚合与投递追踪平台——500+ 公司、AI 推荐引擎、自动追踪',
       'projects.submitflow.domain': '全栈产品',
       'projects.deepintel.tagline': '抗幻觉研究助手——多路检索、查询路由、证据聚合、知识验证',
@@ -999,6 +1032,8 @@ body.modal-open { overflow: hidden; }
       'projects.homemind.domain': 'AI Systems',
       'projects.ascp.tagline': 'Adaptive Semantic Consistency Preservation — Dynamic dependency modeling, constrained execution, adaptive evolution',
       'projects.ascp.domain': 'Research',
+      'projects.hausragen.tagline': 'Semantic RAG Engine for Smart Home Automation — Code retrieval, semantic clustering, multi-provider AI TAP rule generation',
+      'projects.hausragen.domain': 'AI Systems',
       'projects.submitflow.tagline': 'CS/AI Student Job Aggregation & Application Tracking — 500+ companies, AI recommendation engine, automated tracking',
       'projects.submitflow.domain': 'Full-Stack Product',
       'projects.deepintel.tagline': 'Hallucination-Resistant Research Assistant — Multi-route retrieval, query routing, evidence aggregation, knowledge verification',
@@ -1332,19 +1367,27 @@ body.modal-open { overflow: hidden; }
   };
 
   function formatHighlights(text) {
-    // Split on double-newline for paragraphs
-    var paras = text.split('\n\n');
+    // Split on literal backslash-n backslash-n sequences (from JS string escapes)
+    var paras = text.split(/\n\n/);
     return paras.map(function(p) {
+      p = p.trim();
+      if (!p) return '';
       // Convert `code` spans
-      var html = p.replace(
-        /`([^`]+)`/g,
-        '<code class="hl-code">$1</code>'
-      );
-      // Wrap in paragraph if not empty
-      html = html.trim();
-      if (!html) return '';
-      // If it starts with a list item marker, handle differently
-      return '<p class="hl-para">' + html + '</p>';
+      p = p.replace(/`([^`]+)`/g, '<code class="hl-code">$1</code>');
+      // Try to extract a header: text before the first colon followed by space
+      // Pattern: `Header`: rest of description
+      var headerMatch = p.match(/^<code class="hl-code">([^<]+)<\/code>:\s*(.*)/);
+      if (!headerMatch) {
+        // Try without code tag
+        headerMatch = p.match(/^`([^`]+)`:\s*(.*)/);
+        if (headerMatch) {
+          return '<div class="hl-point"><span class="hl-point-header"><code class="hl-code">' + headerMatch[1] + '</code></span><span class="hl-point-body">' + headerMatch[2] + '</span></div>';
+        }
+      } else {
+        return '<div class="hl-point"><span class="hl-point-header"><code class="hl-code">' + headerMatch[1] + '</code></span><span class="hl-point-body">' + headerMatch[2] + '</span></div>';
+      }
+      // Fallback: just render as body text
+      return '<div class="hl-point"><span class="hl-point-body">' + p + '</span></div>';
     }).join('');
   }
 
@@ -1388,6 +1431,7 @@ body.modal-open { overflow: hidden; }
      ============================================================ */
   var PROJECT_DETAILS = {
     graphsci: {
+      github: 'https://github.com/wblxr408',
       en: {
         title: 'GraphSci',
         subtitle: 'Research Discovery Operating System',
@@ -1406,6 +1450,7 @@ body.modal-open { overflow: hidden; }
       }
     },
     homemind: {
+      github: 'https://github.com/wblxr408/HomeMind',
       en: {
         title: 'HomeMind',
         subtitle: 'AI Native Smart Home Operating System',
@@ -1424,6 +1469,7 @@ body.modal-open { overflow: hidden; }
       }
     },
     ascp: {
+      github: 'https://github.com/wblxr408',
       en: {
         title: 'ASCP',
         subtitle: 'Adaptive Semantic Consistency Preservation',
@@ -1441,7 +1487,46 @@ body.modal-open { overflow: hidden; }
         highlights: '三层架构：发现、执行、适应；动态语义依赖追踪；规则变更下的持续一致性；强论⽂发表潜⼒；桥接物联网、智能家居和分布式系统理论'
       }
     },
+  
+  hausragen: {
+    github: 'https://github.com/wblxr408/HausRAGen_JSPY',
+    en: {
+      title: 'HausRAGen',
+      subtitle: 'Semantic RAG Engine for Smart Home Automation Code Generation',
+      overview: 'HausRAGen is a dual-service smart home RAG engine that semantically retrieves automation rule code and generates new TAP (Trigger-Action Programming) rules. It combines a Node.js Express backend (multi-provider AI orchestration supporting 8+ LLM services) with a Python Flask ML microservice (semantic clustering, BSR/LSR similarity, code retrieval via sentence-transformers).',
+      tech: ['Node.js','Express','Python','Flask','Sentence-Transformers','Semantic Clustering','BSR/LSR','TAP Rules','PM2','Docker','Multi-Provider AI'],
+      arch: 'flowchart TD
+    Query[User Query] --> API[Express API :3000]
+    API --> ML[Flask ML :5001]
+    ML --> SC[Semantic Clustering]
+    ML --> CR[Code Retrieval]
+    API --> AI[Multi-Provider AI]
+    AI --> Gen[TAP Rule Generation]
+    SC --> Sim[BSR/LSR Similarity Matrix]
+    CR --> Corpus[TAP Corpus]
+    Gen --> Output[Generated Automation Rules]',
+      highlights: '`Dual-Service Architecture`: Node.js Express API (port 3000) + Python Flask ML microservice (port 5001) — clean separation of concerns with lazy-loaded heavy models (torch, transformers, sentence-transformers) to minimize cold-start latency\n\n`Multi-Provider AI Orchestration`: Unified abstraction over 8+ AI service providers (Claude/PoloAPI, DeepSeek, MiniMax, GLM/Zhipu, Qwen, Kimi, OpenAI-compatible) with automatic provider failover, placeholder API key detection, and per-provider model selection\n\n`Semantic Clustering Engine`: BSR (Broad Semantic Recall) and LSR (Lightweight Semantic Rerank) similarity computation — sentence-transformers (all-MiniLM-L6-v2) embeddings with cosine similarity clustering to group semantically related automation codes\n\n`TAP Rule Generation`: Enhanced TAP.txt corpus with applet YAML + Python script extraction — system retrieves semantically similar existing rules and generates new Trigger-Action Programming rules using LLM reasoning\n\n`Code Retrieval Pipeline`: parse_corpus_file extracts structured entries from Enhanced TAP format (regex-based parser for non-standard JSON-like syntax), computes embeddings, and retrieves top-k candidates by semantic relevance\n\n`Production-Grade Deployment`: PM2 process management (ecosystem.config.js), Docker containerization, deploy.ps1 with dependency checking, health-check endpoints, and automated restart scripts'
+    },
+    zh: {
+      title: 'HausRAGen',
+      subtitle: '面向智能家居自动化代码生成的语义 RAG 引擎',
+      overview: 'HausRAGen 是一个双服务智能家居 RAG 引擎，语义检索自动化规则代码并生成新的 TAP（触发-动作编程）规则。它结合了 Node.js Express 后端（多提供商 AI 编排，支持 8+ LLM 服务）和 Python Flask ML 微服务（语义聚类、BSR/LSR 相似度、基于 sentence-transformers 的代码检索）。',
+      tech: ['Node.js','Express','Python','Flask','Sentence-Transformers','语义聚类','BSR/LSR','TAP 规则','PM2','Docker','多提供商 AI'],
+      arch: 'flowchart TD
+    Query[用户查询] --> API[Express API :3000]
+    API --> ML[Flask ML :5001]
+    ML --> SC[语义聚类]
+    ML --> CR[代码检索]
+    API --> AI[多提供商 AI]
+    AI --> Gen[TAP 规则生成]
+    SC --> Sim[BSR/LSR 相似度矩阵]
+    CR --> Corpus[TAP 语料库]
+    Gen --> Output[生成的自动化规则]',
+      highlights: '`双服务架构`: Node.js Express API（端口 3000）+ Python Flask ML 微服务（端口 5001）——关注点干净分离，重型模型（torch、transformers、sentence-transformers）延迟加载以最小化冷启动延迟\n\n`多提供商 AI 编排`: 统一抽象层覆盖 8+ AI 服务提供商（Claude/PoloAPI、DeepSeek、MiniMax、GLM/智谱、Qwen、Kimi、OpenAI 兼容），自动 Provider 降级、占位符 API Key 检测、按 Provider 模型选择\n\n`语义聚类引擎`: BSR（广度语义召回）与 LSR（轻量语义重排）相似度计算——sentence-transformers（all-MiniLM-L6-v2）嵌入 + 余弦相似度聚类，将语义相似的自动化代码分组\n\n`TAP 规则生成`: 增强型 TAP.txt 语料库，含 applet YAML + Python 脚本提取——系统检索语义相似的已有规则，使用 LLM 推理生成新的触发-动作编程规则\n\n`代码检索管线`: parse_corpus_file 从增强型 TAP 格式中提取结构化条目（基于正则的非标准 JSON 语法解析器），计算嵌入向量，按语义相关性检索 top-k 候选\n\n`生产级部署`: PM2 进程管理（ecosystem.config.js）、Docker 容器化、deploy.ps1 依赖检查、health-check 端点、自动重启脚本'
+    }
+  },
     submitflow: {
+      github: 'https://github.com/wblxr408/SubmitFlow',
       en: {
         title: 'SubmitFlow',
         subtitle: 'CS/AI Student Internship & Job Application Aggregation Platform',
@@ -1460,6 +1545,7 @@ body.modal-open { overflow: hidden; }
       }
     },
     deepintel: {
+      github: 'https://github.com/wblxr408/Agentic-Deep-Research-System',
       en: {
         title: 'DeepIntel',
         subtitle: 'Agentic Deep Research System — Hallucination-Resistant Research Assistant',
@@ -1478,6 +1564,7 @@ body.modal-open { overflow: hidden; }
       }
     },
     ruleflow: {
+      github: 'https://github.com/wblxr408',
       en: {
         title: 'RuleFlow',
         subtitle: 'Semantic Dependency Discovery for TAP Systems',
@@ -1496,6 +1583,7 @@ body.modal-open { overflow: hidden; }
       }
     },
     tapsync: {
+      github: 'https://github.com/wblxr408',
       en: {
         title: 'TapSync',
         subtitle: 'Semantic Consistency Enforcement for TAP Systems',
@@ -1541,6 +1629,9 @@ body.modal-open { overflow: hidden; }
 
     var html = '<button class="modal-close">&times;</button>';
     html += '<div class="modal-tag">' + t('nav.projects') + ' · Project</div>';
+    if (detail.github) {
+      html += '<a href="' + detail.github + '" target="_blank" rel="noopener" class="modal-github-link"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub Repository</a>';
+    }
     html += '<h2 class="modal-title">' + d.title + '</h2>';
     html += '<p class="modal-subtitle">' + d.subtitle + '</p>';
     html += '<div class="modal-section"><h4>' + t('modal.overview') + '</h4><p>' + d.overview + '</p></div>';
