@@ -1495,16 +1495,7 @@ body.modal-open { overflow: hidden; }
       subtitle: 'Semantic RAG Engine for Smart Home Automation Code Generation',
       overview: 'HausRAGen is a dual-service smart home RAG engine that semantically retrieves automation rule code and generates new TAP (Trigger-Action Programming) rules. It combines a Node.js Express backend (multi-provider AI orchestration supporting 8+ LLM services) with a Python Flask ML microservice (semantic clustering, BSR/LSR similarity, code retrieval via sentence-transformers).',
       tech: ['Node.js','Express','Python','Flask','Sentence-Transformers','Semantic Clustering','BSR/LSR','TAP Rules','PM2','Docker','Multi-Provider AI'],
-      arch: 'flowchart TD
-    Query[User Query] --> API[Express API :3000]
-    API --> ML[Flask ML :5001]
-    ML --> SC[Semantic Clustering]
-    ML --> CR[Code Retrieval]
-    API --> AI[Multi-Provider AI]
-    AI --> Gen[TAP Rule Generation]
-    SC --> Sim[BSR/LSR Similarity Matrix]
-    CR --> Corpus[TAP Corpus]
-    Gen --> Output[Generated Automation Rules]',
+      arch: 'flowchart TD\n    Query[User Query] --> API[Express API :3000]\n    API --> ML[Flask ML :5001]\n    ML --> SC[Semantic Clustering]\n    ML --> CR[Code Retrieval]\n    API --> AI[Multi-Provider AI]\n    AI --> Gen[TAP Rule Generation]\n    SC --> Sim[BSR/LSR Similarity Matrix]\n    CR --> Corpus[TAP Corpus]\n    Gen --> Output[Generated Automation Rules]',
       highlights: '`Dual-Service Architecture`: Node.js Express API (port 3000) + Python Flask ML microservice (port 5001) — clean separation of concerns with lazy-loaded heavy models (torch, transformers, sentence-transformers) to minimize cold-start latency\n\n`Multi-Provider AI Orchestration`: Unified abstraction over 8+ AI service providers (Claude/PoloAPI, DeepSeek, MiniMax, GLM/Zhipu, Qwen, Kimi, OpenAI-compatible) with automatic provider failover, placeholder API key detection, and per-provider model selection\n\n`Semantic Clustering Engine`: BSR (Broad Semantic Recall) and LSR (Lightweight Semantic Rerank) similarity computation — sentence-transformers (all-MiniLM-L6-v2) embeddings with cosine similarity clustering to group semantically related automation codes\n\n`TAP Rule Generation`: Enhanced TAP.txt corpus with applet YAML + Python script extraction — system retrieves semantically similar existing rules and generates new Trigger-Action Programming rules using LLM reasoning\n\n`Code Retrieval Pipeline`: parse_corpus_file extracts structured entries from Enhanced TAP format (regex-based parser for non-standard JSON-like syntax), computes embeddings, and retrieves top-k candidates by semantic relevance\n\n`Production-Grade Deployment`: PM2 process management (ecosystem.config.js), Docker containerization, deploy.ps1 with dependency checking, health-check endpoints, and automated restart scripts'
     },
     zh: {
@@ -1512,16 +1503,7 @@ body.modal-open { overflow: hidden; }
       subtitle: '面向智能家居自动化代码生成的语义 RAG 引擎',
       overview: 'HausRAGen 是一个双服务智能家居 RAG 引擎，语义检索自动化规则代码并生成新的 TAP（触发-动作编程）规则。它结合了 Node.js Express 后端（多提供商 AI 编排，支持 8+ LLM 服务）和 Python Flask ML 微服务（语义聚类、BSR/LSR 相似度、基于 sentence-transformers 的代码检索）。',
       tech: ['Node.js','Express','Python','Flask','Sentence-Transformers','语义聚类','BSR/LSR','TAP 规则','PM2','Docker','多提供商 AI'],
-      arch: 'flowchart TD
-    Query[用户查询] --> API[Express API :3000]
-    API --> ML[Flask ML :5001]
-    ML --> SC[语义聚类]
-    ML --> CR[代码检索]
-    API --> AI[多提供商 AI]
-    AI --> Gen[TAP 规则生成]
-    SC --> Sim[BSR/LSR 相似度矩阵]
-    CR --> Corpus[TAP 语料库]
-    Gen --> Output[生成的自动化规则]',
+      arch: 'flowchart TD\n    Query[用户查询] --> API[Express API :3000]\n    API --> ML[Flask ML :5001]\n    ML --> SC[语义聚类]\n    ML --> CR[代码检索]\n    API --> AI[多提供商 AI]\n    AI --> Gen[TAP 规则生成]\n    SC --> Sim[BSR/LSR 相似度矩阵]\n    CR --> Corpus[TAP 语料库]\n    Gen --> Output[生成的自动化规则]',
       highlights: '`双服务架构`: Node.js Express API（端口 3000）+ Python Flask ML 微服务（端口 5001）——关注点干净分离，重型模型（torch、transformers、sentence-transformers）延迟加载以最小化冷启动延迟\n\n`多提供商 AI 编排`: 统一抽象层覆盖 8+ AI 服务提供商（Claude/PoloAPI、DeepSeek、MiniMax、GLM/智谱、Qwen、Kimi、OpenAI 兼容），自动 Provider 降级、占位符 API Key 检测、按 Provider 模型选择\n\n`语义聚类引擎`: BSR（广度语义召回）与 LSR（轻量语义重排）相似度计算——sentence-transformers（all-MiniLM-L6-v2）嵌入 + 余弦相似度聚类，将语义相似的自动化代码分组\n\n`TAP 规则生成`: 增强型 TAP.txt 语料库，含 applet YAML + Python 脚本提取——系统检索语义相似的已有规则，使用 LLM 推理生成新的触发-动作编程规则\n\n`代码检索管线`: parse_corpus_file 从增强型 TAP 格式中提取结构化条目（基于正则的非标准 JSON 语法解析器），计算嵌入向量，按语义相关性检索 top-k 候选\n\n`生产级部署`: PM2 进程管理（ecosystem.config.js）、Docker 容器化、deploy.ps1 依赖检查、health-check 端点、自动重启脚本'
     }
   },
