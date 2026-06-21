@@ -1222,736 +1222,608 @@ body.modal-open { overflow: hidden; }
      TECH DETAIL MODAL
      ============================================================ */
   var TECH_DETAILS = {
-    'ai-agent': {
-      en: {
-        title: 'AI Agent',
-        subtitle: 'Autonomous intelligent agents — reasoning, tool use, and multi-step task execution',
-        overview: 'AI Agents are autonomous systems that perceive their environment, reason about goals, select and invoke tools, and execute multi-step plans. They represent a paradigm shift from static models to dynamic, goal-driven systems.',
-        tech: ['LangGraph','MCP','Tool Calling','Memory','Planning','Reflection'],
-        arch: 'flowchart LR\n    P[Perception] --> Plan[Planning] --> Tool[Tool Select] --> Exec[Execution] --> Obs[Observation] --> Ref[Reflection] --> Plan',
-        highlights: 'Stateful agent workflows with checkpoint/resume; Tool-augmented reasoning with MCP protocol; Multi-agent orchestration patterns; Long-term memory and context management'
-      },
-      zh: {
-        title: 'AI Agent',
-        subtitle: '自主智能体——推理、工具使用与多步任务执行',
-        overview: 'AI Agent 是能够感知环境、推理目标、选择并调用工具、执行多步计划的自主系统。它们代表了从静态模型到动态目标驱动系统的范式转变。',
-        tech: ['LangGraph','MCP','Tool Calling','Memory','Planning','Reflection'],
-        arch: 'flowchart LR\n    P[感知] --> Plan[规划] --> Tool[工具选择] --> Exec[执行] --> Obs[观察] --> Ref[反思] --> Plan',
-        highlights: '带检查点/恢复的有状态智能体工作流；基于 MCP 协议的工具增强推理；多智能体编排模式；长期记忆与上下文管理'
-      }
+
+    /* ===== Language / Runtime ===== */
+    'python': {
+      en: { title:'Python', subtitle:'The dominant language for AI/ML, scientific computing, and backend services',
+        overview:'Python powers the AI/RAG backend in GraphSci (LangGraph + LlamaIndex), the ML microservice in HausRAGen (Flask + sentence-transformers), the full HomeMind agent stack, and the DeepIntel research platform. Its ecosystem of numpy, torch, transformers, LangGraph, and FastAPI makes it the default choice for AI-intensive services.',
+        tech:['FastAPI','Flask','LangGraph','PyTorch','sentence-transformers','asyncio'],
+        arch:'flowchart LR\n    P[Python Service] --> API[REST / gRPC]\n    API --> AI[AI/ML Logic]\n    AI --> DB[(Database)]\n    AI --> Ext[External APIs]',
+        highlights:'Primary AI/ML language across 4 projects; Dual-service pattern with Node.js BFF; Async I/O with asyncio for SSE streaming; Lazy-loaded heavy models minimize cold starts' },
+      zh: { title:'Python', subtitle:'AI/ML、科学计算和后端服务的主导语言',
+        overview:'Python 驱动了 GraphSci 的 AI/RAG 后端（LangGraph + LlamaIndex）、HausRAGen 的 ML 微服务（Flask + sentence-transformers）、HomeMind 的完整 Agent 栈以及 DeepIntel 研究平台。其 numpy、torch、transformers、LangGraph 和 FastAPI 生态使其成为 AI 密集型服务的默认选择。',
+        tech:['FastAPI','Flask','LangGraph','PyTorch','sentence-transformers','asyncio'],
+        arch:'flowchart LR\n    P[Python 服务] --> API[REST / gRPC]\n    API --> AI[AI/ML 逻辑]\n    AI --> DB[(数据库)]\n    AI --> Ext[外部 API]',
+        highlights:'跨 4 个项目的 AI/ML 主语言；与 Node.js BFF 双服务模式；asyncio 异步 I/O 驱动 SSE 流式输出；重型模型延迟加载最小化冷启动' }
     },
-    'knowledge-graph': {
-      en: {
-        title: 'Knowledge Graph',
-        subtitle: 'Structured semantic networks connecting entities, concepts, and their relationships',
-        overview: 'Knowledge Graphs represent information as a network of entities and their interrelations, enabling semantic querying, reasoning, and discovery. They form the backbone of modern knowledge organization systems.',
-        tech: ['Graph Databases','Semantic Web','Ontology','Entity Resolution','Graph Neural Networks','SPARQL'],
-        arch: 'flowchart LR\n    EE[Entity Extraction] --> RE[Relation Extraction] --> ER[Entity Resolution] --> GC[Graph Construction] --> SE[Semantic Enrichment] --> QI[Query & Inference]',
-        highlights: 'Semantic relationship modeling beyond keyword matching; Multi-hop reasoning across knowledge domains; Dynamic graph evolution with new information; Integration with LLM for knowledge-grounded generation'
-      },
-      zh: {
-        title: '知识图谱',
-        subtitle: '连接实体、概念及其关系的结构化语义网络',
-        overview: '知识图谱将信息表示为实体及其相互关系的网络，支持语义查询、推理和发现。它们构成了现代知识组织系统的骨干。',
-        tech: ['图数据库','语义网','本体论','实体消歧','图神经网络','SPARQL'],
-        arch: 'flowchart LR\n    EE[实体抽取] --> RE[关系抽取] --> ER[实体消歧] --> GC[图谱构建] --> SE[语义增强] --> QI[查询与推理]',
-        highlights: '超越关键词匹配的语义关系建模；跨知识域的多跳推理；新信息驱动的动态图谱演化；与 LLM 集成实现知识增强生成'
-      }
+    'node.js': {
+      en: { title:'Node.js', subtitle:'JavaScript runtime for building fast, scalable network applications',
+        overview:'Node.js serves as the primary backend runtime in SubmitFlow (Next.js API routes + worker processes) and HausRAGen (Express API with 8-provider AI orchestration). Its event-driven, non-blocking I/O model excels at handling concurrent HTTP requests and real-time streaming.',
+        tech:['Express','Next.js','jose','node-cron','PM2','Event Loop'],
+        arch:'flowchart LR\n    Req[HTTP Request] --> EL[Event Loop]\n    EL --> Async[Async Handler]\n    Async --> DB[(Database)]\n    Async --> AI[AI Provider]\n    Async --> Res[Response]',
+        highlights:'Event-driven non-blocking I/O for high concurrency; Unified JS/TS across frontend and backend; jose-based Edge-compatible JWT verification; PM2 process management with zero-downtime reloads' },
+      zh: { title:'Node.js', subtitle:'构建快速、可扩展网络应用的 JavaScript 运行时',
+        overview:'Node.js 是 SubmitFlow（Next.js API 路由 + Worker 进程）和 HausRAGen（Express API + 8 提供商 AI 编排）的主要后端运行时。其事件驱动、非阻塞 I/O 模型在处理并发 HTTP 请求和实时流方面表现优异。',
+        tech:['Express','Next.js','jose','node-cron','PM2','Event Loop'],
+        arch:'flowchart LR\n    Req[HTTP 请求] --> EL[Event Loop]\n    EL --> Async[异步处理]\n    Async --> DB[(数据库)]\n    Async --> AI[AI 提供商]\n    Async --> Res[响应]',
+        highlights:'事件驱动非阻塞 I/O 实现高并发；前后端统一 JS/TS 语言栈；基于 jose 的 Edge 兼容 JWT 校验；PM2 进程管理支持零停机重载' }
+    },
+    'typescript': {
+      en: { title:'TypeScript', subtitle:'Typed superset of JavaScript for building robust, maintainable applications',
+        overview:'TypeScript is used across GraphSci (NestJS BFF + Next.js frontend), SubmitFlow (full-stack Next.js + edge middleware), and DeepIntel (React + Vite frontend). Static type checking catches entire classes of bugs at compile time and enables seamless API contract sharing between frontend and backend.',
+        tech:['Static Typing','Generics','Zod / Pydantic','tsc','ESLint','JSDoc'],
+        arch:'flowchart LR\n    TS[TypeScript Source] --> TSC[tsc Compiler]\n    TSC --> JS[JavaScript]\n    TS --> Types[Type Definitions]\n    Types --> API[API Contract Sharing]',
+        highlights:'End-to-end type safety from DB to UI; Shared API contract types across frontend/BFF; Compile-time error detection replacing runtime crashes; IDE autocompletion and refactoring at scale' },
+      zh: { title:'TypeScript', subtitle:'JavaScript 的类型超集，构建健壮、可维护的应用',
+        overview:'TypeScript 用于 GraphSci（NestJS BFF + Next.js 前端）、SubmitFlow（全栈 Next.js + Edge 中间件）和 DeepIntel（React + Vite 前端）。静态类型检查在编译时捕获整类 bug，并实现前后端 API 契约的无缝类型共享。',
+        tech:['静态类型','泛型','Zod / Pydantic','tsc','ESLint','JSDoc'],
+        arch:'flowchart LR\n    TS[TypeScript 源码] --> TSC[tsc 编译]\n    TSC --> JS[JavaScript]\n    TS --> Types[类型定义]\n    Types --> API[API 契约共享]',
+        highlights:'从 DB 到 UI 的端到端类型安全；前后端 API 契约类型共享；编译时错误检测替代运行时崩溃；IDE 自动补全和大规模重构' }
+    },
+
+    /* ===== Backend Frameworks ===== */
+    'fastapi': {
+      en: { title:'FastAPI', subtitle:'High-performance Python web framework with automatic OpenAPI generation',
+        overview:'FastAPI powers DeepIntel\'s backend with async request handling, automatic OpenAPI schema generation, and SSE streaming endpoints. Its dependency injection system and Pydantic validation make it ideal for research platforms requiring strict input/output contracts.',
+        tech:['ASGI','Pydantic','OpenAPI','SSE','Dependency Injection','uvicorn'],
+        arch:'flowchart TD\n    Req[Request] --> DI[Dependency Injection]\n    DI --> Validate[Pydantic Validation]\n    Validate --> Handler[Route Handler]\n    Handler --> SSE[SSE Stream]\n    Handler --> DB[(PostgreSQL)]',
+        highlights:'Automatic OpenAPI schema from Pydantic models; Native async/await with ASGI; Built-in SSE streaming for real-time research progress; Dependency injection for clean testability' },
+      zh: { title:'FastAPI', subtitle:'高性能 Python Web 框架，自动生成 OpenAPI',
+        overview:'FastAPI 驱动 DeepIntel 的后端，提供异步请求处理、自动 OpenAPI Schema 生成和 SSE 流式端点。其依赖注入系统和 Pydantic 校验使其成为需要严格输入/输出契约的研究平台的理想选择。',
+        tech:['ASGI','Pydantic','OpenAPI','SSE','依赖注入','uvicorn'],
+        arch:'flowchart TD\n    Req[请求] --> DI[依赖注入]\n    DI --> Validate[Pydantic 校验]\n    Validate --> Handler[路由处理]\n    Handler --> SSE[SSE 流]\n    Handler --> DB[(PostgreSQL)]',
+        highlights:'Pydantic 模型自动生成 OpenAPI Schema；原生 async/await + ASGI；内置 SSE 流式输出实时研究进度；依赖注入便于测试' }
+    },
+    'flask': {
+      en: { title:'Flask', subtitle:'Lightweight Python WSGI micro-framework for APIs and microservices',
+        overview:'Flask serves as HausRAGen\'s ML microservice framework (port 5001), exposing semantic clustering and code retrieval endpoints. Its minimal overhead and lazy-loading pattern keep heavy models (torch, transformers) dormant until the first request.',
+        tech:['WSGI','flask-cors','Lazy Loading','JSON API','Blueprint','gunicorn'],
+        arch:'flowchart LR\n    Req[POST /semantic-cluster] --> Flask[Flask App]\n    Flask --> Lazy[Lazy Model Load]\n    Lazy --> ST[sentence-transformers]\n    ST --> Result[JSON Response]',
+        highlights:'Minimal overhead for ML microservices; Lazy model loading minimizes cold-start latency; Clean separation from Node.js API layer; Flask-CORS for cross-origin access' },
+      zh: { title:'Flask', subtitle:'轻量级 Python WSGI 微框架，用于 API 和微服务',
+        overview:'Flask 是 HausRAGen 的 ML 微服务框架（端口 5001），暴露语义聚类和代码检索端点。其最小化开销和延迟加载模式使重型模型（torch、transformers）在首次请求前保持休眠。',
+        tech:['WSGI','flask-cors','延迟加载','JSON API','Blueprint','gunicorn'],
+        arch:'flowchart LR\n    Req[POST /semantic-cluster] --> Flask[Flask App]\n    Flask --> Lazy[延迟加载模型]\n    Lazy --> ST[sentence-transformers]\n    ST --> Result[JSON 响应]',
+        highlights:'ML 微服务的最小化开销；延迟模型加载最小化冷启动延迟；与 Node.js API 层干净分离；Flask-CORS 跨域访问' }
+    },
+    'nestjs': {
+      en: { title:'NestJS', subtitle:'Progressive Node.js framework for building scalable server-side applications',
+        overview:'NestJS serves as GraphSci\'s BFF (Backend-for-Frontend) gateway — handling authentication, object-level authorization, Problem Details (RFC 9457), ETag, idempotency keys, audit logging, and SSE task streaming. Its Module/Guard/Interceptor/Pipe architecture provides clean separation between cross-cutting concerns and business logic.',
+        tech:['Modules','Guards','Interceptors','Pipes','OpenAPI','SSE','Prisma'],
+        arch:'flowchart TD\n    Req[Request] --> Guard[Auth Guard]\n    Guard --> Pipe[Validation Pipe]\n    Pipe --> Interceptor[Logging Interceptor]\n    Interceptor --> Ctrl[Controller]\n    Ctrl --> Svc[Service Layer]\n    Svc --> DB[(PostgreSQL)]',
+        highlights:'Module-based architecture for clean BFF separation; Guards for object-level authorization; Interceptors for audit trail and ETag; Pipes for automatic request validation; Prisma ORM integration with type-safe queries' },
+      zh: { title:'NestJS', subtitle:'渐进式 Node.js 框架，构建可扩展的服务端应用',
+        overview:'NestJS 是 GraphSci 的 BFF（面向前端的后端）网关——处理认证、对象级授权、Problem Details（RFC 9457）、ETag、幂等键、审计日志和 SSE 任务流。其 Module/Guard/Interceptor/Pipe 架构在横切关注点和业务逻辑之间提供干净分离。',
+        tech:['模块','守卫','拦截器','管道','OpenAPI','SSE','Prisma'],
+        arch:'flowchart TD\n    Req[请求] --> Guard[认证守卫]\n    Guard --> Pipe[校验管道]\n    Pipe --> Interceptor[日志拦截器]\n    Interceptor --> Ctrl[控制器]\n    Ctrl --> Svc[服务层]\n    Svc --> DB[(PostgreSQL)]',
+        highlights:'模块化架构实现 BFF 干净分离；守卫实现对象级授权；拦截器实现审计追踪和 ETag；管道自动请求校验；Prisma ORM 类型安全查询' }
+    },
+    'express': {
+      en: { title:'Express', subtitle:'Fast, unopinionated Node.js web framework',
+        overview:'Express powers HausRAGen\'s API layer (port 3000) with multi-provider AI orchestration, file upload handling via multer, and CORS-enabled endpoints. Its minimal middleware stack keeps the API lightweight while supporting 8+ AI service providers.',
+        tech:['Middleware','multer','CORS','axios','dotenv','Routing'],
+        arch:'flowchart LR\n    Req[Request] --> CORS[CORS]\n    CORS --> MW[Middleware]\n    MW --> Route[Route Handler]\n    Route --> AI[AI Provider]\n    Route --> FS[File Upload]',
+        highlights:'Minimal middleware stack for low overhead; Multi-provider AI orchestration via axios; Multer-based file upload handling; Environment-aware configuration via dotenv' },
+      zh: { title:'Express', subtitle:'快速、无预设的 Node.js Web 框架',
+        overview:'Express 驱动 HausRAGen 的 API 层（端口 3000），提供多提供商 AI 编排、multer 文件上传处理和 CORS 端点。其最小化中间件栈保持 API 轻量，同时支持 8+ AI 服务提供商。',
+        tech:['中间件','multer','CORS','axios','dotenv','路由'],
+        arch:'flowchart LR\n    Req[请求] --> CORS[CORS]\n    CORS --> MW[中间件]\n    MW --> Route[路由处理]\n    Route --> AI[AI 提供商]\n    Route --> FS[文件上传]',
+        highlights:'最小中间件栈低开销；基于 axios 的多提供商 AI 编排；Multer 文件上传处理；dotenv 环境感知配置' }
+    },
+    'react': {
+      en: { title:'React', subtitle:'Component-based UI library for building interactive user interfaces',
+        overview:'React powers the frontend of GraphSci (Next.js App Router + TanStack Query + Radix Primitives), SubmitFlow (Next.js 14 + React Query), and DeepIntel (Vite + React + TypeScript). Component composition, hooks, and concurrent rendering enable complex research workbench UIs.',
+        tech:['Hooks','Server Components','TanStack Query','Radix Primitives','Zustand','Concurrent Rendering'],
+        arch:'flowchart TD\n    Comp[Component Tree] --> Hooks[Hooks]\n    Hooks --> State[State]\n    State --> Query[TanStack Query]\n    Query --> API[API Client]\n    API --> BFF[NestJS / Next.js BFF]',
+        highlights:'Server Components for zero-JS content; TanStack Query for server-state caching; Radix Primitives for accessible UI components; Zustand for lightweight client state' },
+      zh: { title:'React', subtitle:'基于组件的 UI 库，构建交互式用户界面',
+        overview:'React 驱动 GraphSci（Next.js App Router + TanStack Query + Radix Primitives）、SubmitFlow（Next.js 14 + React Query）和 DeepIntel（Vite + React + TypeScript）的前端。组件组合、Hooks 和并发渲染使复杂研究工作台 UI 成为可能。',
+        tech:['Hooks','Server Components','TanStack Query','Radix Primitives','Zustand','并发渲染'],
+        arch:'flowchart TD\n    Comp[组件树] --> Hooks[Hooks]\n    Hooks --> State[状态]\n    State --> Query[TanStack Query]\n    Query --> API[API Client]\n    API --> BFF[NestJS / Next.js BFF]',
+        highlights:'Server Components 实现零 JS 内容；TanStack Query 服务端状态缓存；Radix Primitives 可访问 UI 组件；Zustand 轻量客户端状态' }
+    },
+    'next.js': {
+      en: { title:'Next.js', subtitle:'React framework with hybrid static & server rendering',
+        overview:'Next.js 14 App Router serves as the full-stack foundation for both GraphSci (research workbench with complex routing) and SubmitFlow (job aggregation platform with Edge middleware). App Router enables layouts, streaming, and Server Components within a single React framework.',
+        tech:['App Router','Server Components','Edge Runtime','Route Handlers','Middleware','SSR/SSG'],
+        arch:'flowchart TD\n    Req[Request] --> MW[Edge Middleware]\n    MW --> Router[App Router]\n    Router --> SC[Server Component]\n    Router --> CC[Client Component]\n    SC --> DB[(Database)]\n    CC --> API[Route Handler]',
+        highlights:'App Router with nested layouts for workbench UI; Edge Runtime for sub-millisecond auth middleware; Server Components reduce client JS bundle; Route Handlers replace traditional API routes' },
+      zh: { title:'Next.js', subtitle:'React 框架，混合静态和服务端渲染',
+        overview:'Next.js 14 App Router 是 GraphSci（复杂路由的研究工作台）和 SubmitFlow（Edge 中间件的职位聚合平台）的全栈基础。App Router 在单个 React 框架内启用布局、流式输出和 Server Components。',
+        tech:['App Router','Server Components','Edge Runtime','Route Handlers','中间件','SSR/SSG'],
+        arch:'flowchart TD\n    Req[请求] --> MW[Edge 中间件]\n    MW --> Router[App Router]\n    Router --> SC[Server Component]\n    Router --> CC[Client Component]\n    SC --> DB[(数据库)]\n    CC --> API[Route Handler]',
+        highlights:'App Router 嵌套布局实现工作台 UI；Edge Runtime 亚毫秒认证中间件；Server Components 减少客户端 JS；Route Handlers 替代传统 API 路由' }
+    },
+    'tailwind-css': {
+      en: { title:'Tailwind CSS', subtitle:'Utility-first CSS framework for rapidly building custom designs',
+        overview:'Tailwind CSS provides the design system foundation for GraphSci (editorial research UI) and SubmitFlow (high-contrast job board). Utility classes enable precise control over Swiss/editorial design language without fighting a component library\'s opinions.',
+        tech:['Utility Classes','JIT Compiler','Design Tokens','Responsive','Dark Mode','@apply'],
+        arch:'flowchart LR\n    Classes[Utility Classes] --> JIT[JIT Compiler]\n    JIT --> CSS[Minimal CSS]\n    CSS --> Design[Design System]',
+        highlights:'JIT compiler generates only used CSS; Design tokens enforce Swiss editorial consistency; Built-in dark mode with class strategy; Responsive prefixes for all breakpoints' },
+      zh: { title:'Tailwind CSS', subtitle:'实用优先的 CSS 框架，快速构建自定义设计',
+        overview:'Tailwind CSS 为 GraphSci（编辑级研究 UI）和 SubmitFlow（高对比度职位面板）提供设计系统基础。实用类实现对 Swiss/编辑级设计语言的精确控制，无需与组件库的预设样式对抗。',
+        tech:['实用类','JIT 编译器','Design Tokens','响应式','深色模式','@apply'],
+        arch:'flowchart LR\n    Classes[实用类] --> JIT[JIT 编译器]\n    JIT --> CSS[最小化 CSS]\n    CSS --> Design[设计系统]',
+        highlights:'JIT 编译器仅生成使用的 CSS；Design Token 强制 Swiss 编辑一致性；内置 class 策略深色模式；所有断点的响应式前缀' }
+    },
+
+    /* ===== Databases & Storage ===== */
+    'postgresql': {
+      en: { title:'PostgreSQL', subtitle:'Advanced open-source relational database with powerful extensions',
+        overview:'PostgreSQL serves as the primary database across GraphSci (ACID business data + pgvector embeddings), DeepIntel (sessions, RAG metadata, tool audit trails), and SubmitFlow (companies, jobs, applications, user auth). Its extension ecosystem (pgvector, PostGIS, full-text search) makes it a versatile single-database solution.',
+        tech:['pgvector','Full-Text Search','JSONB','CTE','ACID','Row-Level Security'],
+        arch:'flowchart TD\n    App[Application] --> Pool[Connection Pool]\n    Pool --> PG[(PostgreSQL)]\n    PG --> Vector[pgvector Index]\n    PG --> FTS[Full-Text Search]\n    PG --> JSON[JSONB Metadata]',
+        highlights:'pgvector for unified vector + relational queries; Full-text search for paper/company discovery; JSONB for flexible metadata without schema migration; Row-level security for multi-tenant data isolation; CTE-based complex recommendation queries' },
+      zh: { title:'PostgreSQL', subtitle:'先进的开源关系型数据库，强大的扩展生态',
+        overview:'PostgreSQL 是 GraphSci（ACID 业务数据 + pgvector 嵌入）、DeepIntel（会话、RAG 元数据、工具审计追踪）和 SubmitFlow（公司、职位、申请、用户认证）的主数据库。其扩展生态（pgvector、PostGIS、全文搜索）使其成为多功能单数据库方案。',
+        tech:['pgvector','全文搜索','JSONB','CTE','ACID','行级安全'],
+        arch:'flowchart TD\n    App[应用] --> Pool[连接池]\n    Pool --> PG[(PostgreSQL)]\n    PG --> Vector[pgvector 索引]\n    PG --> FTS[全文搜索]\n    PG --> JSON[JSONB 元数据]',
+        highlights:'pgvector 统一向量+关系查询；全文搜索论文/公司发现；JSONB 灵活元数据无需 Schema 迁移；行级安全多租户数据隔离；CTE 复杂推荐查询' }
+    },
+    'pgvector': {
+      en: { title:'pgvector', subtitle:'Open-source vector similarity search extension for PostgreSQL',
+        overview:'pgvector extends PostgreSQL with vector storage and ANN (approximate nearest neighbor) indexing — powering RAG retrieval in GraphSci and DeepIntel. It keeps embeddings co-located with business data, enabling single-query vector + relational filtering without data duplication.',
+        tech:['IVFFlat','HNSW','Cosine Distance','L2 Distance','Inner Product','Hybrid Search'],
+        arch:'flowchart LR\n    Query[Query Embedding] --> Index[pgvector Index]\n    Index --> ANN[ANN Search]\n    ANN --> Filter[JOIN Business Data]\n    Filter --> Results[Ranked Results]',
+        highlights:'Co-located vectors with business data in one DB; IVFFlat and HNSW index types; Cosine/L2/inner product distance metrics; Single SQL query combines vector search + relational filters' },
+      zh: { title:'pgvector', subtitle:'PostgreSQL 的开源向量相似度搜索扩展',
+        overview:'pgvector 扩展 PostgreSQL 以支持向量存储和 ANN（近似最近邻）索引——驱动 GraphSci 和 DeepIntel 的 RAG 检索。它将嵌入向量与业务数据共存一处，实现单查询向量+关系过滤，无需数据复制。',
+        tech:['IVFFlat','HNSW','余弦距离','L2 距离','内积','混合搜索'],
+        arch:'flowchart LR\n    Query[查询嵌入] --> Index[pgvector 索引]\n    Index --> ANN[ANN 搜索]\n    ANN --> Filter[JOIN 业务数据]\n    Filter --> Results[排序结果]',
+        highlights:'向量与业务数据共存同一数据库；IVFFlat 和 HNSW 索引类型；余弦/L2/内积距离度量；单 SQL 查询组合向量搜索+关系过滤' }
+    },
+    'redis': {
+      en: { title:'Redis', subtitle:'In-memory data structure store used as cache, message broker, and session store',
+        overview:'Redis provides session caching and SSE state management in DeepIntel. In GraphSci and SubmitFlow, Redis interfaces are pre-reserved for future horizontal scaling — currently used sparingly to avoid introducing a second stateful service prematurely.',
+        tech:['Caching','Pub/Sub','Session Store','Rate Limiting','Sorted Sets','TTL'],
+        arch:'flowchart LR\n    App[Application] --> Cache[Redis Cache]\n    Cache --> Hit[Hit: instant]\n    Cache --> Miss[Miss: query DB]\n    Miss --> DB[(PostgreSQL)]',
+        highlights:'Sub-millisecond in-memory cache responses; Pub/Sub for real-time SSE event distribution; TTL-based automatic cache invalidation; Pre-reserved interfaces for horizontal scaling' },
+      zh: { title:'Redis', subtitle:'内存数据结构存储，用作缓存、消息代理和会话存储',
+        overview:'Redis 提供 DeepIntel 中的会话缓存和 SSE 状态管理。在 GraphSci 和 SubmitFlow 中，Redis 接口已预留给未来水平扩展——当前谨慎使用，避免过早引入第二个有状态服务。',
+        tech:['缓存','Pub/Sub','会话存储','限流','有序集合','TTL'],
+        arch:'flowchart LR\n    App[应用] --> Cache[Redis 缓存]\n    Cache --> Hit[命中: 即时]\n    Cache --> Miss[未命中: 查 DB]\n    Miss --> DB[(PostgreSQL)]',
+        highlights:'亚毫秒内存缓存响应；Pub/Sub 实时 SSE 事件分发；TTL 自动缓存失效；预留给水平扩展的接口' }
+    },
+    'prisma': {
+      en: { title:'Prisma', subtitle:'Next-generation Node.js and TypeScript ORM',
+        overview:'Prisma serves as GraphSci\'s primary ORM, providing type-safe database access with auto-generated migrations, relation management, and schema-as-truth workflow. Its type generation eliminates the gap between database schema and TypeScript types.',
+        tech:['Schema-first','Migrations','Type Safety','Relation Queries','Raw SQL','Prisma Studio'],
+        arch:'flowchart LR\n    Schema[Prisma Schema] --> Generate[Type Gen]\n    Schema --> Migrate[Migration SQL]\n    Generate --> TS[TypeScript Types]\n    TS --> Query[Type-safe Query]\n    Query --> DB[(PostgreSQL)]',
+        highlights:'Schema-first design with auto-generated types; Migration system with version control; Type-safe relation queries eliminate ORM bugs; Prisma Studio for visual data exploration' },
+      zh: { title:'Prisma', subtitle:'下一代 Node.js 和 TypeScript ORM',
+        overview:'Prisma 是 GraphSci 的主 ORM，提供类型安全的数据库访问，自动生成迁移、关系管理和 Schema-as-truth 工作流。其类型生成消除了数据库模式与 TypeScript 类型之间的鸿沟。',
+        tech:['Schema 优先','迁移','类型安全','关联查询','原生 SQL','Prisma Studio'],
+        arch:'flowchart LR\n    Schema[Prisma Schema] --> Generate[类型生成]\n    Schema --> Migrate[迁移 SQL]\n    Generate --> TS[TypeScript 类型]\n    TS --> Query[类型安全查询]\n    Query --> DB[(PostgreSQL)]',
+        highlights:'Schema 优先设计 + 自动类型生成；版本控制的迁移系统；类型安全关联查询消除 ORM bug；Prisma Studio 可视化数据探索' }
+    },
+    'vector-db': {
+      en: { title:'Vector Database', subtitle:'Specialized database for storing and querying high-dimensional embeddings',
+        overview:'Vector databases store semantic embeddings of text, enabling similarity search beyond keyword matching. In HomeMind, a local vector DB powers RAG memory recall. In GraphSci and DeepIntel, PostgreSQL + pgvector provides unified vector + relational storage.',
+        tech:['Embeddings','ANN Search','Cosine Similarity','HNSW Index','Metadata Filtering','Hybrid Search'],
+        arch:'flowchart LR\n    Text[Document] --> Embed[Embedding Model]\n    Embed --> Vec[(Vector DB)]\n    Query[User Query] --> QEmbed[Query Embedding]\n    QEmbed --> Vec\n    Vec --> Results[Top-k Results]',
+        highlights:'Semantic similarity beyond keyword matching; ANN indexing for sub-10ms queries at scale; Metadata filtering combines vector + structured search; Dense + sparse hybrid retrieval patterns' },
+      zh: { title:'向量数据库', subtitle:'存储和查询高维嵌入向量的专用数据库',
+        overview:'向量数据库存储文本的语义嵌入，实现超越关键词匹配的相似度搜索。在 HomeMind 中，本地向量数据库驱动 RAG 记忆召回。在 GraphSci 和 DeepIntel 中，PostgreSQL + pgvector 提供统一的向量+关系存储。',
+        tech:['Embedding','ANN 搜索','余弦相似度','HNSW 索引','元数据过滤','混合搜索'],
+        arch:'flowchart LR\n    Text[文档] --> Embed[嵌入模型]\n    Embed --> Vec[(向量数据库)]\n    Query[用户查询] --> QEmbed[查询嵌入]\n    QEmbed --> Vec\n    Vec --> Results[Top-k 结果]',
+        highlights:'超越关键词匹配的语义相似度；ANN 索引亚 10ms 级查询；元数据过滤组合向量+结构化搜索；稠密+稀疏混合检索模式' }
+    },
+
+    /* ===== AI / ML Stacks ===== */
+    'sentence-transformers': {
+      en: { title:'Sentence-Transformers', subtitle:'Python framework for state-of-the-art sentence and text embeddings',
+        overview:'Sentence-Transformers (all-MiniLM-L6-v2) powers HausRAGen\'s code retrieval and semantic clustering pipelines — converting natural language queries and TAP rule code into dense vector embeddings for cosine similarity matching. Lazy-loaded on first request to minimize cold-start latency.',
+        tech:['all-MiniLM-L6-v2','Cosine Similarity','Embedding Pooling','HuggingFace Hub','ONNX Export','Batch Inference'],
+        arch:'flowchart LR\n    Text[Rule Code / Query] --> Tokenize[Tokenize]\n    Tokenize --> Model[all-MiniLM-L6-v2]\n    Model --> Pool[Mean Pooling]\n    Pool --> Embed[384-dim Embedding]\n    Embed --> Sim[Cosine Similarity]',
+        highlights:'384-dimensional dense embeddings; Mean pooling for sentence-level semantics; Lazy model loading minimizes cold start; Cosine similarity for clustering and retrieval; ONNX-compatible for production optimization' },
+      zh: { title:'Sentence-Transformers', subtitle:'用于最先进句子和文本嵌入的 Python 框架',
+        overview:'Sentence-Transformers（all-MiniLM-L6-v2）驱动 HausRAGen 的代码检索和语义聚类管线——将自然语言查询和 TAP 规则代码转换为稠密向量嵌入，用于余弦相似度匹配。首次请求时延迟加载以最小化冷启动延迟。',
+        tech:['all-MiniLM-L6-v2','余弦相似度','嵌入池化','HuggingFace Hub','ONNX 导出','批量推理'],
+        arch:'flowchart LR\n    Text[规则代码 / 查询] --> Tokenize[分词]\n    Tokenize --> Model[all-MiniLM-L6-v2]\n    Model --> Pool[Mean Pooling]\n    Pool --> Embed[384 维嵌入]\n    Embed --> Sim[余弦相似度]',
+        highlights:'384 维稠密嵌入向量；Mean Pooling 句级语义；延迟加载最小化冷启动；余弦相似度用于聚类和检索；ONNX 兼容便于生产优化' }
+    },
+    'semantic-clustering': {
+      en: { title:'Semantic Clustering', subtitle:'Grouping semantically similar items using embedding-based similarity',
+        overview:'HausRAGen\'s semantic clustering engine computes BSR (Broad Semantic Recall) and LSR (Lightweight Semantic Rerank) similarity matrices from code embeddings, then groups semantically related automation rules into clusters. This enables users to discover related TAP rules without knowing exact keywords.',
+        tech:['BSR Matrix','LSR Matrix','Cosine Similarity','K-Means','Agglomerative','Silhouette Score'],
+        arch:'flowchart TD\n    Codes[Automation Codes] --> Embed[sentence-transformers]\n    Embed --> BSR[BSR Similarity Matrix]\n    Embed --> LSR[LSR Similarity Matrix]\n    BSR --> Cluster[Clustering]\n    LSR --> Cluster\n    Cluster --> Groups[Semantic Groups]',
+        highlights:'BSR: broad recall across all code pairs; LSR: lightweight refinement of top candidates; K-Means and agglomerative clustering strategies; Silhouette score for cluster quality evaluation' },
+      zh: { title:'语义聚类', subtitle:'使用基于嵌入的相似度对语义相似项进行分组',
+        overview:'HausRAGen 的语义聚类引擎从代码嵌入计算 BSR（广度语义召回）和 LSR（轻量语义重排）相似度矩阵，然后将语义相关的自动化规则分组为簇。用户无需知道确切关键词即可发现相关的 TAP 规则。',
+        tech:['BSR 矩阵','LSR 矩阵','余弦相似度','K-Means','层次聚类','轮廓系数'],
+        arch:'flowchart TD\n    Codes[自动化代码] --> Embed[sentence-transformers]\n    Embed --> BSR[BSR 相似度矩阵]\n    Embed --> LSR[LSR 相似度矩阵]\n    BSR --> Cluster[聚类]\n    LSR --> Cluster\n    Cluster --> Groups[语义组]',
+        highlights:'BSR：所有代码对的广度召回；LSR：top 候选的轻量精炼；K-Means 和层次聚类策略；轮廓系数评估聚类质量' }
+    },
+    'bsrlsr': {
+      en: { title:'BSR / LSR', subtitle:'Two-stage semantic retrieval: Broad Semantic Recall + Lightweight Semantic Rerank',
+        overview:'BSR+LSR is the core retrieval architecture shared by HomeMind and HausRAGen. BSR performs fast, broad candidate recall across the full corpus using vector similarity. LSR then does a lightweight, high-precision reranking on the top candidates — yielding both high recall and high precision without expensive LLM calls.',
+        tech:['Vector Recall','BM25','Cosine Similarity','Candidate Pool','Reranking Score','Fusion'],
+        arch:'flowchart TD\n    Query[User Query] --> BSR[BSR: Broad Recall]\n    BSR --> Pool[Candidate Pool ~50]\n    Pool --> LSR[LSR: Lightweight Rerank]\n    LSR --> TopK[Top-K Results ~5]\n    TopK --> LLM[LLM Decision]',
+        highlights:'Two-stage pipeline: recall then rerank; BSR uses fast vector similarity for coverage; LSR uses lightweight model for precision; Minimizes expensive LLM calls by pre-filtering; Shared architecture across HomeMind and HausRAGen' },
+      zh: { title:'BSR / LSR', subtitle:'两级语义检索：广度语义召回 + 轻量语义重排',
+        overview:'BSR+LSR 是 HomeMind 和 HausRAGen 共享的核心检索架构。BSR 使用向量相似度在整个语料库上执行快速、广度候选召回。LSR 然后对 top 候选进行轻量、高精度重排——同时获得高召回率和高精度，无需昂贵的 LLM 调用。',
+        tech:['向量召回','BM25','余弦相似度','候选池','重排打分','融合'],
+        arch:'flowchart TD\n    Query[用户查询] --> BSR[BSR: 广度召回]\n    BSR --> Pool[候选池 ~50]\n    Pool --> LSR[LSR: 轻量重排]\n    LSR --> TopK[Top-K 结果 ~5]\n    TopK --> LLM[LLM 决策]',
+        highlights:'两级管线：先召回后重排；BSR 快速向量相似度保证覆盖率；LSR 轻量模型保证精度；预过滤最小化昂贵 LLM 调用；HomeMind 和 HausRAGen 共享架构' }
+    },
+    'playwright': {
+      en: { title:'Playwright', subtitle:'Reliable end-to-end browser automation for testing and scraping',
+        overview:'Playwright powers the browser automation layer in both DeepIntel (webpage content extraction for research) and SubmitFlow (headless Chromium job scraping from 500+ company career pages). Containerized with official Docker images for consistent CI/CD execution.',
+        tech:['Chromium','Headless Mode','Page Extraction','Network Interception','Docker Image','Async API'],
+        arch:'flowchart LR\n    URL[Target URL] --> Browser[Playwright Chromium]\n    Browser --> Nav[Navigate + Wait]\n    Nav --> Extract[Content Extraction]\n    Extract --> Parse[Structured Output]',
+        highlights:'Headless Chromium for server-side rendering extraction; Network interception for API response capture; Docker-optimized with playwright/playwright base image; Async API for concurrent multi-page scraping' },
+      zh: { title:'Playwright', subtitle:'可靠的端到端浏览器自动化，用于测试和抓取',
+        overview:'Playwright 驱动 DeepIntel（研究网页内容提取）和 SubmitFlow（从 500+ 公司招聘页面进行 headless Chromium 职位抓取）的浏览器自动化层。使用官方 Docker 镜像容器化以实现一致的 CI/CD 执行。',
+        tech:['Chromium','Headless 模式','页面提取','网络拦截','Docker 镜像','Async API'],
+        arch:'flowchart LR\n    URL[目标 URL] --> Browser[Playwright Chromium]\n    Browser --> Nav[导航 + 等待]\n    Nav --> Extract[内容提取]\n    Extract --> Parse[结构化输出]',
+        highlights:'Headless Chromium 服务端渲染提取；网络拦截捕获 API 响应；基于 playwright/playwright 镜像 Docker 优化；Async API 并发多页面抓取' }
+    },
+    'docker': {
+      en: { title:'Docker', subtitle:'Container platform for packaging applications with their dependencies',
+        overview:'Docker containerizes all major services across the portfolio: GraphSci (multi-service research platform), DeepIntel (FastAPI + PostgreSQL + Redis), SubmitFlow (web + worker + postgres 3-container Compose), and HausRAGen (Node.js API + Python ML). Compose orchestrates local development; images deploy to production unchanged.',
+        tech:['Dockerfile','Compose','Volumes','Healthcheck','Multi-stage Build','Networks'],
+        arch:'flowchart TD\n    Code[Source Code] --> Build[Docker Build]\n    Build --> Image[Container Image]\n    Image --> Compose[Docker Compose]\n    Compose --> Web[Web Container]\n    Compose --> Worker[Worker Container]\n    Compose --> DB[(Postgres Container)]',
+        highlights:'Single-command local startup with docker compose up; Persistent volumes for database durability; Healthcheck-based service dependency ordering; Multi-stage builds minimize image size' },
+      zh: { title:'Docker', subtitle:'将应用与其依赖打包的容器平台',
+        overview:'Docker 容器化了项目组合中的所有主要服务：GraphSci（多服务研究平台）、DeepIntel（FastAPI + PostgreSQL + Redis）、SubmitFlow（web + worker + postgres 三容器 Compose）和 HausRAGen（Node.js API + Python ML）。Compose 编排本地开发；镜像不变部署到生产。',
+        tech:['Dockerfile','Compose','卷','健康检查','多阶段构建','网络'],
+        arch:'flowchart TD\n    Code[源代码] --> Build[Docker Build]\n    Build --> Image[容器镜像]\n    Image --> Compose[Docker Compose]\n    Compose --> Web[Web 容器]\n    Compose --> Worker[Worker 容器]\n    Compose --> DB[(Postgres 容器)]',
+        highlights:'docker compose up 一键本地启动；持久化卷保证数据库持久性；基于健康检查的服务依赖排序；多阶段构建最小化镜像大小' }
+    },
+
+    /* ===== Search / Retrieval ===== */
+    'bm25': {
+      en: { title:'BM25', subtitle:'Probabilistic ranking function for sparse text retrieval',
+        overview:'BM25 (Best Matching 25) powers sparse lexical retrieval in DeepIntel\'s hybrid search pipeline — complementing dense vector search with exact term matching. It excels at finding documents containing rare but highly discriminative keywords that embedding models might miss.',
+        tech:['TF-IDF','Term Saturation','Document Length Norm','Sparse Retrieval','Hybrid Fusion','Elasticsearch'],
+        arch:'flowchart LR\n    Query[Query Terms] --> Tokenize[Tokenize]\n    Tokenize --> IDF[IDF Weighting]\n    IDF --> TF[TF Saturation]\n    TF --> Score[BM25 Score]\n    Score --> Rank[Ranked Results]',
+        highlights:'Excels at rare keyword matching where embeddings fail; Complements dense retrieval in hybrid pipelines; Document length normalization prevents bias; Used in DeepIntel multi-route retrieval alongside pgvector' },
+      zh: { title:'BM25', subtitle:'稀疏文本检索的概率排序函数',
+        overview:'BM25（最佳匹配 25）驱动 DeepIntel 混合搜索管线中的稀疏词汇检索——用精确术语匹配补充稠密向量搜索。它擅长查找包含嵌入模型可能遗漏的稀有但高区分度关键词的文档。',
+        tech:['TF-IDF','词频饱和','文档长度归一','稀疏检索','混合融合','Elasticsearch'],
+        arch:'flowchart LR\n    Query[查询词] --> Tokenize[分词]\n    Tokenize --> IDF[IDF 加权]\n    IDF --> TF[TF 饱和]\n    TF --> Score[BM25 得分]\n    Score --> Rank[排序结果]',
+        highlights:'在嵌入模型失效的稀有关键词匹配中表现出色；混合管线中补充稠密检索；文档长度归一化防止偏差；用于 DeepIntel 多路检索配合 pgvector' }
     },
     'rag': {
-      en: {
-        title: 'RAG (Retrieval-Augmented Generation)',
-        subtitle: 'Grounding LLM outputs in retrieved evidence to reduce hallucination',
-        overview: 'RAG combines information retrieval with language generation. Instead of relying solely on model parameters, it retrieves relevant documents from a knowledge base and conditions generation on that evidence, dramatically reducing hallucination.',
-        tech: ['Vector DB','Embedding','BM25','Reranking','Hybrid Search','Chunking'],
-        arch: 'flowchart LR\n    Q[Query] --> QR[Query Reformulation] --> MRR[Multi-Route Retrieval] --> F[Fusion] --> R[Reranking] --> CA[Context Assembly] --> GG[Grounded Generation]',
-        highlights: 'BSR (Broad Semantic Recall) multi-path architecture; Hybrid dense+sparse retrieval; Evidence attribution and citation; Adaptive chunking strategies'
-      },
-      zh: {
-        title: 'RAG（检索增强生成）',
-        subtitle: '将 LLM 输出锚定在检索到的证据上，减少幻觉',
-        overview: 'RAG 将信息检索与语言生成相结合。它不单纯依赖模型参数，而是从知识库中检索相关文档，并以这些证据为条件进行生成，大幅减少幻觉。',
-        tech: ['向量数据库','Embedding','BM25','重排序','混合搜索','分块'],
-        arch: 'flowchart LR\n    Q[查询] --> QR[查询改写] --> MRR[多路召回] --> F[融合] --> R[重排序] --> CA[上下文组装] --> GG[证据增强生成]',
-        highlights: 'BSR（广度语义召回）多路径架构；混合稠密+稀疏检索；证据溯源与引用；自适应分块策略'
-      }
+      en: { title:'RAG (Retrieval-Augmented Generation)', subtitle:'Grounding LLM outputs in retrieved evidence to reduce hallucination',
+        overview:'RAG combines information retrieval with language generation — retrieving relevant documents from a knowledge base and conditioning generation on that evidence. Used across HomeMind (local RAG memory), DeepIntel (multi-route RAG with pgvector+BM25+rerank), and GraphSci (multi-layer RAG with evidence ledger and permission filtering).',
+        tech:['Vector DB','Embedding','BM25','Reranking','Hybrid Search','Chunking'],
+        arch:'flowchart LR\n    Q[Query] --> QR[Query Reformulation]\n    QR --> MRR[Multi-Route Retrieval]\n    MRR --> F[Fusion]\n    F --> R[Reranking]\n    R --> CA[Context Assembly]\n    CA --> GG[Grounded Generation]',
+        highlights:'BSR multi-path architecture for high recall; Hybrid dense+sparse retrieval; Evidence attribution with source citation; Adaptive chunking for varied document types; Permission-aware retrieval in GraphSci' },
+      zh: { title:'RAG（检索增强生成）', subtitle:'将 LLM 输出锚定于检索证据以减少幻觉',
+        overview:'RAG 将信息检索与语言生成相结合——从知识库检索相关文档并以证据为条件进行生成。用于 HomeMind（本地 RAG 记忆）、DeepIntel（多路 RAG + pgvector+BM25+重排）和 GraphSci（多层 RAG + 证据账本 + 权限过滤）。',
+        tech:['向量数据库','Embedding','BM25','重排序','混合搜索','分块'],
+        arch:'flowchart LR\n    Q[查询] --> QR[查询改写]\n    QR --> MRR[多路召回]\n    MRR --> F[融合]\n    F --> R[重排序]\n    R --> CA[上下文组装]\n    CA --> GG[证据增强生成]',
+        highlights:'BSR 多路径架构高召回率；稠密+稀疏混合检索；带来源引用的证据溯源；自适应分块适应不同文档类型；GraphSci 中权限感知检索' }
+    },
+
+    /* ===== Specific Technologies ===== */
+    'ai-agent': {
+      en: { title:'AI Agent', subtitle:'Autonomous systems that perceive, reason, and act through tool use',
+        overview:'AI Agents are the central architectural pattern across the portfolio — from HomeMind\'s coordinator/specialist multi-agent system to DeepIntel\'s Planner→Search→Analyst→Reflection DAG to HausRAGen\'s TAP rule generation agent. Agents combine LLM reasoning with structured tool calling, state management, and multi-step planning.',
+        tech:['LangGraph','MCP','Tool Calling','Memory','Planning','Reflection'],
+        arch:'flowchart LR\n    P[Perception] --> Plan[Planning]\n    Plan --> Tool[Tool Selection]\n    Tool --> Exec[Execution]\n    Exec --> Obs[Observation]\n    Obs --> Plan',
+        highlights:'Stateful agent workflows with checkpoint/resume; Tool-augmented reasoning via MCP protocol; Multi-agent orchestration (coordinator/specialist); Long-term memory with closed-loop preference learning; DAG-based research planning with reflection' },
+      zh: { title:'AI Agent', subtitle:'通过工具使用进行感知、推理和行动的自主系统',
+        overview:'AI Agent 是项目组合中的核心架构模式——从 HomeMind 的 coordinator/specialist 多智能体系统，到 DeepIntel 的 Planner→Search→Analyst→Reflection DAG，再到 HausRAGen 的 TAP 规则生成智能体。Agent 将 LLM 推理与结构化工具调用、状态管理和多步规划相结合。',
+        tech:['LangGraph','MCP','Tool Calling','Memory','Planning','Reflection'],
+        arch:'flowchart LR\n    P[感知] --> Plan[规划]\n    Plan --> Tool[工具选择]\n    Tool --> Exec[执行]\n    Exec --> Obs[观察]\n    Obs --> Plan',
+        highlights:'有状态智能体工作流+检查点/恢复；基于 MCP 协议的工具增强推理；多智能体编排（coordinator/specialist）；闭环偏好学习的长期记忆；基于 DAG 的研究规划+反思' }
     },
     'langgraph': {
-      en: {
-        title: 'LangGraph',
-        subtitle: 'Stateful, graph-based agent orchestration framework',
-        overview: 'LangGraph models agent workflows as directed graphs where nodes represent computation steps and edges represent conditional transitions. It provides built-in support for state management, checkpointing, and human-in-the-loop patterns.',
-        tech: ['StateGraph','Checkpointing','Conditional Edges','Subgraphs','Streaming','Human-in-the-Loop'],
-        arch: 'flowchart TD\n    SD[State Definition] --> NI[Node Implementation] --> EL[Edge Logic] --> GC[Graph Compilation] --> ES[Execution + Streaming] --> CR[Checkpoint / Resume]',
-        highlights: 'Cyclical agent workflows beyond DAG; Time-travel debugging with checkpoint replay; Nested subgraph composition; SSE streaming for real-time progress'
-      },
-      zh: {
-        title: 'LangGraph',
-        subtitle: '有状态的图式智能体编排框架',
-        overview: 'LangGraph 将智能体工作流建模为有向图，节点代表计算步骤，边代表条件转移。它提供内置的状态管理、检查点和人机协同模式支持。',
-        tech: ['StateGraph','Checkpointing','条件边','子图','流式输出','人机协同'],
-        arch: 'flowchart TD\n    SD[状态定义] --> NI[节点实现] --> EL[边逻辑] --> GC[图编译] --> ES[流式执行] --> CR[检查点 / 恢复]',
-        highlights: '超越 DAG 的环形智能体工作流；检查点回放的时间旅行调试；嵌套子图组合；SSE 流式实时进度'
-      }
+      en: { title:'LangGraph', subtitle:'Stateful, graph-based agent orchestration framework',
+        overview:'LangGraph models agent workflows as directed graphs with state management, checkpointing, and conditional edges. Used in HomeMind (agent coordination DAG), DeepIntel (Planner→DAG Executor→Analyst→Reflection with replan loops), and GraphSci (AI/RAG internal service for research workflows).',
+        tech:['StateGraph','Checkpointing','Conditional Edges','Subgraphs','Streaming','Human-in-the-Loop'],
+        arch:'flowchart TD\n    SD[State Definition] --> NI[Node Implementation]\n    NI --> EL[Edge Logic]\n    EL --> GC[Graph Compilation]\n    GC --> ES[Execution + Streaming]\n    ES --> CR[Checkpoint / Resume]',
+        highlights:'Cyclical agent workflows beyond DAG limits; Time-travel debugging with checkpoint replay; Nested subgraph composition for complex workflows; SSE streaming for real-time execution visibility' },
+      zh: { title:'LangGraph', subtitle:'有状态的图式智能体编排框架',
+        overview:'LangGraph 将智能体工作流建模为有向图，具有状态管理、检查点和条件边。用于 HomeMind（智能体协调 DAG）、DeepIntel（Planner→DAG 执行器→Analyst→Reflection + 重规划循环）和 GraphSci（研究工作的 AI/RAG 内部服务）。',
+        tech:['StateGraph','Checkpointing','条件边','子图','流式输出','人机协同'],
+        arch:'flowchart TD\n    SD[状态定义] --> NI[节点实现]\n    NI --> EL[边逻辑]\n    EL --> GC[图编译]\n    GC --> ES[流式执行]\n    ES --> CR[检查点 / 恢复]',
+        highlights:'超越 DAG 的环形智能体工作流；检查点回放的时间旅行调试；嵌套子图组合实现复杂工作流；SSE 流式实时执行可见性' }
     },
     'mcp': {
-      en: {
-        title: 'MCP (Model Context Protocol)',
-        subtitle: 'Open protocol for connecting AI models to external tools and data sources',
-        overview: 'MCP standardizes how AI models discover and interact with external tools, data sources, and services. It defines a client-server architecture where models act as clients that connect to MCP servers exposing resources, tools, and prompt templates.',
-        tech: ['JSON-RPC','Tool Definition','Resource Exposure','Stdio/HTTP Transport','Server Composition'],
-        arch: 'flowchart LR\n    C[MCP Client] --> D[Discovery] --> L[Tool/Rsrc Listing] --> S[Selection] --> I[Invocation] --> R[Result] --> CI[Context Integration]',
-        highlights: 'Universal tool interface across model providers; Dynamic tool discovery without hardcoding; Server composition for complex tool chains; Standardized error handling and logging'
-      },
-      zh: {
-        title: 'MCP（模型上下文协议）',
-        subtitle: '连接 AI 模型与外部工具和数据源的开放协议',
-        overview: 'MCP 标准化了 AI 模型发现和与外部工具、数据源、服务交互的方式。它定义了客户端-服务器架构，模型作为客户端连接到暴露资源、工具和提示模板的 MCP 服务器。',
-        tech: ['JSON-RPC','工具定义','资源暴露','Stdio/HTTP 传输','服务组合'],
-        arch: 'flowchart LR\n    C[MCP Client] --> D[发现] --> L[工具/资源列表] --> S[选择] --> I[调用] --> R[结果] --> CI[上下文集成]',
-        highlights: '跨模型提供商的通用工具接口；无需硬编码的动态工具发现；复杂工具链的服务组合；标准化错误处理和日志'
-      }
+      en: { title:'MCP (Model Context Protocol)', subtitle:'Open protocol for connecting AI models to external tools and data sources',
+        overview:'MCP standardizes how AI models discover and interact with external tools, data sources, and services. In DeepIntel, McpPolicyProxy adds defense-in-depth: server allowlisting, trust-status gating, JSON Schema validation, secret redaction, and read-only-default with auto-escalation to human approval.',
+        tech:['JSON-RPC','Tool Definition','Resource Exposure','Stdio/HTTP Transport','Policy Proxy','Server Composition'],
+        arch:'flowchart LR\n    C[MCP Client] --> D[Discovery]\n    D --> L[Tool/Rsrc Listing]\n    L --> S[Selection]\n    S --> I[Invocation]\n    I --> R[Result]\n    R --> CI[Context Integration]',
+        highlights:'Universal tool interface across model providers; Dynamic tool discovery without hardcoding; Defense-in-depth policy proxy (allowlist + trust + schema + redaction); Server composition for complex tool chains' },
+      zh: { title:'MCP（模型上下文协议）', subtitle:'连接 AI 模型与外部工具和数据源的开放协议',
+        overview:'MCP 标准化了 AI 模型发现和与外部工具、数据源、服务交互的方式。在 DeepIntel 中，McpPolicyProxy 添加纵深防御：服务白名单、信任状态门控、JSON Schema 校验、密钥脱敏、只读默认+写操作自动升级人工审批。',
+        tech:['JSON-RPC','工具定义','资源暴露','Stdio/HTTP 传输','策略代理','服务组合'],
+        arch:'flowchart LR\n    C[MCP Client] --> D[发现]\n    D --> L[工具/资源列表]\n    L --> S[选择]\n    S --> I[调用]\n    I --> R[结果]\n    R --> CI[上下文集成]',
+        highlights:'跨模型提供商的通用工具接口；无需硬编码的动态工具发现；纵深防御策略代理（白名单+信任+Schema+脱敏）；复杂工具链的服务组合' }
+    },
+
+    /* ===== AI Orchestration ===== */
+    'multi-provider-ai': {
+      en: { title:'Multi-Provider AI Orchestration', subtitle:'Unified abstraction layer over multiple AI service providers',
+        overview:'HausRAGen and SubmitFlow both implement multi-provider AI orchestration — a unified abstraction over 8+ AI services (Claude, DeepSeek, MiniMax, GLM, Qwen, Kimi, OpenAI-compatible). Key capabilities include automatic provider failover, placeholder API key detection, per-provider model selection, and structured output validation.',
+        tech:['Adapter Pattern','Failover','Key Validation','Model Routing','Cost Tracking','Structured Output'],
+        arch:'flowchart TD\n    Req[AI Request] --> Orch[Orchestrator]\n    Orch --> P1[Provider 1: Claude]\n    Orch --> P2[Provider 2: DeepSeek]\n    Orch --> P3[Provider 3: GLM]\n    P1 --> Fallback[Failover Chain]\n    Fallback --> P2\n    Result[Response] --> Validate[Output Validation]',
+        highlights:'Adapter pattern for 8+ provider APIs; Automatic failover when primary provider errors; Placeholder API key detection prevents config errors; Per-provider token usage and cost tracking; Structured output validation across all providers' },
+      zh: { title:'多提供商 AI 编排', subtitle:'多个 AI 服务提供商的统一抽象层',
+        overview:'HausRAGen 和 SubmitFlow 均实现了多提供商 AI 编排——对 8+ AI 服务（Claude、DeepSeek、MiniMax、GLM、Qwen、Kimi、OpenAI 兼容）的统一抽象。核心能力包括自动 Provider 降级、占位符 API Key 检测、按 Provider 模型选择和结构化输出校验。',
+        tech:['适配器模式','故障转移','Key 校验','模型路由','成本追踪','结构化输出'],
+        arch:'flowchart TD\n    Req[AI 请求] --> Orch[编排器]\n    Orch --> P1[Provider 1: Claude]\n    Orch --> P2[Provider 2: DeepSeek]\n    Orch --> P3[Provider 3: GLM]\n    P1 --> Fallback[降级链]\n    Fallback --> P2\n    Result[响应] --> Validate[输出校验]',
+        highlights:'适配器模式覆盖 8+ Provider API；主 Provider 出错自动降级；占位符 API Key 检测防配置错误；按 Provider Token 用量和成本追踪；跨所有 Provider 的结构化输出校验' }
+    },
+    'ai-orchestration': {
+      en: { title:'AI Orchestration', subtitle:'Coordinating multiple AI services and models in a unified pipeline',
+        overview:'AI Orchestration layers manage provider selection, request routing, structured output validation, and fallback chains. SubmitFlow implements this as a server-side orchestrator with 8 provider adapters. DeepIntel implements it via LangGraph\'s state machine with Planner routing to specialized agents.',
+        tech:['Provider Adapters','Failover','Output Parsing','Cost Tracking','Model Selection','Retry Logic'],
+        arch:'flowchart LR\n    Input[User Intent] --> Route[Route Decision]\n    Route --> Provider[Provider Selection]\n    Provider --> Parse[Structured Output]\n    Parse --> Validate[Validation]\n    Validate --> Output[Final Response]',
+        highlights:'Unified interface across heterogeneous AI APIs; Automatic retry with exponential backoff; Structured output parsing (JSON, typed responses); Cost-aware model selection based on task complexity' },
+      zh: { title:'AI 编排', subtitle:'在统一管线中协调多个 AI 服务和模型',
+        overview:'AI 编排层管理 Provider 选择、请求路由、结构化输出校验和降级链。SubmitFlow 将其实现为带有 8 个 Provider 适配器的服务端编排器。DeepIntel 通过 LangGraph 状态机实现，Planner 路由到专业化 Agent。',
+        tech:['Provider 适配器','故障转移','输出解析','成本追踪','模型选择','重试逻辑'],
+        arch:'flowchart LR\n    Input[用户意图] --> Route[路由决策]\n    Route --> Provider[Provider 选择]\n    Provider --> Parse[结构化输出]\n    Parse --> Validate[校验]\n    Validate --> Output[最终响应]',
+        highlights:'跨异构 AI API 的统一接口；指数退避自动重试；结构化输出解析（JSON、类型响应）；基于任务复杂度的成本感知模型选择' }
+    },
+
+    /* ===== Authentication ===== */
+    'jwt-auth': {
+      en: { title:'JWT Authentication', subtitle:'Stateless token-based authentication for web applications',
+        overview:'SubmitFlow implements Edge-compatible JWT authentication using the jose library (HS256) — zero Node.js crypto dependency, zero bcrypt, zero polyfills. Runs in Next.js Edge Runtime for per-request auth gating with sub-millisecond overhead. GraphSci uses a full NestJS Guard-based JWT + session system.',
+        tech:['jose','HS256','Edge Runtime','Middleware','Session','Authorization'],
+        arch:'flowchart LR\n    Login[Login] --> Token[JWT Token]\n    Token --> Edge[Edge Middleware]\n    Edge --> Verify[jose verify]\n    Verify --> Allow[Allow / Deny]\n    Allow --> API[Protected Route]',
+        highlights:'Edge-compatible: zero Node.js crypto dependency; jose library for lightweight HS256 verification; Sub-millisecond per-request auth overhead; Encryption key rotation support; Separate access/refresh token pattern' },
+      zh: { title:'JWT 认证', subtitle:'面向 Web 应用的无状态令牌认证',
+        overview:'SubmitFlow 使用 jose 库（HS256）实现 Edge 兼容的 JWT 认证——零 Node.js crypto 依赖、零 bcrypt、零 polyfill。运行在 Next.js Edge Runtime 中，每次请求鉴权亚毫秒级开销。GraphSci 使用完整的 NestJS Guard 级 JWT + 会话系统。',
+        tech:['jose','HS256','Edge Runtime','中间件','会话','授权'],
+        arch:'flowchart LR\n    Login[登录] --> Token[JWT Token]\n    Token --> Edge[Edge 中间件]\n    Edge --> Verify[jose 校验]\n    Verify --> Allow[允许 / 拒绝]\n    Allow --> API[受保护路由]',
+        highlights:'Edge 兼容：零 Node.js crypto 依赖；jose 库轻量 HS256 校验；每次请求亚毫秒级认证开销；加密密钥轮换支持；分离的 access/refresh token 模式' }
+    },
+
+    /* ===== Workflow / Messaging ===== */
+    'temporal': {
+      en: { title:'Temporal', subtitle:'Durable execution platform for long-running business workflows',
+        overview:'Temporal provides durable execution for GraphSci\'s long-running research tasks — PDF parsing, RAG indexing, Explore/Critique/Validate/Memory workflows that need retry, cancel, resume, and human-in-the-loop signals. Workflow history is immutably recorded, enabling full replay and audit.',
+        tech:['Workflows','Activities','Signals','Queries','Sagas','Workflow History'],
+        arch:'flowchart TD\n    Start[Trigger] --> WF[Workflow]\n    WF --> Act1[Activity 1]\n    Act1 --> Signal{Human Signal?}\n    Signal -->|Yes| Act2[Activity 2]\n    Signal -->|Timeout| Retry[Retry Policy]\n    Act2 --> Complete[Complete]',
+        highlights:'Durable execution survives worker crashes; Workflow history enables full replay debugging; Native human-in-the-loop via Signals; Saga pattern for distributed transaction compensation; Multi-language SDK (Python + TypeScript)' },
+      zh: { title:'Temporal', subtitle:'长时间运行业务工作流的持久执行平台',
+        overview:'Temporal 为 GraphSci 的长时间研究任务提供持久执行——PDF 解析、RAG 索引、Explore/Critique/Validate/Memory 工作流，需要重试、取消、恢复和人机协同信号。工作流历史不可篡改记录，支持完整回放和审计。',
+        tech:['Workflows','Activities','Signals','Queries','Sagas','工作流历史'],
+        arch:'flowchart TD\n    Start[触发] --> WF[Workflow]\n    WF --> Act1[Activity 1]\n    Act1 --> Signal{人工信号?}\n    Signal -->|是| Act2[Activity 2]\n    Signal -->|超时| Retry[重试策略]\n    Act2 --> Complete[完成]',
+        highlights:'持久执行不受 Worker 崩溃影响；工作流历史支持完整回放调试；原生人机协同 via Signals；分布式事务补偿 Saga 模式；多语言 SDK（Python + TypeScript）' }
+    },
+    'sse': {
+      en: { title:'SSE (Server-Sent Events)', subtitle:'HTTP-based protocol for server-to-client real-time streaming',
+        overview:'SSE provides real-time progress streaming across DeepIntel (research DAG execution progress), GraphSci (task event streaming from Temporal workflows via BFF projection), and HomeMind (agent decision streaming). Simpler than WebSockets — unidirectional server→client over standard HTTP.',
+        tech:['EventSource API','text/event-stream','Reconnection','Event ID','Streaming','Chunked Transfer'],
+        arch:'flowchart LR\n    Server[Server] --> SSE[SSE Stream]\n    SSE --> Client[EventSource]\n    Client --> UI[Live UI Update]\n    SSE --> Reconnect[Auto Reconnect]\n    Reconnect --> LastID[Last-Event-ID]',
+        highlights:'Standard HTTP — no WebSocket upgrade needed; Automatic reconnection with Last-Event-ID; Chunked transfer encoding for progressive rendering; Used for DAG progress, task events, agent streaming' },
+      zh: { title:'SSE（Server-Sent Events）', subtitle:'基于 HTTP 的服务器到客户端实时流协议',
+        overview:'SSE 提供 DeepIntel（研究 DAG 执行进度）、GraphSci（Temporal 工作流经 BFF 投射的任务事件流）和 HomeMind（Agent 决策流）的实时进度推送。比 WebSocket 更简单——通过标准 HTTP 的单向服务器→客户端流。',
+        tech:['EventSource API','text/event-stream','自动重连','Event ID','流式输出','Chunked Transfer'],
+        arch:'flowchart LR\n    Server[服务器] --> SSE[SSE 流]\n    SSE --> Client[EventSource]\n    Client --> UI[实时 UI 更新]\n    SSE --> Reconnect[自动重连]\n    Reconnect --> LastID[Last-Event-ID]',
+        highlights:'标准 HTTP——无需 WebSocket 升级；自动重连+Last-Event-ID；Chunked Transfer 渐进式渲染；用于 DAG 进度、任务事件、Agent 流式输出' }
+    },
+    'openapi': {
+      en: { title:'OpenAPI', subtitle:'Standard specification for describing REST APIs',
+        overview:'GraphSci uses OpenAPI as its API contract cornerstone — 136+ endpoints with full JSON Schema request/response definitions, auto-generated TypeScript client types, contract testing with mock server validation, and Problem Details (RFC 9457) error responses. The OpenAPI spec serves as the single source of truth between NestJS BFF and Next.js frontend.',
+        tech:['OpenAPI 3.1','JSON Schema','Code Generation','Contract Testing','Mock Server','Problem Details'],
+        arch:'flowchart TD\n    Spec[OpenAPI Spec] --> Gen[Type Gen]\n    Spec --> Mock[Mock Server]\n    Spec --> Test[Contract Tests]\n    Gen --> Client[TS API Client]\n    Gen --> BFF[NestJS BFF]\n    Client --> BFF',
+        highlights:'136+ endpoints documented in single OpenAPI spec; Auto-generated TypeScript types from JSON Schema; Contract testing with mock server validation; Problem Details (RFC 9457) error standardization; Single source of truth for frontend-backend contracts' },
+      zh: { title:'OpenAPI', subtitle:'描述 REST API 的标准规范',
+        overview:'GraphSci 使用 OpenAPI 作为 API 契约基石——136+ 端点、完整 JSON Schema 请求/响应定义、自动生成 TypeScript 客户端类型、Mock 服务器契约测试和 Problem Details（RFC 9457）错误响应。OpenAPI 规范是 NestJS BFF 和 Next.js 前端之间的唯一真相来源。',
+        tech:['OpenAPI 3.1','JSON Schema','代码生成','契约测试','Mock Server','Problem Details'],
+        arch:'flowchart TD\n    Spec[OpenAPI 规范] --> Gen[类型生成]\n    Spec --> Mock[Mock 服务器]\n    Spec --> Test[契约测试]\n    Gen --> Client[TS API 客户端]\n    Gen --> BFF[NestJS BFF]\n    Client --> BFF',
+        highlights:'136+ 端点统一 OpenAPI 规范文档；JSON Schema 自动生成 TypeScript 类型；Mock 服务器契约测试验证；Problem Details（RFC 9457）错误标准化；前后端契约唯一真相来源' }
+    },
+
+    /* ===== Specialized Tools ===== */
+    'tap-rules': {
+      en: { title:'TAP Rules', subtitle:'Trigger-Action Programming rules for smart home automation',
+        overview:'TAP (Trigger-Action Programming) rules are the automation backbone in HomeMind and HausRAGen. Users define rules as "when X happens, do Y". RuleFlow discovers hidden dependencies between rules. TapSync enforces execution ordering. HausRAGen generates new TAP rules from natural language using semantic code retrieval + LLM reasoning.',
+        tech:['Rule Engine','NL-to-TAP','Dependency Graph','Conflict Detection','Automation Scheduling','YAML Rules'],
+        arch:'flowchart TD\n    NL[Natural Language] --> Gen[NL-to-TAP Generation]\n    Gen --> Rule[TAP Rule]\n    Rule --> Engine[Rule Engine]\n    Engine --> Exec[Execute Action]\n    RuleFlow[Dependency Discovery] --> TapSync[Consistency Enforcement]\n    TapSync --> Engine',
+        highlights:'NL-to-TAP: natural language to executable automation; Hidden dependency discovery between rules; Conflict detection and execution ordering; YAML-based rule persistence with versioning; Automatic rule scheduling and activation' },
+      zh: { title:'TAP 规则', subtitle:'面向智能家居自动化的触发-动作编程规则',
+        overview:'TAP（触发-动作编程）规则是 HomeMind 和 HausRAGen 的自动化骨干。用户以"当 X 发生，执行 Y"的形式定义规则。RuleFlow 发现规则之间的隐藏依赖。TapSync 强制执行排序。HausRAGen 使用语义代码检索+LLM 推理从自然语言生成新的 TAP 规则。',
+        tech:['规则引擎','NL-to-TAP','依赖图','冲突检测','自动化调度','YAML 规则'],
+        arch:'flowchart TD\n    NL[自然语言] --> Gen[NL-to-TAP 生成]\n    Gen --> Rule[TAP 规则]\n    Rule --> Engine[规则引擎]\n    Engine --> Exec[执行动作]\n    RuleFlow[依赖发现] --> TapSync[一致性执行]\n    TapSync --> Engine',
+        highlights:'NL-to-TAP：自然语言到可执行自动化；规则间隐藏依赖发现；冲突检测和执行排序；基于 YAML 的规则持久化+版本化；自动规则调度和激活' }
+    },
+    'rule-engine': {
+      en: { title:'Rule Engine', subtitle:'System that evaluates and executes business rules against incoming data',
+        overview:'HomeMind\'s TAP rule engine (tap_engine.py) evaluates automation rules against sensor events, manages scheduling, detects conflicts, and dispatches device commands. It supports both reactive (event-triggered) and proactive (schedule-based) rule execution with automatic rule activation/deactivation.',
+        tech:['Event Matching','Schedule Engine','Conflict Detection','Action Dispatch','Rule Store','Hot Reload'],
+        arch:'flowchart TD\n    Event[Sensor Event] --> Match[Rule Matching]\n    Match --> Check[Conflict Check]\n    Check --> Schedule[Schedule]\n    Schedule --> Dispatch[Action Dispatch]\n    Dispatch --> Device[Device Control]',
+        highlights:'Reactive + proactive rule execution modes; Conflict detection before action dispatch; YAML-based rule persistence with hot reload; Automatic rule activation based on time/context; Integration with NL-to-TAP for natural language rule creation' },
+      zh: { title:'规则引擎', subtitle:'根据输入数据评估和执行业务规则的系统',
+        overview:'HomeMind 的 TAP 规则引擎（tap_engine.py）根据传感器事件评估自动化规则、管理调度、检测冲突并分发设备命令。它支持响应式（事件触发）和主动式（基于时间表）规则执行，以及自动规则激活/停用。',
+        tech:['事件匹配','调度引擎','冲突检测','动作分发','规则存储','热重载'],
+        arch:'flowchart TD\n    Event[传感器事件] --> Match[规则匹配]\n    Match --> Check[冲突检查]\n    Check --> Schedule[调度]\n    Schedule --> Dispatch[动作分发]\n    Dispatch --> Device[设备控制]',
+        highlights:'响应式+主动式双模式规则执行；动作分发前冲突检测；YAML 规则持久化+热重载；基于时间/上下文的自动规则激活；与 NL-to-TAP 集成的自然语言规则创建' }
+    },
+    'vosk': {
+      en: { title:'Vosk', subtitle:'Offline speech recognition toolkit supporting 20+ languages',
+        overview:'Vosk provides local, offline voice recognition in HomeMind — no cloud dependency, no internet required. It supports Chinese/English recognition with dialect normalization, enabling privacy-preserving voice commands for smart home control without sending audio to the cloud.',
+        tech:['Kaldi','Acoustic Model','Language Model','Streaming','Offline','Multi-language'],
+        arch:'flowchart LR\n    Mic[Microphone] --> Vosk[Vosk ASR]\n    Vosk --> Text[Recognized Text]\n    Text --> Norm[Language Normalizer]\n    Norm --> Intent[Intent → Command]',
+        highlights:'Fully offline — zero cloud dependency for voice; Multi-language support (Chinese + English); Streaming recognition for real-time response; Dialect normalization for non-standard speech; Privacy-preserving: audio never leaves the device' },
+      zh: { title:'Vosk', subtitle:'支持 20+ 语言的离线语音识别工具包',
+        overview:'Vosk 在 HomeMind 中提供本地离线语音识别——无需云依赖、无需网络连接。它支持中英文识别和方言归一化，实现隐私保护的语音命令控制智能家居，无需将音频发送到云端。',
+        tech:['Kaldi','声学模型','语言模型','流式','离线','多语言'],
+        arch:'flowchart LR\n    Mic[麦克风] --> Vosk[Vosk ASR]\n    Vosk --> Text[识别文本]\n    Text --> Norm[语言归一化]\n    Norm --> Intent[意图 → 命令]',
+        highlights:'完全离线——语音无需云依赖；多语言支持（中文+英文）；流式识别实时响应；方言归一化处理非标准语音；隐私保护：音频不离开设备' }
+    },
+    'dqn': {
+      en: { title:'DQN (Deep Q-Network)', subtitle:'Deep reinforcement learning for sequential decision making',
+        overview:'HomeMind uses a Deep Q-Network for proactive scene and routine recommendation — learning user behavior patterns over time and suggesting automations before the user asks. The DQN observes time, sensor context, and interaction history to decide when to proactively recommend actions.',
+        tech:['Q-Learning','Experience Replay','Epsilon-Greedy','Neural Network','Reward Shaping','State Encoding'],
+        arch:'flowchart TD\n    State[State: time + sensor + history] --> DQN[DQN Model]\n    DQN --> Action[Recommend Action]\n    Action --> Reward[User Feedback]\n    Reward --> Replay[Experience Replay]\n    Replay --> DQN',
+        highlights:'Learns user routines from interaction history; Experience replay for stable training; Epsilon-greedy exploration vs. exploitation; State encoding: time, sensors, context, preferences; Proactive recommendations before explicit user requests' },
+      zh: { title:'DQN（深度 Q 网络）', subtitle:'用于序列决策的深度强化学习',
+        overview:'HomeMind 使用深度 Q 网络进行主动场景和例程推荐——随时间学习用户行为模式，在用户询问之前建议自动化。DQN 观察时间、传感器上下文和交互历史，决定何时主动推荐动作。',
+        tech:['Q-Learning','经验回放','Epsilon-Greedy','神经网络','奖励塑造','状态编码'],
+        arch:'flowchart TD\n    State[状态: 时间+传感器+历史] --> DQN[DQN 模型]\n    DQN --> Action[推荐动作]\n    Action --> Reward[用户反馈]\n    Reward --> Replay[经验回放]\n    Replay --> DQN',
+        highlights:'从交互历史学习用户例程；经验回放稳定训练；Epsilon-greedy 探索 vs 利用；状态编码：时间、传感器、上下文、偏好；主动推荐先于显式用户请求' }
+    },
+    'policy-engine': {
+      en: { title:'Policy Engine', subtitle:'Rule-based governance system for enforcing constraints and approvals',
+        overview:'HomeMind\'s policy engine governs device command execution — validating commands against safety policies, user permissions, and environmental constraints before dispatch. DeepIntel\'s guardrails/policy.py serves a similar role for AI agent actions: intent classification, risk assessment, and tool gating.',
+        tech:['Policy Rules','Risk Levels','Approval Workflow','Constraint Check','Audit Log','Hot Reload'],
+        arch:'flowchart LR\n    Action[Proposed Action] --> Risk[Risk Assessment]\n    Risk -->|Low| Allow[Auto-approve]\n    Risk -->|High| Approve[Request Approval]\n    Approve --> Audit[Audit Log]',
+        highlights:'Pre-execution policy validation; Risk-level-based approval routing (low/medium/high); Hot-reloadable policy rules without restart; Immutable audit trail for every policy decision' },
+      zh: { title:'策略引擎', subtitle:'基于规则的治理系统，强制执行约束和审批',
+        overview:'HomeMind 的策略引擎管理设备命令执行——在分发前根据安全策略、用户权限和环境约束验证命令。DeepIntel 的 guardrails/policy.py 为 AI Agent 动作提供类似角色：意图分类、风险评估和工具门控。',
+        tech:['策略规则','风险级别','审批工作流','约束检查','审计日志','热重载'],
+        arch:'flowchart LR\n    Action[提议动作] --> Risk[风险评估]\n    Risk -->|低| Allow[自动批准]\n    Risk -->|高| Approve[请求审批]\n    Approve --> Audit[审计日志]',
+        highlights:'执行前策略验证；基于风险级别的审批路由（低/中/高）；无需重启的热重载策略规则；每次策略决策的不可篡改审计追踪' }
+    },
+    'tool-calling': {
+      en: { title:'Tool Calling', subtitle:'Mechanism for LLMs to invoke external functions and APIs',
+        overview:'Tool calling enables LLMs to go beyond text generation — invoking search engines, databases, browsers, device controllers, and MCP servers. Used across all projects: HomeMind (device control tools), DeepIntel (search/browse/RAG tools with audit), HausRAGen (code retrieval tool), GraphSci (AI action tools with approval gates).',
+        tech:['Function Calling','JSON Schema','Tool Registry','Error Handling','Retry','Audit Trail'],
+        arch:'flowchart LR\n    LLM[LLM Decision] --> Select[Select Tool]\n    Select --> Validate[Validate Args]\n    Validate --> Invoke[Invoke Tool]\n    Invoke --> Result[Result]\n    Result --> LLM',
+        highlights:'Structured tool definitions with JSON Schema; Tool registry with dynamic discovery; Automatic argument validation before invocation; Immutable audit trail per tool call (DeepIntel); Approval gates for high-risk tools (GraphSci)' },
+      zh: { title:'Tool Calling', subtitle:'LLM 调用外部函数和 API 的机制',
+        overview:'Tool Calling 使 LLM 超越文本生成——调用搜索引擎、数据库、浏览器、设备控制器和 MCP 服务器。跨所有项目使用：HomeMind（设备控制工具）、DeepIntel（搜索/浏览/RAG 工具+审计）、HausRAGen（代码检索工具）、GraphSci（AI 动作工具+审批门控）。',
+        tech:['函数调用','JSON Schema','工具注册表','错误处理','重试','审计追踪'],
+        arch:'flowchart LR\n    LLM[LLM 决策] --> Select[选择工具]\n    Select --> Validate[校验参数]\n    Validate --> Invoke[调用工具]\n    Invoke --> Result[结果]\n    Result --> LLM',
+        highlights:'JSON Schema 结构化工具定义；动态发现工具注册表；调用前自动参数校验；每次工具调用不可篡改审计追踪（DeepIntel）；高风险工具审批门控（GraphSci）' }
+    },
+    'pm2': {
+      en: { title:'PM2', subtitle:'Production process manager for Node.js applications',
+        overview:'PM2 manages the HausRAGen backend processes with zero-downtime reloads, automatic restarts on crash, log management, and cluster mode. The ecosystem.config.js defines both the Node.js API (port 3000) and Python ML (port 5001) services as managed processes.',
+        tech:['Process Management','Cluster Mode','Log Management','Zero-downtime Reload','Watch Mode','Startup Script'],
+        arch:'flowchart LR\n    PM2[PM2 Daemon] --> API[Node.js API :3000]\n    PM2 --> ML[Python ML :5001]\n    PM2 --> Logs[Centralized Logs]\n    PM2 --> Monitor[Health Monitor]',
+        highlights:'Zero-downtime reload for production updates; Automatic restart on process crash; Centralized log management across services; ecosystem.config.js for declarative process definition; Windows-compatible via deploy.ps1' },
+      zh: { title:'PM2', subtitle:'Node.js 应用的生产级进程管理器',
+        overview:'PM2 管理 HausRAGen 后端进程，支持零停机重载、崩溃自动重启、日志管理和集群模式。ecosystem.config.js 将 Node.js API（端口 3000）和 Python ML（端口 5001）服务定义为受管进程。',
+        tech:['进程管理','集群模式','日志管理','零停机重载','监听模式','启动脚本'],
+        arch:'flowchart LR\n    PM2[PM2 守护进程] --> API[Node.js API :3000]\n    PM2 --> ML[Python ML :5001]\n    PM2 --> Logs[集中日志]\n    PM2 --> Monitor[健康监控]',
+        highlights:'生产更新零停机重载；进程崩溃自动重启；跨服务集中日志管理；ecosystem.config.js 声明式进程定义；Windows 兼容 via deploy.ps1' }
+    },
+    'react-query': {
+      en: { title:'React Query (TanStack Query)', subtitle:'Server-state management library for React',
+        overview:'TanStack Query manages all server-state in SubmitFlow and GraphSci frontends — automatic background refetching, stale-while-revalidate caching, optimistic updates, and pagination. It eliminates the need for manual useEffect + useState patterns for data fetching.',
+        tech:['useQuery','useMutation','Cache Invalidation','Optimistic Updates','Infinite Query','DevTools'],
+        arch:'flowchart LR\n    Component[React Component] --> useQuery[useQuery]\n    useQuery --> Cache[Query Cache]\n    Cache -->|Stale| Refetch[Background Refetch]\n    Cache -->|Fresh| Render[Instant Render]',
+        highlights:'Automatic background refetching on window focus; Stale-while-revalidate for instant UI + fresh data; Optimistic mutations for zero-latency interactions; Infinite query for paginated 500+ company listings; DevTools for query inspection and debugging' },
+      zh: { title:'React Query (TanStack Query)', subtitle:'React 的服务端状态管理库',
+        overview:'TanStack Query 管理 SubmitFlow 和 GraphSci 前端中的所有服务端状态——自动后台重新获取、stale-while-revalidate 缓存、乐观更新和分页。它消除了数据获取方面手动 useEffect + useState 模式的需求。',
+        tech:['useQuery','useMutation','缓存失效','乐观更新','无限查询','DevTools'],
+        arch:'flowchart LR\n    Component[React 组件] --> useQuery[useQuery]\n    useQuery --> Cache[查询缓存]\n    Cache -->|过期| Refetch[后台重新获取]\n    Cache -->|新鲜| Render[即时渲染]',
+        highlights:'窗口聚焦时自动后台重新获取；Stale-while-revalidate 即时 UI + 新鲜数据；乐观突变零延迟交互；500+ 公司列表分页无限查询；DevTools 查询检查和调试' }
+    },
+
+    /* ===== Dependency & Formal Methods ===== */
+    'dependency-graph': {
+      en: { title:'Dependency Graph', subtitle:'Directed graph modeling relationships and constraints between system components',
+        overview:'Dependency graphs are the core data structure in RuleFlow (TAP rule dependencies), TapSync (execution ordering), ASCP (semantic dependency evolution), and GraphSci (research relationship graphs). They enable cycle detection, topological sorting, and transitive dependency analysis.',
+        tech:['DAG','Cycle Detection','Topological Sort','Transitive Closure','GraphViz','Adjacency List'],
+        arch:'flowchart TD\n    Rules[Rule Set] --> Parse[Parse Dependencies]\n    Parse --> Graph[Dependency Graph]\n    Graph --> Cycle[Cycle Detection]\n    Graph --> Topo[Topological Order]\n    Topo --> Exec[Execution Plan]',
+        highlights:'DFS-based cycle detection (HarnessSupervisor in DeepIntel); Topological sort for execution ordering; Transitive dependency analysis for hidden couplings; GraphViz export for visual dependency exploration' },
+      zh: { title:'依赖图', subtitle:'建模系统组件间关系和约束的有向图',
+        overview:'依赖图是 RuleFlow（TAP 规则依赖）、TapSync（执行排序）、ASCP（语义依赖演化）和 GraphSci（研究关系图）中的核心数据结构。它们支持环检测、拓扑排序和传递依赖分析。',
+        tech:['DAG','环检测','拓扑排序','传递闭包','GraphViz','邻接表'],
+        arch:'flowchart TD\n    Rules[规则集] --> Parse[解析依赖]\n    Parse --> Graph[依赖图]\n    Graph --> Cycle[环检测]\n    Graph --> Topo[拓扑排序]\n    Topo --> Exec[执行计划]',
+        highlights:'基于 DFS 的环检测（DeepIntel HarnessSupervisor）；拓扑排序执行排序；传递依赖分析发现隐藏耦合；GraphViz 导出可视化依赖探索' }
+    },
+    'constraint-solving': {
+      en: { title:'Constraint Solving', subtitle:'Finding variable assignments that satisfy a set of logical constraints',
+        overview:'Constraint solving underpins TapSync\'s execution enforcement — given N simultaneously triggered rules with discovered dependencies, the constraint solver computes a valid execution order that respects all semantic constraints while maximizing parallelism where safe.',
+        tech:['CSP','SAT','SMT','Backtracking','Propagation','Optimization'],
+        arch:'flowchart LR\n    Constraints[Dependency Constraints] --> Solver[Constraint Solver]\n    Solver --> Valid[Valid Order]\n    Solver --> Conflict[Conflict Report]\n    Valid --> Execute[Execute Rules]',
+        highlights:'CSP formulation of rule execution ordering; Backtracking search with constraint propagation; Detects unsatisfiable constraint sets (rule conflicts); Maximizes safe parallel execution' },
+      zh: { title:'约束求解', subtitle:'找到满足一组逻辑约束的变量赋值',
+        overview:'约束求解支撑 TapSync 的执行强制执行——给定 N 条同时触发的规则和已发现的依赖，约束求解器计算遵守所有语义约束的有效执行顺序，同时在安全前提下最大化并行度。',
+        tech:['CSP','SAT','SMT','回溯','约束传播','优化'],
+        arch:'flowchart LR\n    Constraints[依赖约束] --> Solver[约束求解器]\n    Solver --> Valid[有效顺序]\n    Solver --> Conflict[冲突报告]\n    Valid --> Execute[执行规则]',
+        highlights:'规则执行排序的 CSP 形式化；约束传播回溯搜索；检测不可满足约束集（规则冲突）；最大化安全并行执行' }
+    },
+    'reactive-systems': {
+      en: { title:'Reactive Systems', subtitle:'Systems that maintain consistency through automatic propagation of changes',
+        overview:'Reactive system principles underlie TapSync and ASCP — when a rule\'s dependency changes, dependent rules automatically re-evaluate. This pattern extends from IoT smart home automation (sensor→rule→device chains) to distributed system consistency.',
+        tech:['Event-Driven','Change Propagation','Dataflow','Observer Pattern','Stream Processing','Backpressure'],
+        arch:'flowchart LR\n    Change[State Change] --> Propagate[Propagation]\n    Propagate --> Dependents[Dependent Rules]\n    Dependents --> ReEval[Re-evaluate]\n    ReEval --> Consistent[Consistent State]',
+        highlights:'Automatic change propagation across rule graphs; Event-driven architecture with message bus (HomeMind); Reactive rule re-evaluation on dependency changes; Backpressure handling for cascading updates' },
+      zh: { title:'响应式系统', subtitle:'通过自动变化传播维持一致性的系统',
+        overview:'响应式系统原则是 TapSync 和 ASCP 的基础——当规则的依赖变化时，依赖规则自动重新评估。此模式从物联网智能家居自动化（传感器→规则→设备链）延伸到分布式系统一致性。',
+        tech:['事件驱动','变化传播','数据流','观察者模式','流处理','背压'],
+        arch:'flowchart LR\n    Change[状态变化] --> Propagate[传播]\n    Propagate --> Dependents[依赖规则]\n    Dependents --> ReEval[重新评估]\n    ReEval --> Consistent[一致状态]',
+        highlights:'跨规则图的自动变化传播；事件驱动架构+消息总线（HomeMind）；依赖变化时的响应式规则重评估；级联更新的背压处理' }
+    },
+    'static-analysis': {
+      en: { title:'Static Analysis', subtitle:'Analyzing source code without executing it to find properties and defects',
+        overview:'RuleFlow applies static analysis to TAP rule definitions — parsing rule YAML, extracting trigger conditions and action side-effects, constructing a dependency graph without executing any rules. This catches hidden dependencies at design time, before they cause runtime cascading failures.',
+        tech:['AST Parsing','Control Flow','Data Flow','Symbolic Execution','Pattern Matching','Call Graph'],
+        arch:'flowchart LR\n    Source[TAP Rule Definitions] --> Parse[Parse YAML/AST]\n    Parse --> Extract[Extract Triggers + Actions]\n    Extract --> Graph[Build Dependency Graph]\n    Graph --> Warn[Conflict Warnings]',
+        highlights:'Design-time dependency discovery — no execution needed; Rule trigger/action overlap analysis; AST-level rule definition parsing; Early conflict detection before production deployment' },
+      zh: { title:'静态分析', subtitle:'不执行源代码即可分析其属性和缺陷',
+        overview:'RuleFlow 对 TAP 规则定义应用静态分析——解析规则 YAML、提取触发条件和动作副作用、在不执行任何规则的情况下构建依赖图。这在设计时捕获隐藏依赖，避免运行时级联故障。',
+        tech:['AST 解析','控制流','数据流','符号执行','模式匹配','调用图'],
+        arch:'flowchart LR\n    Source[TAP 规则定义] --> Parse[解析 YAML/AST]\n    Parse --> Extract[提取触发+动作]\n    Extract --> Graph[构建依赖图]\n    Graph --> Warn[冲突警告]',
+        highlights:'设计时依赖发现——无需执行；规则触发/动作重叠分析；AST 级规则定义解析；生产部署前早期冲突检测' }
+    },
+
+    /* ===== Reverse Engineering ===== */
+        'knowledge-graph': {
+      en: { title:'Knowledge Graph', subtitle:'Structured semantic networks connecting entities, concepts, and their relationships',
+        overview:'Knowledge Graphs represent information as a network of entities and their interrelations, enabling semantic querying, reasoning, and discovery. GraphSci builds multi-entity knowledge graphs (Paper, Author, Method, Dataset, Institution, Concept) as its core data model, enabling research pathfinding beyond keyword search.',
+        tech:['Graph Databases','Semantic Web','Ontology','Entity Resolution','Graph Neural Networks','SPARQL'],
+        arch:'flowchart LR\n    EE[Entity Extraction] --> RE[Relation Extraction]\n    RE --> ER[Entity Resolution]\n    ER --> GC[Graph Construction]\n    GC --> SE[Semantic Enrichment]\n    SE --> QI[Query & Inference]',
+        highlights:'Multi-entity knowledge graph (6+ node types) in GraphSci; Semantic relationship modeling beyond keyword matching; Multi-hop reasoning across research domains; Dynamic graph evolution with new papers and findings; Integration with LLM for knowledge-grounded research' },
+      zh: { title:'知识图谱', subtitle:'连接实体、概念及其关系的结构化语义网络',
+        overview:'知识图谱将信息表示为实体及其相互关系的网络，支持语义查询、推理和发现。GraphSci 构建多实体知识图谱（论文、作者、方法、数据集、机构、概念）作为其核心数据模型，实现超越关键词搜索的研究路径发现。',
+        tech:['图数据库','语义网','本体论','实体消歧','图神经网络','SPARQL'],
+        arch:'flowchart LR\n    EE[实体抽取] --> RE[关系抽取]\n    RE --> ER[实体消歧]\n    ER --> GC[图谱构建]\n    GC --> SE[语义增强]\n    SE --> QI[查询与推理]',
+        highlights:'GraphSci 中多实体知识图谱（6+ 节点类型）；超越关键词匹配的语义关系建模；跨研究域多跳推理；新论文和发现驱动的动态图谱演化；与 LLM 集成实现知识增强研究' }
     },
     'concurrency': {
-      en: {
-        title: 'Concurrency',
-        subtitle: 'Managing simultaneous execution flows in complex systems',
-        overview: 'Concurrency is the art of managing multiple simultaneous execution flows — threads, processes, async tasks, and distributed workers. In the context of agent systems, it governs how multiple agents coordinate without race conditions or deadlocks.',
-        tech: ['Async/Await','Threading','Multiprocessing','Lock-free Structures','Scheduling','Message Passing'],
-        arch: 'flowchart TD\n    TD[Task Decomposition] --> S[Scheduling] --> E[Execution] --> SY[Synchronization] --> RA[Result Aggregation]',
-        highlights: 'Agent-level concurrency patterns; Lock-free data structures for high-throughput; Priority-based agent scheduling; Distributed agent coordination'
-      },
-      zh: {
-        title: '并发',
-        subtitle: '管理复杂系统中同时执行的多个流程',
-        overview: '并发是管理多个同时执行流程——线程、进程、异步任务和分布式工作器的艺术。在智能体系统语境中，它决定了多个智能体如何协调而不出现竞态条件或死锁。',
-        tech: ['Async/Await','多线程','多进程','无锁结构','调度','消息传递'],
-        arch: 'flowchart TD\n    TD[任务分解] --> S[调度] --> E[执行] --> SY[同步] --> RA[结果聚合]',
-        highlights: '智能体级并发模式；高吞吐的无锁数据结构；基于优先级的智能体调度；分布式智能体协调'
-      }
+      en: { title:'Concurrency', subtitle:'Managing simultaneous execution flows in complex systems',
+        overview:'Concurrency is foundational across the portfolio — HomeMind coordinates multi-agent execution via bus.py message passing, DeepIntel runs parallel Search/Browse/RAG agents in LangGraph DAGs, and GraphSci handles concurrent API requests via NestJS async with proper transaction boundaries.',
+        tech:['Async/Await','Threading','Multiprocessing','Lock-free Structures','Scheduling','Message Passing'],
+        arch:'flowchart TD\n    TD[Task Decomposition] --> S[Scheduling]\n    S --> E[Execution]\n    E --> SY[Synchronization]\n    SY --> RA[Result Aggregation]',
+        highlights:'Multi-agent concurrent coordination via message bus (HomeMind); Parallel DAG execution in LangGraph (DeepIntel); Async request handling with transaction isolation (GraphSci); Lock-free agent communication patterns' },
+      zh: { title:'并发', subtitle:'管理复杂系统中同时执行的多个流程',
+        overview:'并发是项目组合的基础——HomeMind 通过 bus.py 消息传递协调多智能体执行，DeepIntel 在 LangGraph DAG 中运行并行 Search/Browse/RAG Agent，GraphSci 通过 NestJS 异步+事务边界处理并发 API 请求。',
+        tech:['Async/Await','多线程','多进程','无锁结构','调度','消息传递'],
+        arch:'flowchart TD\n    TD[任务分解] --> S[调度]\n    S --> E[执行]\n    E --> SY[同步]\n    SY --> RA[结果聚合]',
+        highlights:'多智能体并发协调 via 消息总线（HomeMind）；LangGraph DAG 并行执行（DeepIntel）；异步请求处理+事务隔离（GraphSci）；无锁智能体通信模式' }
     },
     'semantic': {
-      en: {
-        title: 'Semantic Consistency',
-        subtitle: 'Ensuring logical coherence across interdependent rule systems',
-        overview: 'Semantic Consistency addresses the challenge of maintaining logical coherence when rules, constraints, and dependencies evolve over time. In IoT, smart home, and distributed systems, hidden dependencies between rules can cause cascading failures.',
-        tech: ['Dependency Graph','Constraint Solving','Reactive Systems','Formal Verification','Temporal Logic'],
-        arch: 'flowchart TD\n    RR[Rule Registration] --> DD[Dependency Discovery] --> CD[Conflict Detection] --> CE[Consistency Enforcement] --> AE[Adaptive Evolution]',
-        highlights: 'Automatic hidden dependency discovery; Real-time constraint propagation; Adaptive consistency under rule changes; Cascading failure prevention'
-      },
-      zh: {
-        title: '语义一致性',
-        subtitle: '确保相互依赖的规则系统保持逻辑一致',
-        overview: '语义一致性解决规则、约束和依赖随时间演化时如何保持逻辑一致性的挑战。在物联网、智能家居和分布式系统中，规则之间的隐藏依赖可能导致级联故障。',
-        tech: ['依赖图','约束求解','响应式系统','形式化验证','时序逻辑'],
-        arch: 'flowchart TD\n    RR[规则注册] --> DD[依赖发现] --> CD[冲突检测] --> CE[一致性执行] --> AE[自适应演化]',
-        highlights: '自动隐藏依赖发现；实时约束传播；规则变更下的自适应一致性；级联故障预防'
-      }
+      en: { title:'Semantic Consistency', subtitle:'Ensuring logical coherence across interdependent rule systems',
+        overview:'Semantic Consistency addresses the challenge of maintaining logical coherence when rules, constraints, and dependencies evolve over time. RuleFlow discovers hidden dependencies, TapSync enforces them at execution time, and ASCP models adaptive evolution — together forming a complete semantic consistency preservation pipeline.',
+        tech:['Dependency Graph','Constraint Solving','Reactive Systems','Formal Verification','Temporal Logic'],
+        arch:'flowchart TD\n    RR[Rule Registration] --> DD[Dependency Discovery]\n    DD --> CD[Conflict Detection]\n    CD --> CE[Consistency Enforcement]\n    CE --> AE[Adaptive Evolution]',
+        highlights:'Automatic hidden dependency discovery (RuleFlow); Real-time constraint enforcement (TapSync); Adaptive consistency under rule topology changes (ASCP); Published at CSCWD conference; Bridges IoT middleware theory with practical automation' },
+      zh: { title:'语义一致性', subtitle:'确保相互依赖的规则系统保持逻辑一致',
+        overview:'语义一致性解决规则、约束和依赖随时间演化时如何保持逻辑一致性的挑战。RuleFlow 发现隐藏依赖，TapSync 在运行时强制执行，ASCP 建模自适应演化——三者共同构成完整的语义一致性保持管线。',
+        tech:['依赖图','约束求解','响应式系统','形式化验证','时序逻辑'],
+        arch:'flowchart TD\n    RR[规则注册] --> DD[依赖发现]\n    DD --> CD[冲突检测]\n    CD --> CE[一致性执行]\n    CE --> AE[自适应演化]',
+        highlights:'自动隐藏依赖发现（RuleFlow）；实时约束强制执行（TapSync）；规则拓扑变化的适应一致性（ASCP）；发表于 CSCWD 会议；桥接物联网中间件理论与实用自动化' }
     },
     'systems': {
-      en: {
-        title: 'Systems Design',
-        subtitle: 'Architecting complex software systems from first principles',
-        overview: 'Systems Design is the discipline of structuring complex software to meet functional and non-functional requirements. It spans operating systems, distributed systems, databases, and the architectural patterns that make them reliable, scalable, and maintainable.',
-        tech: ['OS Design','Distributed Systems','Scheduling','Memory Management','Networking','Fault Tolerance'],
-        highlights: 'First-principles approach to system architecture; Deep understanding of OS internals; Distributed consistency and consensus; Performance profiling and optimization'
-      },
-      zh: {
-        title: '系统设计',
-        subtitle: '从第一性原理构建复杂软件系统',
-        overview: '系统设计是构建复杂软件以满足功能和非功能需求的学科。它涵盖操作系统、分布式系统、数据库，以及使它们可靠、可扩展和可维护的架构模式。',
-        tech: ['操作系统设计','分布式系统','调度','内存管理','网络','容错'],
-        highlights: '第一性原理系统架构方法；深入理解操作系统内部机制；分布式一致性与共识；性能分析与优化'
-      }
+      en: { title:'Systems Design', subtitle:'Architecting complex software systems from first principles',
+        overview:'Systems-level thinking permeates the portfolio — from HomeMind\'s edge-cloud hybrid architecture with local-first inference routing, to DeepIntel\'s crash-safe HarnessSupervisor with atomic writes and stale lock detection, to GraphSci\'s carefully reasoned aggregate-root-aligned transaction boundaries.',
+        tech:['OS Design','Distributed Systems','Scheduling','Memory Management','Fault Tolerance','Architecture'],
+        arch:'flowchart TD\n    Req[Requirements] --> Arch[Architecture Design]\n    Arch --> Edge[Edge/Cloud Split]\n    Arch --> Trans[Transaction Boundaries]\n    Arch --> Fault[Fault Tolerance]\n    Edge --> Impl[Implementation]\n    Trans --> Impl\n    Fault --> Impl',
+        highlights:'First-principles architecture decisions documented in TECH_CHANGELOG; Edge-cloud hybrid with local-first routing (HomeMind); Crash-safe state machine with atomic writes (DeepIntel); Aggregate-root transaction boundaries with Temporal saga (GraphSci)' },
+      zh: { title:'系统设计', subtitle:'从第一性原理构建复杂软件系统',
+        overview:'系统级思维贯穿项目组合——从 HomeMind 的端云混合架构+本地优先推理路由，到 DeepIntel 的崩溃安全 HarnessSupervisor（原子写入+过期锁检测），到 GraphSci 精心推理的 aggregate root 对齐事务边界。',
+        tech:['操作系统设计','分布式系统','调度','内存管理','容错','架构'],
+        arch:'flowchart TD\n    Req[需求] --> Arch[架构设计]\n    Arch --> Edge[端云拆分]\n    Arch --> Trans[事务边界]\n    Arch --> Fault[容错设计]\n    Edge --> Impl[实现]\n    Trans --> Impl\n    Fault --> Impl',
+        highlights:'TECH_CHANGELOG 中记录的第一性原理架构决策；端云混合+本地优先路由（HomeMind）；崩溃安全状态机+原子写入（DeepIntel）；Aggregate root 事务边界+Temporal saga（GraphSci）' }
+    },
+    '
+    'ghidra': {
+      en: { title:'Ghidra', subtitle:'NSA-developed open-source reverse engineering framework',
+        overview:'Ghidra is used in the Agent Reverse Engineering exploration project for binary analysis of agent systems — decompiling binaries, analyzing code graphs, and understanding internal agent architectures through static and dynamic analysis.',
+        tech:['Decompiler','Disassembly','Code Graph','Scripting','Plugin API','Binary Analysis'],
+        arch:'flowchart LR\n    Binary[Agent Binary] --> Ghidra[Ghidra]\n    Ghidra --> Decompile[Decompiled Code]\n    Ghidra --> Graph[Code Graph]\n    Graph --> Analysis[Architecture Understanding]',
+        highlights:'NSA-developed professional reverse engineering tool; Multi-architecture binary support (x86, ARM, MIPS); Python/Java scripting API for automation; Code graph extraction for agent workflow analysis' },
+      zh: { title:'Ghidra', subtitle:'NSA 开发的开源逆向工程框架',
+        overview:'Ghidra 用于 Agent 逆向工程探索项目，进行智能体系统的二进制分析——反编译二进制、分析代码图、通过静态和动态分析理解智能体内部架构。',
+        tech:['反编译器','反汇编','代码图','脚本','插件 API','二进制分析'],
+        arch:'flowchart LR\n    Binary[智能体二进制] --> Ghidra[Ghidra]\n    Ghidra --> Decompile[反编译代码]\n    Ghidra --> Graph[代码图]\n    Graph --> Analysis[架构理解]',
+        highlights:'NSA 开发的专业逆向工程工具；多架构二进制支持（x86、ARM、MIPS）；Python/Java 脚本 API 自动化；代码图提取用于智能体工作流分析' }
     }
   };
 
-  function formatHighlights(text) {
-    // Split on literal backslash-n backslash-n sequences (from JS string escapes)
-    var paras = text.split(/\n\n/);
-    return paras.map(function(p) {
-      p = p.trim();
-      if (!p) return '';
-      // Convert `code` spans
-      p = p.replace(/`([^`]+)`/g, '<code class="hl-code">$1</code>');
-      // Try to extract a header: text before the first colon followed by space
-      // Pattern: `Header`: rest of description
-      var headerMatch = p.match(/^<code class="hl-code">([^<]+)<\/code>:\s*(.*)/);
-      if (!headerMatch) {
-        // Try without code tag
-        headerMatch = p.match(/^`([^`]+)`:\s*(.*)/);
-        if (headerMatch) {
-          return '<div class="hl-point"><span class="hl-point-header"><code class="hl-code">' + headerMatch[1] + '</code></span><span class="hl-point-body">' + headerMatch[2] + '</span></div>';
-        }
-      } else {
-        return '<div class="hl-point"><span class="hl-point-header"><code class="hl-code">' + headerMatch[1] + '</code></span><span class="hl-point-body">' + headerMatch[2] + '</span></div>';
-      }
-      // Fallback: just render as body text
-      return '<div class="hl-point"><span class="hl-point-body">' + p + '</span></div>';
-    }).join('');
-  }
 
   function openTechDetail(techName) {
-    var key = techName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
-    // Try to match
-    var detail = TECH_DETAILS[key];
-    if (!detail) {
-      // fuzzy match
-      var keys = Object.keys(TECH_DETAILS);
-      for (var i = 0; i < keys.length; i++) {
-        if (keys[i].indexOf(key) >= 0 || key.indexOf(keys[i]) >= 0) {
-          detail = TECH_DETAILS[keys[i]];
-          break;
-        }
-      }
-    }
-    if (!detail) return;
-
-    var d = detail[currentLang] || detail['en'];
-    var techTags = d.tech.map(function(t) {
-      return '<span data-tech="' + t.toLowerCase().replace(/\s+/g, '-') + '">' + t + '</span>';
-    }).join('');
-
-    var html = '<button class="modal-close">&times;</button>';
-    html += '<div class="modal-tag">' + t('nav.atlas') + ' · Tech</div>';
-    html += '<h2 class="modal-title">' + d.title + '</h2>';
-    html += '<p class="modal-subtitle">' + d.subtitle + '</p>';
-    html += '<div class="modal-section"><h4>' + t('modal.overview') + '</h4><p>' + d.overview + '</p></div>';
-    html += '<div class="modal-section"><h4>' + t('modal.tech') + '</h4><div class="tech-tags">' + techTags + '</div></div>';
-    if (d.arch) {
-      html += '<div class="modal-section"><h4>' + t('modal.arch') + '</h4><div class="mermaid-container"><div class="mermaid">' + d.arch + '</div></div></div>';
-    }
-    html += '<div class="modal-section"><h4>' + t('modal.highlights') + '</h4><div class="modal-highlights">' + formatHighlights(d.highlights) + '</div></div>';
-
-    openModal(html);
-  }
-
-  /* ============================================================
-     PROJECT DETAIL MODAL
-     ============================================================ */
-  var PROJECT_DETAILS = {
-    graphsci: {
-      github: 'https://github.com/wblxr408',
-      en: {
-        title: 'GraphSci',
-        subtitle: 'Research Discovery Operating System',
-        overview: 'GraphSci is a knowledge discovery platform that transforms how researchers navigate academic literature. Unlike traditional paper search tools, GraphSci uses knowledge graphs, infinite canvas, and semantic relationship modeling to enable true research pathfinding.',
-        tech: ['Next.js','React','TypeScript','NestJS','PostgreSQL','LangGraph','Knowledge Graph','OpenAPI','SSE','Temporal'],
-        arch: 'flowchart TD\n    Paper[Papers] --> KG[Knowledge Graph]\n    Authors[Authors] --> KG\n    Methods[Methods] --> KG\n    KG --> Canvas[Infinite Canvas]\n    KG --> Explore[Semantic Exploration]\n    Canvas --> Path[Research Pathfinding]\n    Explore --> Path\n    Path --> Disc[Discovery]',
-        highlights: '`8 Research Spaces`: Explore (infinite canvas + knowledge graph), Reasoning (argument DAG with logical edges), Create (idea seeds → expand/merge/send-to-critique), Critique (multi-lens manuscript review with evidence requests), Validate (reproducibility plans with step-level evidence), Consensus (topics → candidates → viewpoints → voting), Memory Forest (branching memory trees with merge/diff), AI Everywhere (context-aware AI layer with privacy boundaries)\\n\\n`Data Architecture`: PostgreSQL + pgvector + Prisma unified data layer — 136 OpenAPI contracts, short-transaction + outbox/inbox + Temporal saga, `If-Match` optimistic concurrency on every `DELETE`, aggregate-root-aligned lock ordering\\n\\n`BFF Separation`: NestJS TypeScript BFF (auth, authorization, Problem Details, ETag, idempotency, audit, SSE task streaming) cleanly separated from Python AI/RAG internal services — frontend never touches A2A/MCP/LangGraph directly\\n\\n`Context-Aware AI`: Automatic context recognition per research space, privacy boundary enforcement for private manuscripts, granular knowledge layer gating (Personal/Project/Team), redaction-controlled external search for draft papers\\n\\n`Task Engine`: Temporal for durable long-task execution with retry/cancel/resume/human checkpoint, BullMQ for low-risk short jobs, SSE event stream for frontend progress — BFF projects Temporal events into product-semantic task views',
-      },
-      zh: {
-        title: 'GraphSci',
-        subtitle: '研究探索操作系统',
-        overview: 'GraphSci 是一个知识发现平台，彻底改变了研究者导航学术文献的方式。不同于传统的论文搜索工具，GraphSci 使用知识图谱、无限画布和语义关系建模来实现真正的研究路径发现。',
-        tech: ['Next.js','React','TypeScript','NestJS','PostgreSQL','LangGraph','知识图谱','OpenAPI','SSE','Temporal'],
-        arch: 'flowchart TD\n    Paper[论文] --> KG[知识图谱]\n    Authors[作者] --> KG\n    Methods[方法] --> KG\n    KG --> Canvas[无限画布]\n    KG --> Explore[语义探索]\n    Canvas --> Path[研究路径发现]\n    Explore --> Path\n    Path --> Disc[发现]',
-        highlights: '`8 个研究空间`: Explore（无限画布+知识图谱）、Reasoning（论证 DAG + 逻辑边）、Create（idea seeds → 展开/合并/送入审判）、Critique（多维手稿评审+证据请求）、Validate（可复现性计划+步骤级证据）、Consensus（议题→候选→观点→投票）、Memory Forest（分支记忆树+合并/差异对比）、AI Everywhere（上下文感知 AI 层+隐私边界）\\n\\n`数据架构`: PostgreSQL + pgvector + Prisma 统一数据层——136 个 OpenAPI 契约、短事务+outbox/inbox+Temporal saga、所有 `DELETE` 强制 `If-Match` 乐观并发、按 aggregate root 对齐锁顺序\\n\\n`BFF 分离`: NestJS TypeScript BFF（认证、对象级授权、Problem Details、ETag、幂等、审计、SSE 任务流）与 Python AI/RAG 内部服务干净分离——前端绝不直连 A2A/MCP/LangGraph\\n\\n`Context-Aware AI`: 按研究空间自动识别上下文、私有稿件隐私边界强制、知识层级精细门控（个人/项目/团队）、草稿脱敏控制外部检索\\n\\n`任务引擎`: Temporal 承载可恢复长任务（重试/取消/恢复/人机检查点）、BullMQ 处理低风险短任务、SSE 事件流驱动前端进度——BFF 将 Temporal 事件投影为产品语义任务视图',
-      }
-    },
-    homemind: {
-      github: 'https://github.com/wblxr408/HomeMind',
-      en: {
-        title: 'HomeMind',
-        subtitle: 'AI Native Smart Home Operating System',
-        overview: 'HomeMind is an edge-first, optionally cloud-collaborative smart home agent. It understands fuzzy natural language, retains context and user preferences, invokes the cloud only when necessary while keeping execution authority on the edge, and progressively introduces automation rules.',
-        tech: ['LangGraph','RAG','Vector DB','MCP','Tool Calling','Policy Engine','Vosk','DQN','Python'],
-        arch: 'flowchart TD\n    Input[Voice / Text Input] --> Norm[Language Normalizer]\n    Norm --> BSR[BSR Recall]\n    BSR --> LSR[LSR Rerank]\n    LSR --> Router[Inference Router]\n    Router --> Privacy[Privacy Redactor]\n    Privacy --> LLM[LLM Decider]\n    LLM --> Val[Command Validator]\n    Val --> Dev[Device Controller]\n    Dev --> Store[Session / Preference Store]',
-        highlights: '`BSR + LSR + LLM Pipeline`: Broad Semantic Recall (multi-strategy candidate retrieval) → Lightweight Semantic Rerank (local fast scoring) → LLM final decision — progressive filtering minimizes cloud LLM calls\\n\\n`Edge-First Architecture`: `InferenceRouter` with 4 paths: local (Vosk/on-device LLM), cloud (redacted), clarify (ask user), fallback (safe default). `PrivacyRedactor` strips PII before any cloud upload, uploads only the minimum necessary context\\n\\n`TAP Rule Engine + NL Automation`: `tap_engine.py` with `nl_to_tap.py` — users describe automation intent in natural language, system generates executable TAP rules. `tap_rules.py` manages scheduling, conflict detection, and automatic rule activation\\n\\n`Local RAG Memory Loop`: `SessionStore` + `PreferenceStore` persist structured user context. `KnowledgeBase` with vector retrieval surfaces relevant preferences during inference. Closed-loop learning — each interaction writes back to preference models\\n\\n`DQN Active Recommendation`: Deep Q-Network proactively suggests scenes/routines based on time, sensor context, and interaction history — not just reactive command execution\\n\\n`Multi-Agent Protocol`: `coordinator.py` orchestrates `specialist.py` agents via `protocols/a2a.py` (Agent-to-Agent) and `protocols/admin.py`. `bus.py` provides message-passing backbone with agent discovery',
-      },
-      zh: {
-        title: 'HomeMind',
-        subtitle: 'AI 原生智能家居操作系统',
-        overview: 'HomeMind 是一个端侧优先、可选端云协同的智能家居智能体。它能理解模糊的自然语言表达，保留上下文和用户偏好，在需要时调用云端但始终由端侧掌握执行权，并逐步引入自动化规则。',
-        tech: ['LangGraph','RAG','向量数据库','MCP','Tool Calling','策略引擎','Vosk','DQN','Python'],
-        arch: 'flowchart TD\n    Input[语音 / 文本输入] --> Norm[语言归一化]\n    Norm --> BSR[BSR 候选召回]\n    BSR --> LSR[LSR 精排]\n    LSR --> Router[推理路由]\n    Router --> Privacy[隐私脱敏]\n    Privacy --> LLM[LLM 决策]\n    LLM --> Val[指令校验]\n    Val --> Dev[设备控制]\n    Dev --> Store[会话 / 偏好存储]',
-        highlights: '`BSR + LSR + LLM 管线`: 广度语义召回（多策略候选检索）→ 轻量语义重排（本地快速打分）→ LLM 最终决策——逐级过滤最大限度减少云端 LLM 调用\\n\\n`端侧优先架构`: `InferenceRouter` 四路径：本地（Vosk/端侧 LLM）、云端（脱敏后）、澄清（反问用户）、兜底（安全默认值）。`PrivacyRedactor` 在上传云端前剥离所有 PII，仅上传最小必要上下文\\n\\n`TAP 规则引擎 + 自然语言自动化`: `tap_engine.py` + `nl_to_tap.py`——用户用自然语言描述自动化意图，系统生成可执行 TAP 规则。`tap_rules.py` 管理调度、冲突检测和自动规则激活\\n\\n`本地 RAG 记忆闭环`: `SessionStore` + `PreferenceStore` 持久化结构化用户上下文。`KnowledgeBase` 向量检索在推理时召回相关偏好。闭环学习——每次交互写回偏好模型\\n\\n`DQN 主动推荐`: 深度 Q 网络根据时间、传感器上下文和交互历史主动推荐场景/例程——不仅是响应式命令执行\\n\\n`多智能体协议`: `coordinator.py` 通过 `protocols/a2a.py`（Agent-to-Agent）和 `protocols/admin.py` 编排 `specialist.py` Agent。`bus.py` 提供消息传递骨干+Agent 发现',
-      }
-    },
-    ascp: {
-      github: 'https://github.com/wblxr408',
-      en: {
-        title: 'ASCP',
-        subtitle: 'Adaptive Semantic Consistency Preservation',
-        overview: 'ASCP is a research framework addressing a fundamental gap: existing work detects conflicts, but ASCP models how dynamic semantic dependencies continuously maintain consistency. Built upon RuleFlow (dependency discovery) and TapSync (consistency enforcement), ASCP adds adaptive evolution — the ability to self-adjust when the rule environment changes.',
-        tech: ['Dependency Modeling','Constraint Solving','Reactive Systems','Temporal Logic','Graph Theory','Formal Methods'],
-        arch: 'flowchart TD\n    RF[RuleFlow: Dependency Discovery] --> TS[TapSync: Consistency Enforcement]\n    TS --> ASCP[ASCP: Adaptive Evolution]\n    subgraph Layers[Three-Layer Architecture]\n        direction LR\n        DM[Dependency Modeling] --> CE[Constrained Execution] --> AE[Adaptive Evolution]\n    end',
-        highlights: '`Three-Layer Architecture`: RuleFlow (dependency discovery via static rule analysis) → TapSync (real-time constraint enforcement at execution time) → ASCP (adaptive evolution — self-adjusting consistency model when rule topology changes)\\n\\n`Hidden Dependency Discovery`: Rule A can silently affect Rule B without developer awareness. RuleFlow performs static analysis on TAP rule sets, constructs a dependency graph, and surfaces hidden couplings before they cause cascading failures\\n\\n`Execution-Time Enforcement`: TapSync consumes the RuleFlow dependency graph, plans execution order respecting all discovered constraints, and prevents conflict patterns (write-after-read, concurrent modification) during live rule execution\\n\\n`Adaptive Evolution`: When new rules are added or existing rules modified, ASCP re-evaluates the dependency model and adjusts consistency boundaries — the system degrades gracefully rather than failing\\n\\n`Bridging Domains`: Connects IoT middleware theory with formal methods (temporal logic, constraint solving) and practical smart home/distributed systems engineering — published at CSCWD conference',
-      },
-      zh: {
-        title: 'ASCP',
-        subtitle: '自适应语义一致性保持',
-        overview: 'ASCP 是一个研究框架，解决了一个根本性的缺口：现有研究检测冲突，而 ASCP 建模动态语义依赖如何持续保持一致性。ASCP 构建于 RuleFlow（依赖发现）和 TapSync（一致性执行）之上，增加了自适应演化——规则环境变化时的自我调整能力。',
-        tech: ['依赖建模','约束求解','响应式系统','时序逻辑','图论','形式化方法'],
-        arch: 'flowchart TD\n    RF[RuleFlow: 依赖发现] --> TS[TapSync: 一致性执行]\n    TS --> ASCP[ASCP: 自适应演化]\n    subgraph Layers[三层架构]\n        direction LR\n        DM[依赖建模] --> CE[约束执行] --> AE[自适应演化]\n    end',
-        highlights: '三层架构：发现、执行、适应；动态语义依赖追踪；规则变更下的持续一致性；强论⽂发表潜⼒；桥接物联网、智能家居和分布式系统理论'
-      }
-    },
-  
-  hausragen: {
-    github: 'https://github.com/wblxr408/HausRAGen_JSPY',
-    en: {
-      title: 'HausRAGen',
-      subtitle: 'Semantic RAG Engine for Smart Home Automation Code Generation',
-      overview: 'HausRAGen is a dual-service smart home RAG engine that semantically retrieves automation rule code and generates new TAP (Trigger-Action Programming) rules. It combines a Node.js Express backend (multi-provider AI orchestration supporting 8+ LLM services) with a Python Flask ML microservice (semantic clustering, BSR/LSR similarity, code retrieval via sentence-transformers).',
-      tech: ['Node.js','Express','Python','Flask','Sentence-Transformers','Semantic Clustering','BSR/LSR','TAP Rules','PM2','Docker','Multi-Provider AI'],
-      arch: 'flowchart TD\n    Query[User Query] --> API[Express API :3000]\n    API --> ML[Flask ML :5001]\n    ML --> SC[Semantic Clustering]\n    ML --> CR[Code Retrieval]\n    API --> AI[Multi-Provider AI]\n    AI --> Gen[TAP Rule Generation]\n    SC --> Sim[BSR/LSR Similarity Matrix]\n    CR --> Corpus[TAP Corpus]\n    Gen --> Output[Generated Automation Rules]',
-      highlights: '`Dual-Service Architecture`: Node.js Express API (port 3000) + Python Flask ML microservice (port 5001) — clean separation of concerns with lazy-loaded heavy models (torch, transformers, sentence-transformers) to minimize cold-start latency\n\n`Multi-Provider AI Orchestration`: Unified abstraction over 8+ AI service providers (Claude/PoloAPI, DeepSeek, MiniMax, GLM/Zhipu, Qwen, Kimi, OpenAI-compatible) with automatic provider failover, placeholder API key detection, and per-provider model selection\n\n`Semantic Clustering Engine`: BSR (Broad Semantic Recall) and LSR (Lightweight Semantic Rerank) similarity computation — sentence-transformers (all-MiniLM-L6-v2) embeddings with cosine similarity clustering to group semantically related automation codes\n\n`TAP Rule Generation`: Enhanced TAP.txt corpus with applet YAML + Python script extraction — system retrieves semantically similar existing rules and generates new Trigger-Action Programming rules using LLM reasoning\n\n`Code Retrieval Pipeline`: parse_corpus_file extracts structured entries from Enhanced TAP format (regex-based parser for non-standard JSON-like syntax), computes embeddings, and retrieves top-k candidates by semantic relevance\n\n`Production-Grade Deployment`: PM2 process management (ecosystem.config.js), Docker containerization, deploy.ps1 with dependency checking, health-check endpoints, and automated restart scripts'
-    },
-    zh: {
-      title: 'HausRAGen',
-      subtitle: '面向智能家居自动化代码生成的语义 RAG 引擎',
-      overview: 'HausRAGen 是一个双服务智能家居 RAG 引擎，语义检索自动化规则代码并生成新的 TAP（触发-动作编程）规则。它结合了 Node.js Express 后端（多提供商 AI 编排，支持 8+ LLM 服务）和 Python Flask ML 微服务（语义聚类、BSR/LSR 相似度、基于 sentence-transformers 的代码检索）。',
-      tech: ['Node.js','Express','Python','Flask','Sentence-Transformers','语义聚类','BSR/LSR','TAP 规则','PM2','Docker','多提供商 AI'],
-      arch: 'flowchart TD\n    Query[用户查询] --> API[Express API :3000]\n    API --> ML[Flask ML :5001]\n    ML --> SC[语义聚类]\n    ML --> CR[代码检索]\n    API --> AI[多提供商 AI]\n    AI --> Gen[TAP 规则生成]\n    SC --> Sim[BSR/LSR 相似度矩阵]\n    CR --> Corpus[TAP 语料库]\n    Gen --> Output[生成的自动化规则]',
-      highlights: '`双服务架构`: Node.js Express API（端口 3000）+ Python Flask ML 微服务（端口 5001）——关注点干净分离，重型模型（torch、transformers、sentence-transformers）延迟加载以最小化冷启动延迟\n\n`多提供商 AI 编排`: 统一抽象层覆盖 8+ AI 服务提供商（Claude/PoloAPI、DeepSeek、MiniMax、GLM/智谱、Qwen、Kimi、OpenAI 兼容），自动 Provider 降级、占位符 API Key 检测、按 Provider 模型选择\n\n`语义聚类引擎`: BSR（广度语义召回）与 LSR（轻量语义重排）相似度计算——sentence-transformers（all-MiniLM-L6-v2）嵌入 + 余弦相似度聚类，将语义相似的自动化代码分组\n\n`TAP 规则生成`: 增强型 TAP.txt 语料库，含 applet YAML + Python 脚本提取——系统检索语义相似的已有规则，使用 LLM 推理生成新的触发-动作编程规则\n\n`代码检索管线`: parse_corpus_file 从增强型 TAP 格式中提取结构化条目（基于正则的非标准 JSON 语法解析器），计算嵌入向量，按语义相关性检索 top-k 候选\n\n`生产级部署`: PM2 进程管理（ecosystem.config.js）、Docker 容器化、deploy.ps1 依赖检查、health-check 端点、自动重启脚本'
-    }
-  },
-    submitflow: {
-      github: 'https://github.com/wblxr408/SubmitFlow',
-      en: {
-        title: 'SubmitFlow',
-        subtitle: 'CS/AI Student Internship & Job Application Aggregation Platform',
-        overview: 'SubmitFlow is a full-stack platform designed for CS/AI students aggregating internship and campus recruitment opportunities. It features 500+ companies, 1000+ job listings, a six-dimensional AI recommendation engine, city-aware matching, and automated application tracking — all powered by a Next.js + PostgreSQL + AI orchestration stack.',
-        tech: ['Next.js 14','TypeScript','Tailwind CSS','React Query','PostgreSQL 16','Playwright','AI Orchestration','Docker','JWT Auth'],
-        arch: 'flowchart LR\n    Pool[Company Pool 500+] --> Score[AI Scoring 6-dim] --> City[City Matching] --> Rec[Recommendations] --> Track[Application Tracking] --> Pipe[Status Pipeline]',
-        highlights: '`Edge-Compatible JWT Auth`: Custom `jose`-based HS256 verification in Next.js middleware — no Node.js `crypto`, no `bcrypt`, zero polyfill dependencies. Runs in Edge Runtime for per-request auth gating with sub-millisecond overhead\\n\\n`6-Dimension AI Scoring Engine`: Prestige (company tier) × Match (skill alignment) × City (tiered interop: Tier-1 ↔ Tier-1, New-Tier-1 ↔ New-Tier-1, same-region) × Urgency (deadline proximity) × Conversion Rate (historical offer data) × Freshness (listing age decay) → weighted composite ranking\\n\\n`Docker Compose 3-Container Architecture`: `web` (Next.js, request handling only), `worker` (Playwright browser automation + cron scheduling + AI batch processing), `postgres` (persistent volume) — no Redis dependency for v1, Redis interfaces pre-reserved for horizontal scaling\\n\\n`AI Orchestrator`: Unified provider abstraction supporting 8 AI service vendors with structured output validation, provider fallback chains, and per-provider cost/token tracking\\n\\n`Playwright in Container`: Worker container based on `playwright/playwright` image, headless Chromium for job scraping, browser instance managed via queue with concurrency control\\n\\n`React Query Frontend`: Optimistic UI updates, automatic background refetching, stale-while-revalidate caching — 500+ company listings load with instant filter/sort without spinner jank',
-      },
-      zh: {
-        title: 'SubmitFlow',
-        subtitle: 'CS/AI 学生实习校招信息聚合与投递追踪平台',
-        overview: 'SubmitFlow 是一个面向 CS/AI 学生的全栈平台，聚合实习和校园招聘机会。拥有 500+ 家公司、1000+ 岗位、六维 AI 推荐引擎、城市智能匹配和自动投递追踪——全部基于 Next.js + PostgreSQL + AI 编排技术栈。',
-        tech: ['Next.js 14','TypeScript','Tailwind CSS','React Query','PostgreSQL 16','Playwright','AI 编排','Docker','JWT 认证'],
-        arch: 'flowchart LR\n    Pool[公司池 500+] --> Score[AI 六维评分] --> City[城市匹配] --> Rec[智能推荐] --> Track[投递追踪] --> Pipe[状态流水线]',
-        highlights: '`Edge 兼容 JWT 认证`: 基于 `jose` 库的 HS256 签名校验，运行在 Next.js Edge Runtime 中——零 Node.js `crypto` 依赖、零 `bcrypt` 依赖、零 polyfill。每次请求鉴权亚毫秒级开销\\n\\n`六维 AI 评分引擎`: 知名度（公司档次）× 匹配度（技能对齐）× 城市（分级互通：一线↔一线、新一线↔新一线、同区域）× 紧迫性（截止日期临近）× 转正率（历史 offer 数据）× 新鲜度（发布时间衰减）→ 加权综合排名\\n\\n`Docker Compose 三容器架构`: `web`（Next.js，仅处理请求）、`worker`（Playwright 浏览器自动化+定时调度+AI 批处理）、`postgres`（持久化卷）——v1 无 Redis 依赖，Redis 接口预留给水平扩展\\n\\n`AI 编排层`: 统一 Provider 抽象，支持 8 家 AI 服务商，结构化输出校验、Provider 降级链、按 Provider 的成本/Token 追踪\\n\\n`Playwright 容器化`: Worker 容器基于 `playwright/playwright` 镜像，headless Chromium 执行职位抓取，浏览器实例通过队列+并发控制管理\\n\\n`React Query 前端`: 乐观更新、后台自动重新获取、stale-while-revalidate 缓存——500+ 公司列表即时筛选排序无 spinner 卡顿',
-      }
-    },
-    deepintel: {
-      github: 'https://github.com/wblxr408/Agentic-Deep-Research-System',
-      en: {
-        title: 'DeepIntel',
-        subtitle: 'Agentic Deep Research System — Hallucination-Resistant Research Assistant',
-        overview: 'DeepIntel (ADRS) is a LangGraph-based autonomous research agent platform. Its core pipeline: User Input → Planner generates DAG → Parallel Search/Browse/RAG collection → Analyst synthesis → Reflection verification → Report output. Designed to demonstrate Agent Engineering capabilities with executable DAGs, multi-agent collaboration, SSE streaming, and evidence-driven generation.',
-        tech: ['LangGraph','FastAPI','React','TypeScript','PostgreSQL','pgvector','BM25','Playwright','Redis','SSE'],
-        arch: 'flowchart TD\n    Input[User Input] --> Planner[Planner]\n    Planner --> DAG[DAG Generation]\n    DAG --> Search[Search]\n    DAG --> Browse[Browse]\n    DAG --> Rag[RAG]\n    Search --> Analyst[Analyst Synthesis]\n    Browse --> Analyst\n    Rag --> Analyst\n    Analyst --> Refl[Reflection Verify]\n    Refl --> Report[Report Output]',
-        highlights: '`HarnessSupervisor`: Crash-safe task state machine with atomic writes (tmp+rename), automatic backup recovery, stale lock detection & eviction, and DFS-based dependency cycle detection preventing cascading failures\\n\\n`RuntimePersistence`: Full audit trail — every tool call, its args hash, result hash, token cost, server fingerprint, and safety metadata are immutably persisted to `tool_call_audit`. Approval requests tracked with risk level and resolution status\\n\\n`McpPolicyProxy`: Defense-in-depth MCP gateway — server allowlist enforcement, trust-status gating, JSON Schema input/output validation, secret redaction (api_key/token/password), read-only-default with auto-escalation to human approval for writes\\n\\n`GuardrailDecision`: Intent classification (search_compare/fact_lookup/doc_answer/analysis), risk level assessment (low/medium/high), prompt profile routing, evidence gate with confidence scoring, and structured output validation\\n\\n`Research Budgets`: Three-tier enforcement (short/medium/long) with hard caps on tokens, cost (USD), tool calls, wall-clock seconds, and retries — `harness.py` enforces at the supervisor level, not advisor\\n\\n`LangGraph DAG`: Planner generates executable research DAG → parallel Search/Browse/RAG agents → Analyst synthesis → Reflection verification with auto-replan on low confidence',
-      },
-      zh: {
-        title: 'DeepIntel',
-        subtitle: '智能深度研究系统——抗幻觉研究助手',
-        overview: 'DeepIntel（ADRS）是一个基于 LangGraph 的自主研究智能体平台。其核心链路：用户输入 → Planner 生成 DAG → 并行搜索/浏览/RAG 采集 → Analyst 综合 → Reflection 校验 → Report 输出。旨在展示智能体工程能力，具有可执行 DAG、多智能体协作、SSE 流式输出和证据驱动生成。',
-        tech: ['LangGraph','FastAPI','React','TypeScript','PostgreSQL','pgvector','BM25','Playwright','Redis','SSE'],
-        arch: 'flowchart TD\n    Input[用户输入] --> Planner[Planner]\n    Planner --> DAG[DAG 生成]\n    DAG --> Search[搜索]\n    DAG --> Browse[浏览]\n    DAG --> Rag[RAG]\n    Search --> Analyst[Analyst 分析]\n    Browse --> Analyst\n    Rag --> Analyst\n    Analyst --> Refl[Reflection 反思]\n    Refl --> Report[Report 输出]',
-        highlights: '`HarnessSupervisor`: 崩溃安全的任务状态机——原子写入（tmp+rename）、自动备份恢复、过期锁检测与清理、基于 DFS 的依赖环检测防止级联故障\\n\\n`RuntimePersistence`: 全链路审计——每个工具调用的参数哈希、结果哈希、Token 成本、服务器指纹和安全元数据均不可篡改地持久化到 `tool_call_audit` 表。审批请求带风险等级和解决状态追踪\\n\\n`McpPolicyProxy`: 纵深防御 MCP 网关——服务白名单强制、信任状态门控、JSON Schema 输入/输出校验、密钥脱敏（api_key/token/password）、只读默认+写操作自动升级人工审批\\n\\n`GuardrailDecision`: 意图分类（搜索比较/事实查询/文档问答/分析）、风险评级（低/中/高）、Prompt 模板路由、证据门槛置信度评分、结构化输出校验\\n\\n`Research Budgets`: 三级硬约束（短/中/长）——Token 上限、美元成本上限、工具调用次数上限、挂钟时间上限、重试次数上限——由 `harness.py` 在 supervisor 层强制执行，非建议\\n\\n`LangGraph DAG`: Planner 生成可执行研究 DAG → 并行 Search/Browse/RAG Agent → Analyst 综合 → Reflection 校验 + 低置信自动重规划',
-      }
-    },
-    ruleflow: {
-      github: 'https://github.com/wblxr408',
-      en: {
-        title: 'RuleFlow',
-        subtitle: 'Semantic Dependency Discovery for TAP Systems',
-        overview: 'RuleFlow addresses a hidden danger in Trigger-Action Programming (TAP) systems: rules can have implicit dependencies unknown to the developer. Rule A affecting Rule B without the developer realizing it can cause cascading failures. RuleFlow automatically discovers these hidden semantic dependencies.',
-        tech: ['Dependency Graph','Static Analysis','Rule Engine','Semantic Modeling','Graph Algorithms'],
-        arch: 'flowchart LR\n    RS[Rule Set] --> DA[Dependency Analysis] --> HDD[Hidden Dependency Discovery] --> DG[Dependency Graph] --> CW[Conflict Warning]',
-        highlights: '`Static Dependency Analysis`: Parses TAP rule definitions, extracts trigger conditions and action side-effects, constructs a directed dependency graph. Identifies hidden couplings where Rule A\'s action overlaps with Rule B\'s trigger domain\\n\\n`Conflict Classification`: Categorizes discovered dependencies into conflict types — direct contradiction, resource contention, ordering sensitivity, cascading side-effect — each with severity scoring\\n\\n`CSCWD Publication`: Accepted at the International Conference on Computer Supported Cooperative Work in Design — peer-reviewed validation of the dependency discovery approach\\n\\n`Integration Surface`: Exports structured dependency graph consumable by TapSync for execution-time enforcement, enabling end-to-end semantic consistency from discovery to execution',
-      },
-      zh: {
-        title: 'RuleFlow',
-        subtitle: 'TAP 系统语义依赖发现',
-        overview: 'RuleFlow 解决了触发-动作编程（TAP）系统中的一个隐藏危险：规则之间可能存在开发者未知的隐式依赖。规则 A 影响规则 B 而开发者未意识到，可能导致级联故障。RuleFlow 自动发现这些隐藏的语义依赖。',
-        tech: ['依赖图','静态分析','规则引擎','语义建模','图算法'],
-        arch: 'flowchart LR\n    RS[规则集] --> DA[依赖分析] --> HDD[隐藏依赖发现] --> DG[依赖图] --> CW[冲突预警]',
-        highlights: '`静态依赖分析`: 解析 TAP 规则定义，提取触发条件和动作副作用，构建有向依赖图。识别 Rule A 的动作域与 Rule B 的触发域重叠的隐藏耦合\\n\\n`冲突分类`: 将发现的依赖分类为冲突类型——直接矛盾、资源争用、顺序敏感、级联副作用——每种附严重性评分\\n\\n`CSCWD 发表`: 被国际计算机支持协同设计大会录用——依赖发现方法经同行评审验证\\n\\n`集成接口`: 导出结构化依赖图供 TapSync 在执行时消费，实现从发现到执行的端到端语义一致性',
-      }
-    },
-    tapsync: {
-      github: 'https://github.com/wblxr408',
-      en: {
-        title: 'TapSync',
-        subtitle: 'Semantic Consistency Enforcement for TAP Systems',
-        overview: 'TapSync is the enforcement counterpart to RuleFlow. While RuleFlow discovers hidden dependencies, TapSync ensures that rule execution respects those dependencies — preventing conflicts, ensuring correct ordering, and maintaining semantic consistency during concurrent rule execution.',
-        tech: ['Constraint Solving','Reactive Programming','Execution Ordering','Conflict Resolution','IoT Middleware'],
-        arch: 'flowchart LR\n    DG[Dependency Graph from RuleFlow] --> EP[Execution Planning] --> CE[Constraint Enforcement] --> OE[Ordered Execution] --> CV[Consistency Verification]',
-        highlights: '`Constraint Enforcement Middleware`: Sits between the rule engine and device controllers — intercepts every rule execution, checks against the dependency graph, and blocks/reorders/queues as needed\\n\\n`Ordered Execution Planning`: Given N rules triggered simultaneously, TapSync computes a topological execution order that respects all discovered dependencies — preventing race conditions at the execution layer\\n\\n`Real-Time Conflict Prevention`: Detects write-after-read, concurrent modification, and ordering violations in real time — < 10ms overhead per rule dispatch\\n\\n`End-to-End with RuleFlow`: RuleFlow discovers → TapSync enforces → together they guarantee that the semantic dependency model is preserved at runtime, closing the gap between static analysis and live execution',
-      },
-      zh: {
-        title: 'TapSync',
-        subtitle: 'TAP 系统语义一致性执行',
-        overview: 'TapSync 是 RuleFlow 的执行端对应。RuleFlow 发现隐藏依赖，TapSync 确保规则执行尊重这些依赖——防止冲突、确保正确顺序、在并发规则执行期间保持语义一致性。',
-        tech: ['约束求解','响应式编程','执行排序','冲突解决','物联网中间件'],
-        arch: 'flowchart LR\n    DG[依赖图 来自 RuleFlow] --> EP[执行规划] --> CE[约束执行] --> OE[有序执行] --> CV[一致性验证]',
-        highlights: '`约束执行中间件`: 位于规则引擎与设备控制器之间——拦截每一次规则执行，对照依赖图检查，按需阻止/重排/排队\\n\\n`有序执行规划`: 给定 N 条同时触发的规则，TapSync 计算遵守所有已发现依赖的拓扑执行顺序——在执行层防止竞态条件\\n\\n`实时冲突预防`: 实时检测写后读、并发修改和顺序违规——每次规则分派 < 10ms 开销\\n\\n`端到端闭环`: RuleFlow 发现 → TapSync 执行 → 二者共同保证语义依赖模型在运行时得到保持，弥合静态分析与实时执行之间的鸿沟',
-      }
-    },
-    'agent-re': {
-      en: {
-        title: 'Agent Reverse Engineering',
-        subtitle: 'Understanding agent systems through binary and behavioral analysis',
-        overview: 'An exploratory project applying reverse engineering techniques (Ghidra, IDA) to understand how agent systems work internally — their code graphs, knowledge structures, and workflow patterns. This bridges systems-level understanding with agent architecture design.',
-        tech: ['Ghidra','IDA','MCP','Agent Workflow','Code Graph','Knowledge Graph'],
-        highlights: 'Reverse engineering agent binaries to understand internal architecture; Code graph extraction for agent workflow analysis; Cross-pollination of systems and AI knowledge'
-      },
-      zh: {
-        title: 'Agent 逆向工程',
-        subtitle: '通过二进制和行为分析理解智能体系统',
-        overview: '一个探索性项目，应用逆向工程技术（Ghidra、IDA）来理解智能体系统的内部运作——它们的代码图、知识结构和工作流模式。这桥接了系统级理解与智能体架构设计。',
-        tech: ['Ghidra','IDA','MCP','Agent Workflow','Code Graph','Knowledge Graph'],
-        highlights: '逆向智能体二进制以理解内部架构；代码图提取用于智能体工作流分析；系统与 AI 知识的交叉融合'
-      }
-    }
-  };
-
-  function openProjectDetail(projectKey) {
-    var detail = PROJECT_DETAILS[projectKey];
-    if (!detail) return;
-    var d = detail[currentLang] || detail['en'];
-    var techTags = d.tech.map(function(t) {
-      return '<span data-tech="' + t.toLowerCase().replace(/\s+/g, '-') + '">' + t + '</span>';
-    }).join('');
-
-    var html = '<button class="modal-close">&times;</button>';
-    html += '<div class="modal-tag">' + t('nav.projects') + ' · Project</div>';
-    if (detail.github) {
-      html += '<a href="' + detail.github + '" target="_blank" rel="noopener" class="modal-github-link"><svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub Repository</a>';
-    }
-    html += '<h2 class="modal-title">' + d.title + '</h2>';
-    html += '<p class="modal-subtitle">' + d.subtitle + '</p>';
-    html += '<div class="modal-section"><h4>' + t('modal.overview') + '</h4><p>' + d.overview + '</p></div>';
-    html += '<div class="modal-section"><h4>' + t('modal.tech') + '</h4><div class="tech-tags">' + techTags + '</div></div>';
-    html += '<div class="modal-section"><h4>' + t('modal.arch') + '</h4><div class="mermaid-container"><div class="mermaid">' + d.arch + '</div></div></div>';
-    html += '<div class="modal-section"><h4>' + t('modal.highlights') + '</h4><div class="modal-highlights">' + formatHighlights(d.highlights) + '</div></div>';
-
-    // Update URL hash
-    history.pushState(null, '', '#project/' + projectKey);
-    openModal(html);
-  }
-
-  /* ============================================================
-     PROGRESS BAR
-     ============================================================ */
-  var progressBar = document.getElementById('progress');
-  function updateProgress() {
-    var st = window.scrollY;
-    var dh = document.documentElement.scrollHeight - window.innerHeight;
-    progressBar.style.width = (dh > 0 ? Math.min((st / dh) * 100, 100) : 0) + '%';
-  }
-
-  /* ============================================================
-     NAV STATE
-     ============================================================ */
-  var nav = document.getElementById('nav');
-  var navLinks = document.querySelectorAll('nav .links a');
-  var sections = [];
-
-  navLinks.forEach(function(link) {
-    var id = link.getAttribute('data-section');
-    var el = document.getElementById(id);
-    if (el) sections.push({ id: id, el: el, link: link });
-  });
-
-  function updateNav() {
-    var sy = window.scrollY;
-    if (sy < 60) nav.classList.add('at-top');
-    else nav.classList.remove('at-top');
-
-    var current = null;
-    sections.forEach(function(s) {
-      if (sy >= s.el.offsetTop - 140) current = s;
-    });
-    navLinks.forEach(function(l) { l.classList.remove('active'); });
-    if (current) current.link.classList.add('active');
-  }
-
-  /* ============================================================
-     REVEAL OBSERVER
-     ============================================================ */
-  var revealEls = document.querySelectorAll('.reveal');
-  var revealObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -36px 0px' });
-
-  revealEls.forEach(function(el) { revealObserver.observe(el); });
-
-  var labelObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        labelObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.25 });
-  document.querySelectorAll('.section-label').forEach(function(el) { labelObserver.observe(el); });
-
-  /* ============================================================
-     SCROLL HANDLER (throttled)
-     ============================================================ */
-  var ticking = false;
-  window.addEventListener('scroll', function() {
-    if (!ticking) {
-      requestAnimationFrame(function() {
-        updateProgress();
-        updateNav();
-        ticking = false;
-      });
-      ticking = true;
-    }
-  }, { passive: true });
-
-  /* ============================================================
-     RESEARCH ATLAS
-     ============================================================ */
-  var atlasNodes = [
-    { id: 'agent',      label: 'Agent Systems',            x: 450, y: 78,  r: 24 },
-    { id: 'knowledge',  label: 'Knowledge Discovery',      x: 165, y: 195, r: 20 },
-    { id: 'systems',    label: 'Operating Systems',        x: 735, y: 195, r: 18 },
-    { id: 'infra',      label: 'Research Infra.',          x: 95,  y: 365, r: 15 },
-    { id: 'hci',        label: 'Human-AI Collab.',         x: 805, y: 365, r: 15 },
-    { id: 'semantic',   label: 'Semantic Consistency',     x: 285, y: 375, r: 17 },
-    { id: 'complex',    label: 'Complex Systems',          x: 600, y: 395, r: 15 },
-  ];
-
-  var atlasEdgesData = [
-    ['agent','knowledge'],['agent','systems'],['agent','hci'],['agent','semantic'],
-    ['knowledge','infra'],['knowledge','semantic'],['systems','complex'],
-    ['systems','semantic'],['agent','complex'],['knowledge','complex'],
-    ['agent','infra'],['knowledge','hci'],['semantic','complex'],
-    ['agent','systems'],['knowledge','agent'],
-  ];
-
-  function updateAtlasColors() {
-    var isDark = currentTheme === 'dark';
-    var edgeColor = isDark ? '#2A2A2A' : '#E0E0DC';
-    var highlightColor = isDark ? '#3B82F6' : '#0047FF';
-    var textColor = isDark ? '#E8E8E8' : '#111111';
-    var circleFill = isDark ? '#1A1A1A' : '#FFFFFF';
-    var circleStroke = isDark ? '#333333' : '#E0E0DC';
-    var hoverCircleStroke = isDark ? '#3B82F6' : '#0047FF';
-    var labelColor = isDark ? '#666666' : '#999999';
-
-    var edges = document.querySelectorAll('#atlasEdges .atlas-edge');
-    edges.forEach(function(e) { e.style.stroke = edgeColor; });
-
-    var nodes = document.querySelectorAll('#atlasNodes .atlas-node');
-    nodes.forEach(function(g) {
-      var circle = g.querySelector('circle');
-      var text = g.querySelector('text');
-      if (circle) {
-        circle.setAttribute('fill', circleFill);
-        circle.setAttribute('stroke', circleStroke);
-      }
-      if (text) text.setAttribute('fill', textColor);
-    });
-
-    var labels = document.querySelectorAll('#atlasSvg .atlas-label');
-    labels.forEach(function(l) { l.setAttribute('fill', labelColor); });
-  }
-
-  function buildAtlas() {
-    var edgesGroup = document.getElementById('atlasEdges');
-    var nodesGroup = document.getElementById('atlasNodes');
-
-    // Edges
-    atlasEdgesData.forEach(function(e) {
-      var fn = null, tn = null;
-      for (var i = 0; i < atlasNodes.length; i++) {
-        if (atlasNodes[i].id === e[0]) fn = atlasNodes[i];
-        if (atlasNodes[i].id === e[1]) tn = atlasNodes[i];
-      }
-      if (!fn || !tn) return;
-      var line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-      line.setAttribute('x1', fn.x);
-      line.setAttribute('y1', fn.y);
-      line.setAttribute('x2', tn.x);
-      line.setAttribute('y2', tn.y);
-      line.setAttribute('data-from', e[0]);
-      line.setAttribute('data-to', e[1]);
-      line.classList.add('atlas-edge');
-      edgesGroup.appendChild(line);
-    });
-
-    // Nodes
-    atlasNodes.forEach(function(n) {
-      var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-      g.classList.add('atlas-node');
-      g.setAttribute('data-id', n.id);
-      g.setAttribute('transform', 'translate(' + n.x + ',' + n.y + ')');
-      g.style.cursor = 'pointer';
-
-      var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      circle.setAttribute('r', n.r);
-      circle.setAttribute('fill', '#FFFFFF');
-      circle.setAttribute('stroke', '#E0E0DC');
-      circle.setAttribute('stroke-width', '1.5');
-      g.appendChild(circle);
-
-      var text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      text.setAttribute('text-anchor', 'middle');
-      text.setAttribute('dy', '0.35em');
-      text.setAttribute('font-family', 'Inter, Noto Sans SC, sans-serif');
-      text.setAttribute('font-size', n.r > 18 ? '12' : '10');
-      text.setAttribute('font-weight', '600');
-      text.setAttribute('fill', '#111111');
-      text.setAttribute('letter-spacing', '0.01em');
-      text.textContent = n.label;
-      g.appendChild(text);
-
-      g.addEventListener('mouseenter', function() {
-        var allEdges = edgesGroup.querySelectorAll('.atlas-edge');
-        allEdges.forEach(function(edge) {
-          var from = edge.getAttribute('data-from');
-          var to = edge.getAttribute('data-to');
-          if (from === n.id || to === n.id) edge.classList.add('highlight');
-        });
-      });
-      g.addEventListener('mouseleave', function() {
-        edgesGroup.querySelectorAll('.atlas-edge').forEach(function(edge) {
-          edge.classList.remove('highlight');
-        });
-      });
-
-      // Click to open related tech detail
-      g.addEventListener('click', function() {
-        var techMap = {
-          'agent': 'ai-agent', 'knowledge': 'knowledge-graph', 'systems': 'systems',
-          'semantic': 'semantic', 'complex': 'systems', 'infra': 'rag',
-          'hci': 'ai-agent'
-        };
-        openTechDetail(techMap[n.id] || n.id);
-      });
-
-      nodesGroup.appendChild(g);
-    });
-
-    // Fade-in animation
-    var atlasObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          var nodeEls = nodesGroup.querySelectorAll('.atlas-node');
-          nodeEls.forEach(function(el, i) {
-            el.style.opacity = '0';
-            setTimeout(function() {
-              el.style.transition = 'opacity 0.55s cubic-bezier(0.22,0.61,0.36,1)';
-              el.style.opacity = '1';
-            }, i * 90);
-          });
-          atlasObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.2 });
-    atlasObserver.observe(document.getElementById('atlasContainer'));
-  }
-
-  /* ============================================================
-     EVENT BINDINGS
-     ============================================================ */
-  function bindEvents() {
-    // Project rows
-    document.querySelectorAll('[data-project]').forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        // Don't fire if clicking on a child that already has a handler
-        if (e.target.closest('.tech-tags span')) return;
-        var key = el.getAttribute('data-project');
-        if (key && PROJECT_DETAILS[key]) openProjectDetail(key);
-      });
-    });
-
-    // Hero quick-link project items
-    document.querySelectorAll('#hero .hql-item').forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var key = el.getAttribute('data-project');
-        if (key && PROJECT_DETAILS[key]) openProjectDetail(key);
-      });
-    });
-
-    // Tech keywords
-    document.querySelectorAll('[data-tech]').forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        e.stopPropagation();
-        var tech = el.getAttribute('data-tech');
-        if (tech) openTechDetail(tech);
-      });
-    });
-
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-      anchor.addEventListener('click', function(e) {
-        var href = this.getAttribute('href');
-        if (href === '#') { e.preventDefault(); return; }
-        var target = document.querySelector(href);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          history.pushState(null, '', href);
-        }
-      });
-    });
-
-    // Theme toggle
-    document.getElementById('btnTheme').addEventListener('click', toggleTheme);
-    // Lang toggle
-    document.getElementById('btnLang').addEventListener('click', toggleLang);
-  }
-
-  /* ============================================================
-     INIT
-     ============================================================ */
-  function init() {
-    // Restore saved preferences
-    var savedTheme = localStorage.getItem('wb-theme');
-    if (savedTheme) setTheme(savedTheme);
-    else setTheme('light');
-
-    var savedLang = localStorage.getItem('wb-lang');
-    if (savedLang) setLang(savedLang);
-    else setLang('en');
-
-    buildAtlas();
-    buildKeywordCloud();
-    bindEvents();
-    updateProgress();
-    updateNav();
-
-    // Handle hash-based routing for direct links or back/forward
-    function handleHash() {
-      var hash = window.location.hash;
-      var match = hash.match(/^#project\/(.+)/);
-      if (match) {
-        var key = match[1];
-        if (PROJECT_DETAILS[key]) {
-          setTimeout(function() { openProjectDetail(key); }, 200);
-        }
-      }
-    }
-    window.addEventListener('hashchange', handleHash);
-    handleHash(); // check on load
-  }
-
-  /* ---- Inject logo watermark into every section ---- */
-  function injectWatermark() {
-    var secs = document.querySelectorAll('section');
-    secs.forEach(function(sec) {
-      var wm = document.createElement('div');
-      wm.className = 'sec-watermark';
-      var img = document.createElement('img');
-      img.src = 'logo.png';
-      img.alt = '';
-      img.onerror = function() { this.style.display = 'none'; };
-      wm.appendChild(img);
-      sec.insertBefore(wm, sec.firstChild);
-    });
-  }
-  injectWatermark();
-
-  init();
-
-})();
-</script>
-
-</body>
-</html>
