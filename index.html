@@ -1826,6 +1826,31 @@ body.modal-open { overflow: hidden; }
   };
 
 
+  function formatHighlights(text) {
+    // Split on literal backslash-n backslash-n sequences (from JS string escapes)
+    var paras = text.split(/\n\n/);
+    return paras.map(function(p) {
+      p = p.trim();
+      if (!p) return '';
+      // Convert `code` spans
+      p = p.replace(/`([^`]+)`/g, '<code class="hl-code">$1</code>');
+      // Try to extract a header: text before the first colon followed by space
+      // Pattern: `Header`: rest of description
+      var headerMatch = p.match(/^<code class="hl-code">([^<]+)<\/code>:\s*(.*)/);
+      if (!headerMatch) {
+        // Try without code tag
+        headerMatch = p.match(/^`([^`]+)`:\s*(.*)/);
+        if (headerMatch) {
+          return '<div class="hl-point"><span class="hl-point-header"><code class="hl-code">' + headerMatch[1] + '</code></span><span class="hl-point-body">' + headerMatch[2] + '</span></div>';
+        }
+      } else {
+        return '<div class="hl-point"><span class="hl-point-header"><code class="hl-code">' + headerMatch[1] + '</code></span><span class="hl-point-body">' + headerMatch[2] + '</span></div>';
+      }
+      // Fallback: just render as body text
+      return '<div class="hl-point"><span class="hl-point-body">' + p + '</span></div>';
+    }).join('');
+  }
+
   function openTechDetail(techName) {
     var key = techName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
     // Try to match
