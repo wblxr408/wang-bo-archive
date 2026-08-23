@@ -8,7 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<link href="https://db.onlinewebfonts.com/c/5ac3fe7c6abd2f62067f266d89671492?family=HelveticaNowDisplay-Medium" rel="stylesheet">
+<link href="https://db.onlinewebfonts.com/c/1aa3377e489837a26d019bba501e779d?family=HelveticaNowDisplayW01-Rg" rel="stylesheet">
+<script id="mermaidScript" defer src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 <style>
 /* ============================================================
    Wang Bo Archive — Swiss International × Computational Aesthetic
@@ -37,6 +39,8 @@
   --overlay:       rgba(0,0,0,0.35);
   --nav-bg:        rgba(250,250,248,0.88);
   --hero-grid-op:  0.30;
+  --mf-font-heading: 'HelveticaNowDisplay-Medium', 'Helvetica Neue', Arial, sans-serif;
+  --mf-font-body: 'HelveticaNowDisplayW01-Rg', 'Helvetica Neue', Arial, sans-serif;
 }
 
 [data-theme="dark"] {
@@ -139,6 +143,320 @@ nav .nav-utils button {
 nav .nav-utils button:hover { border-color: var(--accent); color: var(--accent); }
 nav .nav-utils button.active-btn { background: var(--accent); color: #fff; border-color: var(--accent); }
 
+/* ---- View Modes ---- */
+#mainframe-app {
+  display: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #fff;
+  color: #000;
+  font-family: var(--mf-font-body);
+}
+body.mode-mainframe {
+  overflow: hidden;
+  background: #fff;
+}
+body.mode-mainframe > *:not(#mainframe-app) {
+  display: none !important;
+}
+body.mode-mainframe #mainframe-app {
+  display: block;
+}
+
+#mainframe-app, #mainframe-app * {
+  box-sizing: border-box;
+}
+#mainframe-app a {
+  color: inherit;
+  text-decoration: none;
+}
+#mainframe-app button {
+  font: inherit;
+}
+#mainframe-app .mf-video {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% center;
+}
+#mainframe-app .mf-overlay-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.12));
+  pointer-events: none;
+}
+#mainframe-app .mf-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px;
+  pointer-events: none;
+}
+#mainframe-app .mf-nav > * {
+  pointer-events: auto;
+}
+#mainframe-app .mf-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #000;
+  font-family: var(--mf-font-heading);
+  letter-spacing: -0.02em;
+}
+#mainframe-app .mf-brand-name {
+  font-size: clamp(21px, 2vw, 26px);
+  line-height: 1;
+  white-space: nowrap;
+}
+#mainframe-app .mf-brand-mark {
+  font-size: clamp(25px, 2.4vw, 30px);
+  line-height: 1;
+  user-select: none;
+  transform: translateY(1px);
+}
+#mainframe-app .mf-nav-links {
+  display: none;
+  align-items: center;
+  gap: 0;
+  color: #000;
+  font-family: var(--mf-font-body);
+  font-size: 23px;
+  line-height: 1;
+}
+#mainframe-app .mf-nav-links a {
+  transition: opacity 0.2s ease;
+}
+#mainframe-app .mf-nav-links a:hover,
+#mainframe-app .mf-cta:hover,
+#mainframe-app .mf-switch:hover {
+  opacity: 0.6;
+}
+#mainframe-app .mf-nav-cta {
+  display: none;
+  align-items: center;
+  gap: 18px;
+}
+#mainframe-app .mf-cta {
+  font-family: var(--mf-font-body);
+  font-size: 23px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: opacity 0.2s ease;
+}
+#mainframe-app .mf-switch {
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0.72);
+  color: #000;
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+#mainframe-app .mf-menu-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 42px;
+  padding: 8px 6px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+#mainframe-app .mf-menu-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #000;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform-origin: center;
+}
+#mainframe-app .mf-nav.is-menu-open .mf-menu-toggle span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+#mainframe-app .mf-nav.is-menu-open .mf-menu-toggle span:nth-child(2) {
+  opacity: 0;
+}
+#mainframe-app .mf-nav.is-menu-open .mf-menu-toggle span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+#mainframe-app .mf-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 32px;
+  padding: 0 32px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+#mainframe-app .mf-menu.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+#mainframe-app .mf-menu a,
+#mainframe-app .mf-menu button {
+  font-family: var(--mf-font-body);
+  color: #000;
+}
+#mainframe-app .mf-menu a {
+  font-size: clamp(28px, 6vw, 32px);
+  font-weight: 500;
+  line-height: 1;
+}
+#mainframe-app .mf-menu .mf-menu-cta {
+  font-size: 22px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+#mainframe-app .mf-hero {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 20px 48px;
+  overflow: hidden;
+}
+#mainframe-app .mf-content {
+  position: relative;
+  z-index: 2;
+  max-width: 36rem;
+}
+#mainframe-app .mf-intro {
+  pointer-events: none;
+  user-select: none;
+  margin-bottom: 20px;
+  font-size: clamp(18px, 4vw, 26px);
+  line-height: 1.3;
+  font-weight: 400;
+  color: #000;
+  filter: blur(4px);
+  white-space: pre-line;
+}
+#mainframe-app .mf-typewriter {
+  margin: 0 0 20px;
+  min-height: 54px;
+  font-size: clamp(18px, 4vw, 26px);
+  line-height: 1.35;
+  font-weight: 400;
+  color: #000;
+}
+#mainframe-app .mf-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.1em;
+  margin-left: 2px;
+  background: #000;
+  vertical-align: middle;
+  animation: blink 1s step-end infinite;
+}
+#mainframe-app .mf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+#mainframe-app .mf-actions.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+#mainframe-app .mf-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #fff;
+  color: #000;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 999px;
+  font-size: 13px;
+  line-height: 1;
+  padding: 0.3em 1em;
+  margin: 0 0.2em 0.4em;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+#mainframe-app .mf-pill:hover {
+  background: #000;
+  color: #fff;
+}
+#mainframe-app .mf-pill-outline {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255,255,255,0.95);
+}
+#mainframe-app .mf-pill-outline:hover {
+  background: #fff;
+  color: #000;
+}
+#mainframe-app .mf-pill .mf-copy {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+#mainframe-app .mf-pill .mf-email {
+  text-decoration: underline;
+  text-underline-offset: 1px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+@media (min-width: 768px) {
+  #mainframe-app .mf-nav {
+    padding: 20px 32px;
+  }
+  #mainframe-app .mf-nav-links {
+    display: flex;
+  }
+  #mainframe-app .mf-nav-cta {
+    display: flex;
+  }
+  #mainframe-app .mf-menu-toggle {
+    display: none;
+  }
+  #mainframe-app .mf-menu {
+    display: none;
+  }
+  #mainframe-app .mf-hero {
+    justify-content: center;
+    padding: 0 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  #mainframe-app .mf-nav-links,
+  #mainframe-app .mf-nav-cta {
+    display: none;
+  }
+}
+
 /* ---- Section ---- */
 section {
   padding: 7rem 4rem; max-width: min(90rem, 100%); margin: 0 auto;
@@ -148,9 +466,10 @@ section.full-bleed { max-width: 100%; padding-left: 0; padding-right: 0; }
 .section-label {
   font-size: 0.6875rem; font-weight: 600; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
-  opacity: 0; transform: translateY(12px);
+  opacity: 1; transform: translateY(0);
   transition: opacity 0.7s cubic-bezier(0.22,0.61,0.36,1), transform 0.7s cubic-bezier(0.22,0.61,0.36,1);
 }
+html.reveal-ready .section-label { opacity: 0; transform: translateY(12px); }
 .section-label.visible { opacity: 1; transform: translateY(0); }
 
 /* ---- Section Watermark ---- */
@@ -577,10 +896,11 @@ footer .ft-copy { font-size: 0.6875rem; color: var(--text-faint); margin-top: 1.
 
 /* ---- Reveal ---- */
 .reveal {
-  opacity: 0; transform: translateY(24px);
+  opacity: 1; transform: translateY(0);
   transition: opacity 0.8s cubic-bezier(0.22,0.61,0.36,1), transform 0.8s cubic-bezier(0.22,0.61,0.36,1);
 }
-.reveal.visible { opacity: 1; transform: translateY(0); }
+html.reveal-ready .reveal { opacity: 0; transform: translateY(24px); }
+html.reveal-ready .reveal.visible { opacity: 1; transform: translateY(0); }
 .reveal-delay-1 { transition-delay: 0.05s; }
 .reveal-delay-2 { transition-delay: 0.10s; }
 .reveal-delay-3 { transition-delay: 0.15s; }
@@ -629,6 +949,68 @@ body.modal-open { overflow: hidden; }
 </head>
 <body>
 
+<div id="mainframe-app" aria-hidden="true">
+  <video
+    id="mainframeVideo"
+    class="mf-video"
+    muted
+    playsinline
+    preload="auto"
+    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260530_042513_df96a13b-6155-4f6e-8b93-c9dee66fba08.mp4"
+  ></video>
+  <div class="mf-overlay-scrim"></div>
+
+  <nav class="mf-nav" aria-label="Mainframe navigation">
+    <a href="#" class="mf-brand" data-mf-switch>
+      <span class="mf-brand-name">Mainframe<span class="mf-reg">®</span></span>
+      <span class="mf-brand-mark">✳︎</span>
+    </a>
+    <div class="mf-nav-links" aria-label="Mainframe links">
+      <a href="#">Labs</a><span>, </span>
+      <a href="#">Studio</a><span>, </span>
+      <a href="#">Openings</a><span>, </span>
+      <a href="#">Shop</a>
+    </div>
+    <div class="mf-nav-cta">
+      <a class="mf-cta" href="mailto:hello@mainframe.co">Get in touch</a>
+      <button class="mf-switch" type="button" data-mode-toggle>Archive</button>
+    </div>
+    <button class="mf-menu-toggle" type="button" aria-label="Open menu" data-mf-menu-toggle>
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="mf-menu" data-mf-menu>
+    <a href="#">Labs</a>
+    <a href="#">Studio</a>
+    <a href="#">Openings</a>
+    <a href="#">Shop</a>
+    <a href="mailto:hello@mainframe.co">Get in touch</a>
+    <button class="mf-menu-cta" type="button" data-mode-toggle>Back to Archive</button>
+  </div>
+
+  <section class="mf-hero" aria-label="Mainframe hero">
+    <div class="mf-content">
+      <p class="mf-intro">Hey there, meet A.R.I.A,
+Mainframe's Adaptive Response Interface Agent</p>
+      <p class="mf-typewriter"><span data-mf-typewriter></span><span class="mf-cursor" data-mf-cursor></span></p>
+      <div class="mf-actions" data-mf-actions>
+        <a class="mf-pill" href="#">Pitch us an idea</a>
+        <a class="mf-pill" href="#">Come work here</a>
+        <a class="mf-pill" href="#">Send a brief hello</a>
+        <a class="mf-pill" href="#">See how we operate</a>
+        <button class="mf-pill mf-pill-outline" type="button" data-copy-email>
+          <span>Reach us: <span class="mf-email">hello@mainframe.co</span></span>
+          <svg class="mf-copy" viewBox="0 0 12 12" aria-hidden="true">
+            <rect x="3" y="1.5" width="7" height="8" fill="none" stroke="currentColor" stroke-width="1"></rect>
+            <rect x="1.5" y="3.5" width="7" height="8" fill="none" stroke="currentColor" stroke-width="1"></rect>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </section>
+</div>
+
 <div id="progress"></div>
 
 <!-- NAVIGATION -->
@@ -645,6 +1027,7 @@ body.modal-open { overflow: hidden; }
   <div class="nav-utils">
     <button id="btnLang" type="button" title="Switch Language">中文</button>
     <button id="btnTheme" type="button" title="Toggle Theme">◐</button>
+    <button id="btnMode" type="button" title="Switch Style" data-mode-toggle>Mainframe</button>
   </div>
 </nav>
 
@@ -904,11 +1287,32 @@ body.modal-open { overflow: hidden; }
     primaryTextColor: '#111111', lineColor: '#CCCCC8',
     secondaryColor: '#F2F2EE', tertiaryColor: '#FAFAF8'
   };
-  mermaid.initialize({
-    startOnLoad: false, theme: 'base', securityLevel: 'loose',
-    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis', padding: 18, nodeSpacing: 42, rankSpacing: 48 },
-    themeVariables: mermaidLight
-  });
+  function hasMermaid() {
+    return typeof window.mermaid !== 'undefined';
+  }
+
+  function initMermaid(themeVars) {
+    if (!hasMermaid()) return;
+    try {
+      window.mermaid.initialize({
+        startOnLoad: false, theme: 'base', securityLevel: 'loose',
+        flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis', padding: 18, nodeSpacing: 42, rankSpacing: 48 },
+        themeVariables: themeVars
+      });
+    } catch(e) {
+      console.warn('Mermaid init failed:', e);
+    }
+  }
+
+  initMermaid(mermaidLight);
+  // Mermaid is an optional enhancement. Loading it with `defer` keeps the
+  // archive usable even when a static host cannot reach the CDN.
+  var mermaidScript = document.getElementById('mermaidScript');
+  if (mermaidScript) {
+    mermaidScript.addEventListener('load', function() {
+      initMermaid(currentTheme === 'dark' ? mermaidDark : mermaidLight);
+    });
+  }
 
   /* ============================================================
      i18n DATA
@@ -1082,7 +1486,7 @@ body.modal-open { overflow: hidden; }
       if (key === 'keywords') return; // handled separately
       // For text that contains HTML (like <em>), use innerHTML
       var val = t(key);
-      if (val.indexOf('<') >= 0) {
+      if (typeof val === 'string' && val.indexOf('<') >= 0) {
         el.innerHTML = val;
       } else {
         el.textContent = val;
@@ -1110,15 +1514,7 @@ body.modal-open { overflow: hidden; }
   function updateMermaidTheme() {
     var isDark = currentTheme === 'dark';
     var vars = isDark ? mermaidDark : mermaidLight;
-    try {
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: 'base',
-        securityLevel: 'loose',
-        flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis', padding: 16, nodeSpacing: 40, rankSpacing: 45 },
-        themeVariables: vars
-      });
-    } catch(e) {}
+    initMermaid(vars);
   }
   function toggleTheme() {
     setTheme(currentTheme === 'dark' ? 'light' : 'dark');
@@ -1139,6 +1535,155 @@ body.modal-open { overflow: hidden; }
   }
 
   /* ============================================================
+     MAINFRAME MODE
+     ============================================================ */
+  var MODE_KEY = 'wb-mode';
+  var currentMode = 'archive';
+  var mainframeApp = document.getElementById('mainframe-app');
+  var body = document.body;
+  var allModeButtons = document.querySelectorAll('[data-mode-toggle]');
+  var modeButtons = Array.prototype.slice.call(allModeButtons).filter(function(btn) {
+    return !btn.closest('[data-mf-menu]');
+  });
+
+  function setMode(mode) {
+    currentMode = mode;
+    localStorage.setItem(MODE_KEY, mode);
+    body.classList.toggle('mode-mainframe', mode === 'mainframe');
+    if (mainframeApp) mainframeApp.setAttribute('aria-hidden', mode === 'mainframe' ? 'false' : 'true');
+    allModeButtons.forEach(function(btn) {
+      btn.textContent = mode === 'mainframe' ? 'Archive' : 'Mainframe';
+    });
+    if (mode === 'mainframe') {
+      window.scrollTo(0, 0);
+    }
+  }
+
+  function toggleMode() {
+    setMode(currentMode === 'mainframe' ? 'archive' : 'mainframe');
+  }
+
+  function useTypewriter(el, text, speed, startDelay, onDone) {
+    speed = speed || 38;
+    startDelay = startDelay || 600;
+    el.textContent = '';
+    var index = 0;
+    var done = false;
+    var timer = setTimeout(function() {
+      var interval = setInterval(function() {
+        index += 1;
+        el.textContent = text.slice(0, index);
+        if (index >= text.length) {
+          clearInterval(interval);
+          done = true;
+          if (onDone) onDone();
+        }
+      }, speed);
+    }, startDelay);
+    return function cleanup() {
+      clearTimeout(timer);
+      if (!done) el.textContent = text;
+    };
+  }
+
+  function initMainframeMode() {
+    var menu = document.querySelector('[data-mf-menu]');
+    var menuToggle = document.querySelector('[data-mf-menu-toggle]');
+    var typewriterEl = document.querySelector('[data-mf-typewriter]');
+    var actionsEl = document.querySelector('[data-mf-actions]');
+    var copyBtn = document.querySelector('[data-copy-email]');
+    var video = document.getElementById('mainframeVideo');
+    var cursor = document.querySelector('[data-mf-cursor]');
+    var videoReady = false;
+    var targetTime = 0;
+    var seeking = false;
+    var pendingSeek = false;
+    var prevX = null;
+    var typewriterCleanup = null;
+
+    if (menuToggle && menu) {
+      menuToggle.addEventListener('click', function() {
+        var open = menu.classList.toggle('is-open');
+        document.querySelector('.mf-nav').classList.toggle('is-menu-open', open);
+        menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      });
+      menu.querySelectorAll('[data-mode-toggle]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          menu.classList.remove('is-open');
+          document.querySelector('.mf-nav').classList.remove('is-menu-open');
+          toggleMode();
+        });
+      });
+    }
+
+    modeButtons.forEach(function(btn) {
+      btn.addEventListener('click', toggleMode);
+    });
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', function() {
+        navigator.clipboard.writeText('hello@mainframe.co');
+      });
+    }
+
+    if (typewriterEl) {
+      typewriterCleanup = useTypewriter(
+        typewriterEl,
+        "Glad you stopped in. Good taste tends to find us. Now, what are we building?",
+        38,
+        600
+      );
+    }
+
+    window.setTimeout(function() {
+      if (actionsEl) actionsEl.classList.add('is-visible');
+    }, 400);
+
+    if (video) {
+      video.addEventListener('loadedmetadata', function() {
+        videoReady = true;
+        targetTime = 0;
+      });
+      video.addEventListener('seeked', function() {
+        seeking = false;
+        if (pendingSeek && Math.abs(video.currentTime - targetTime) > 0.01) {
+          pendingSeek = false;
+          seeking = true;
+          video.currentTime = targetTime;
+        }
+      });
+      window.addEventListener('mousemove', function(e) {
+        if (currentMode !== 'mainframe' || !videoReady) return;
+        if (prevX === null) {
+          prevX = e.clientX;
+          return;
+        }
+        var delta = e.clientX - prevX;
+        prevX = e.clientX;
+        if (!delta) return;
+        var duration = video.duration || 0;
+        if (!duration) return;
+        targetTime = Math.max(0, Math.min(duration, targetTime + (delta / window.innerWidth) * 0.8 * duration));
+        if (!seeking) {
+          seeking = true;
+          video.currentTime = targetTime;
+        } else {
+          pendingSeek = true;
+        }
+      }, { passive: true });
+      window.addEventListener('mouseleave', function() {
+        prevX = null;
+      });
+    }
+
+    var enterMainframe = function() {
+      if (typewriterCleanup) typewriterCleanup();
+      if (cursor) cursor.style.display = 'inline-block';
+    };
+    enterMainframe();
+  }
+
+  /* ============================================================
      KEYWORD CLOUD
      ============================================================ */
   function buildKeywordCloud() {
@@ -1150,7 +1695,7 @@ body.modal-open { overflow: hidden; }
       var span = document.createElement('span');
       span.className = 'kw';
       span.textContent = kw;
-      span.setAttribute('data-tech', kw.toLowerCase().replace(/\s+/g, '-'));
+      span.setAttribute('data-tech', normalizeTechKey(kw));
       span.addEventListener('click', function() { openTechDetail(kw); });
       cloud.appendChild(span);
     });
@@ -1170,9 +1715,9 @@ body.modal-open { overflow: hidden; }
     modalContent.innerHTML = html;
     // Render Mermaid diagrams inside modal
     setTimeout(function() {
+      if (!hasMermaid()) return;
       try {
-        var svgId = 0;
-        mermaid.run({
+        window.mermaid.run({
           querySelector: '#modalContent .mermaid'
         }).then(function() {
           // Adjust SVG for dark/light
@@ -1366,6 +1911,51 @@ body.modal-open { overflow: hidden; }
     }
   };
 
+  var TECH_KEY_ALIASES = {
+    'ai agent': 'ai-agent',
+    'ai-agent': 'ai-agent',
+    '知识图谱': 'knowledge-graph',
+    'knowledge graph': 'knowledge-graph',
+    'knowledge-graph': 'knowledge-graph',
+    '研究映射': 'research-mapping',
+    'research mapping': 'research-mapping',
+    'research-mapping': 'research-mapping',
+    'rag': 'rag',
+    'langgraph': 'langgraph',
+    'mcp': 'mcp',
+    '系统': 'systems',
+    'systems': 'systems',
+    'system': 'systems',
+    '并发': 'concurrency',
+    'concurrency': 'concurrency',
+    '语义一致性': 'semantic',
+    'semantic consistency': 'semantic',
+    'semantic-consistency': 'semantic',
+    '发现': 'discovery',
+    'discovery': 'discovery',
+    '架构': 'architecture',
+    'architecture': 'architecture',
+    '设计': 'design',
+    'design': 'design',
+    '复杂系统': 'complex-systems',
+    'complex systems': 'complex-systems',
+    'complex-systems': 'complex-systems',
+    '知识发现': 'knowledge-discovery',
+    'knowledge discovery': 'knowledge-discovery',
+    'knowledge-discovery': 'knowledge-discovery',
+    '人机协作': 'human-ai-collaboration',
+    'human-ai collaboration': 'human-ai-collaboration',
+    'human-ai-collaboration': 'human-ai-collaboration'
+  };
+
+  function normalizeTechKey(techName) {
+    var raw = String(techName || '').trim();
+    var lower = raw.toLowerCase();
+    if (TECH_KEY_ALIASES[lower]) return TECH_KEY_ALIASES[lower];
+    var asciiKey = lower.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    return TECH_KEY_ALIASES[asciiKey] || asciiKey;
+  }
+
   function formatHighlights(text) {
     // Split on literal backslash-n backslash-n sequences (from JS string escapes)
     var paras = text.split(/\n\n/);
@@ -1392,7 +1982,8 @@ body.modal-open { overflow: hidden; }
   }
 
   function openTechDetail(techName) {
-    var key = techName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    var key = normalizeTechKey(techName);
+    if (!key) return;
     // Try to match
     var detail = TECH_DETAILS[key];
     if (!detail) {
@@ -1409,7 +2000,7 @@ body.modal-open { overflow: hidden; }
 
     var d = detail[currentLang] || detail['en'];
     var techTags = d.tech.map(function(t) {
-      return '<span data-tech="' + t.toLowerCase().replace(/\s+/g, '-') + '">' + t + '</span>';
+      return '<span data-tech="' + normalizeTechKey(t) + '">' + t + '</span>';
     }).join('');
 
     var html = '<button class="modal-close">&times;</button>';
@@ -1426,9 +2017,91 @@ body.modal-open { overflow: hidden; }
     openModal(html);
   }
 
-  /* ============================================================
-     PROJECT DETAIL MODAL
-     ============================================================ */
+  Object.assign(TECH_DETAILS, {
+    'research-mapping': {
+      en: { title:'Research Mapping', subtitle:'Turning scattered literature into navigable research terrain',
+        overview:'Research mapping organizes papers, concepts, methods, datasets, and open problems into a spatial and semantic structure. In GraphSci, it supports pathfinding across academic relationships instead of treating search results as a flat ranked list.',
+        tech:['Knowledge Graph', 'Citation Network', 'Topic Modeling', 'Research Pathfinding', 'Semantic Edges'],
+        arch:'flowchart LR\n    Papers[Papers] --> Extract[Concept Extraction]\n    Extract --> Map[Research Map]\n    Map --> Paths[Pathfinding]\n    Map --> Gaps[Gap Discovery]',
+        highlights:'Maps papers to concepts and methods; Exposes adjacent research paths; Helps identify missing links and research gaps; Turns literature review into an exploratory workflow' },
+      zh: { title:'研究映射', subtitle:'把分散文献转化为可导航的研究地形',
+        overview:'研究映射不是简单罗列论文，而是把论文、概念、方法、数据集和开放问题组织成带语义关系的结构。在 GraphSci 中，它用于支持跨学术关系的路径发现，让研究者看到“从哪里来、往哪里去、哪里还有空白”。',
+        tech:['知识图谱', '引用网络', '主题建模', '研究路径发现', '语义边'],
+        arch:'flowchart LR\n    Papers[论文] --> Extract[概念抽取]\n    Extract --> Map[研究地图]\n    Map --> Paths[路径发现]\n    Map --> Gaps[空白识别]',
+        highlights:'将论文映射到概念、方法和问题；暴露相邻研究路径；帮助识别缺失连接和研究空白；把文献综述变成可探索的工作流' }
+    },
+    'discovery': {
+      en: { title:'Discovery', subtitle:'Finding non-obvious links, gaps, and next moves in knowledge spaces',
+        overview:'Discovery is the workflow layer that surfaces useful relationships which are not visible through keyword search alone: adjacent topics, weak signals, methodological bridges, and unexplored combinations.',
+        tech:['Graph Traversal', 'Hybrid Search', 'Reranking', 'Gap Analysis', 'Evidence Surfacing'],
+        arch:'flowchart LR\n    Query[Intent] --> Retrieve[Hybrid Retrieval]\n    Retrieve --> Link[Relation Mining]\n    Link --> Rank[Novelty Ranking]\n    Rank --> Insight[Discovery]',
+        highlights:'Combines retrieval with relationship mining; Prioritizes novelty and evidence; Supports research gap analysis; Connects search, graph traversal, and reasoning' },
+      zh: { title:'发现', subtitle:'在知识空间中找到非显而易见的连接、空白与下一步',
+        overview:'发现层关注关键词搜索看不到的关系：相邻主题、弱信号、方法迁移路径、尚未被充分探索的组合。它把检索结果进一步组织成可解释的线索，而不是只返回相似文本。',
+        tech:['图遍历', '混合检索', '重排序', '空白分析', '证据浮现'],
+        arch:'flowchart LR\n    Query[研究意图] --> Retrieve[混合检索]\n    Retrieve --> Link[关系挖掘]\n    Link --> Rank[新颖性排序]\n    Rank --> Insight[发现]',
+        highlights:'结合检索与关系挖掘；按新颖性和证据强度排序；支持研究空白分析；连接搜索、图遍历和推理流程' }
+    },
+    'architecture': {
+      en: { title:'Architecture', subtitle:'How system boundaries, data flow, and control flow are shaped',
+        overview:'Architecture describes the durable structure of a system: module boundaries, data ownership, control flow, failure handling, and integration surfaces. Across these projects, architecture is treated as a reasoning tool, not just a diagram.',
+        tech:['Bounded Contexts', 'BFF', 'Event Flow', 'Sagas', 'API Contracts', 'State Machines'],
+        arch:'flowchart TD\n    Goals[System Goals] --> Boundaries[Boundaries]\n    Boundaries --> Data[Data Ownership]\n    Boundaries --> Flow[Control Flow]\n    Flow --> Reliability[Reliability]',
+        highlights:'Clarifies ownership and change boundaries; Makes failure paths explicit; Separates frontend, BFF, AI services, and persistence; Uses contracts to keep modules evolvable' },
+      zh: { title:'架构', subtitle:'系统边界、数据流与控制流如何被塑形',
+        overview:'架构描述系统中长期稳定的结构：模块边界、数据归属、控制流、失败处理和集成接口。在这些项目里，架构不是装饰性的图，而是帮助判断复杂系统如何演化的推理工具。',
+        tech:['边界上下文', 'BFF', '事件流', 'Saga', 'API 契约', '状态机'],
+        arch:'flowchart TD\n    Goals[系统目标] --> Boundaries[边界]\n    Boundaries --> Data[数据归属]\n    Boundaries --> Flow[控制流]\n    Flow --> Reliability[可靠性]',
+        highlights:'明确所有权和变更边界；显式表达失败路径；分离前端、BFF、AI 服务和持久化；用契约保持模块可演化' }
+    },
+    'design': {
+      en: { title:'Design', subtitle:'Interaction, information structure, and product judgment for research tools',
+        overview:'Design here means more than visual styling. It covers how complex information is arranged, how users move between views, and how AI assistance stays legible, controllable, and useful inside dense workflows.',
+        tech:['Information Architecture', 'Workflow Design', 'Interaction States', 'Editorial UI', 'Human Control'],
+        arch:'flowchart LR\n    Need[User Need] --> IA[Information Architecture]\n    IA --> Flow[Workflow]\n    Flow --> UI[Interface]\n    UI --> Feedback[Feedback Loop]',
+        highlights:'Organizes dense research states for scanning; Keeps AI actions visible and reversible; Uses calm interaction patterns for repeated work; Treats layout as part of reasoning' },
+      zh: { title:'设计', subtitle:'研究工具中的交互、信息结构与产品判断',
+        overview:'这里的设计不只是视觉样式，而是复杂信息如何组织、用户如何在不同视图之间移动、AI 辅助如何保持可理解、可控制、可追溯。它服务于高密度研究工作流，而不是营销式展示。',
+        tech:['信息架构', '工作流设计', '交互状态', '编辑式 UI', '人类控制权'],
+        arch:'flowchart LR\n    Need[用户需求] --> IA[信息架构]\n    IA --> Flow[工作流]\n    Flow --> UI[界面]\n    UI --> Feedback[反馈闭环]',
+        highlights:'组织高密度研究状态便于扫描；让 AI 行为可见且可撤回；使用适合重复工作的安静交互；把布局作为推理的一部分' }
+    },
+    'complex-systems': {
+      en: { title:'Complex Systems', subtitle:'Many interacting parts, nonlinear effects, and evolving behavior',
+        overview:'Complex systems emerge when many components interact through feedback loops: agent workflows, rule engines, research graphs, and distributed services. The core challenge is not one component, but the behavior that appears between components.',
+        tech:['Feedback Loops', 'Dependency Graphs', 'Emergence', 'Simulation', 'Observability', 'Control'],
+        arch:'flowchart TD\n    Parts[Components] --> Interact[Interactions]\n    Interact --> Feedback[Feedback]\n    Feedback --> Behavior[Emergent Behavior]\n    Behavior --> Control[Control Strategy]',
+        highlights:'Models interactions rather than isolated modules; Tracks cascading effects and hidden dependencies; Uses observability to understand emergent behavior; Designs control points without over-centralizing' },
+      zh: { title:'复杂系统', subtitle:'多组件交互、非线性影响与持续演化的行为',
+        overview:'复杂系统来自大量组件通过反馈环相互作用：智能体工作流、规则引擎、研究图谱和分布式服务都属于这个范畴。真正的难点不是单个组件，而是组件之间涌现出的行为。',
+        tech:['反馈环', '依赖图', '涌现', '仿真', '可观测性', '控制策略'],
+        arch:'flowchart TD\n    Parts[组件] --> Interact[交互]\n    Interact --> Feedback[反馈]\n    Feedback --> Behavior[涌现行为]\n    Behavior --> Control[控制策略]',
+        highlights:'建模组件之间的相互作用；追踪级联影响和隐藏依赖；用可观测性理解涌现行为；设计控制点但避免过度中心化' }
+    },
+    'knowledge-discovery': {
+      en: { title:'Knowledge Discovery', subtitle:'Extracting structure, evidence, and insight from large knowledge spaces',
+        overview:'Knowledge discovery combines retrieval, graph modeling, semantic enrichment, and human judgment to transform large corpora into usable research insight. It is broader than search: the goal is to expose structure and direction.',
+        tech:['Retrieval', 'Knowledge Graph', 'Entity Linking', 'Semantic Search', 'Evidence Aggregation'],
+        arch:'flowchart LR\n    Corpus[Corpus] --> Extract[Extraction]\n    Extract --> Graph[Knowledge Graph]\n    Graph --> Search[Semantic Search]\n    Search --> Insight[Insight]',
+        highlights:'Turns unstructured corpora into navigable structures; Connects entities, methods, and claims; Supports evidence-grounded synthesis; Bridges RAG, graphs, and research workflows' },
+      zh: { title:'知识发现', subtitle:'从大规模知识空间中抽取结构、证据与洞察',
+        overview:'知识发现结合检索、图建模、语义增强和人的判断，把大规模语料转化为可使用的研究洞察。它比搜索更进一步：目标是暴露结构、关系和下一步方向。',
+        tech:['检索', '知识图谱', '实体链接', '语义搜索', '证据聚合'],
+        arch:'flowchart LR\n    Corpus[语料] --> Extract[抽取]\n    Extract --> Graph[知识图谱]\n    Graph --> Search[语义搜索]\n    Search --> Insight[洞察]',
+        highlights:'把非结构语料转成可导航结构；连接实体、方法和主张；支持基于证据的综合；桥接 RAG、图谱和研究工作流' }
+    },
+    'human-ai-collaboration': {
+      en: { title:'Human-AI Collaboration', subtitle:'Keeping people in control while AI expands the working surface',
+        overview:'Human-AI collaboration focuses on division of labor: AI proposes, retrieves, summarizes, and checks; humans set intent, judge quality, resolve ambiguity, and decide. Good collaboration makes AI actions inspectable rather than magical.',
+        tech:['Human-in-the-Loop', 'Review Workflows', 'Provenance', 'Explainability', 'Control Surfaces'],
+        arch:'flowchart LR\n    Human[Human Intent] --> AI[AI Assistance]\n    AI --> Evidence[Evidence]\n    Evidence --> Review[Human Review]\n    Review --> Decision[Decision]',
+        highlights:'Preserves human judgment at decision points; Shows evidence and provenance; Supports review, correction, and rollback; Treats AI as a collaborator inside the workflow' },
+      zh: { title:'人机协作', subtitle:'让 AI 扩展工作面，同时保留人的控制权',
+        overview:'人机协作关注分工：AI 负责提出候选、检索、总结和校验；人负责设定意图、判断质量、处理歧义并做最终决定。好的协作不是让 AI 显得神秘，而是让它的行为可检查、可修正。',
+        tech:['人在回路', '评审工作流', '来源追踪', '可解释性', '控制界面'],
+        arch:'flowchart LR\n    Human[人的意图] --> AI[AI 辅助]\n    AI --> Evidence[证据]\n    Evidence --> Review[人工评审]\n    Review --> Decision[决策]',
+        highlights:'在关键决策点保留人的判断；展示证据和来源；支持评审、修正与回滚；把 AI 作为工作流中的协作者' }
+    },
     'node.js': {
       en: { title:'Node.js', subtitle:'JavaScript runtime for building fast, scalable network applications',
         overview:'Node.js serves as the primary backend runtime in SubmitFlow (Next.js API routes + worker processes) and HausRAGen (Express API with 8-provider AI orchestration). Its event-driven, non-blocking I/O model excels at handling concurrent HTTP requests and real-time streaming.',
@@ -1561,6 +2234,11 @@ body.modal-open { overflow: hidden; }
         arch:'flowchart LR\n    Query[查询嵌入] --> Index[pgvector 索引]\n    Index --> ANN[ANN 搜索]\n    ANN --> Filter[JOIN 业务数据]\n    Filter --> Results[排序结果]',
         highlights:'向量与业务数据共存同一数据库；IVFFlat 和 HNSW 索引类型；余弦/L2/内积距离度量；单 SQL 查询组合向量搜索+关系过滤' }
     },
+  });
+
+  /* ============================================================
+     PROJECT DETAIL MODAL
+     ============================================================ */
 
   var PROJECT_DETAILS = {
     graphsci: {
@@ -1739,7 +2417,7 @@ body.modal-open { overflow: hidden; }
     if (!detail) return;
     var d = detail[currentLang] || detail['en'];
     var techTags = d.tech.map(function(t) {
-      return '<span data-tech="' + t.toLowerCase().replace(/\s+/g, '-') + '">' + t + '</span>';
+      return '<span data-tech="' + normalizeTechKey(t) + '">' + t + '</span>';
     }).join('');
 
     var html = '<button class="modal-close">&times;</button>';
@@ -2035,6 +2713,8 @@ body.modal-open { overflow: hidden; }
      INIT
      ============================================================ */
   function init() {
+    document.documentElement.classList.add('reveal-ready');
+
     // Restore saved preferences
     var savedTheme = localStorage.getItem('wb-theme');
     if (savedTheme) setTheme(savedTheme);
@@ -2044,9 +2724,14 @@ body.modal-open { overflow: hidden; }
     if (savedLang) setLang(savedLang);
     else setLang('en');
 
+    var savedMode = localStorage.getItem(MODE_KEY);
+    if (savedMode === 'mainframe') setMode('mainframe');
+    else setMode('archive');
+
     buildAtlas();
     buildKeywordCloud();
     bindEvents();
+    initMainframeMode();
     updateProgress();
     updateNav();
 
